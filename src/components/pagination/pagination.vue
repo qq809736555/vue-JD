@@ -18,7 +18,8 @@
         </li>
         <li class="page">
           每页
-          <select name="" class="page_select" :value="pageSize">
+          <select name="" class="page_select" v-model="changePageSize">
+            <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="30">30</option>
@@ -51,10 +52,12 @@
         return {
           currentPage: 1,
           page: 1,
-          jumpPage: 0
+          jumpPage: 0,
+          changePageSize: 0
         };
       },
       created () {
+        this.changePageSize = this.pageSize;
       },
       methods: {
         go (page) {
@@ -67,20 +70,26 @@
           } else if (page === this.currentPage) {
             return false;
           } else {
-            let formDate = {'currentPage': '' + page, 'pageSize': '20', 'CREATOR': '1', 'START_TIME': '20180627', 'END_TIME': '20180807', 'FPQQLSH': '', 'YWLX': '', 'YWBH': '', 'LYXT': '', 'FP_DM': '', 'FP_HM': '', 'FPZT': '', 'GMF_MC': '', 'GMF_NSRSBH': '', 'XSF_ID': '007'};
+            let formDate = {'currentPage': '' + page, 'pageSize': '' + this.pageSize};
             this.$http.post('/api/mvc/EntinvoiceRecord/entIRList.do', formDate).then((response) => {
               this.$store.commit('changeList', response.list);
               this.currentPage = parseInt(page, 10);
             });
           }
-          this.$emit('go-page', {
-            page: this.totalPage
-          });
         }
       },
       computed: {
         totalPage() {
           return Math.ceil(this.totalCount / this.pageSize);
+        }
+      },
+      watch: {
+        changePageSize(val) {
+          let data = {
+            page: Number(val)
+          };
+          console.log(1);
+          this.$emit('showNewPageSize', data); // 告诉父组件，子组件修改了pageSize的值
         }
       }
     };

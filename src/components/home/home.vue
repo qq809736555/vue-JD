@@ -51,12 +51,14 @@
     </div>
     <!-- 弹窗部分 -->
     <v-dialog></v-dialog>
+    <v-hint></v-hint>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import header from 'components/header/header';
   import dialog from 'components/dialog/dialog';
+  import hint from 'components/hint/hint';
 
   export default {
     data() {
@@ -95,7 +97,8 @@
     },
     components: {
       'v-header': header,
-      'v-dialog': dialog
+      'v-dialog': dialog,
+      'v-hint': hint
     }
   };
 </script>
