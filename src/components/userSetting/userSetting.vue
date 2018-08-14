@@ -92,40 +92,28 @@
             vModel: 'accountName',
             placeholder: '请输入账号名称',
             type: 'text',
-            value: '',
-            style: ''
-          },
-          {
-            editLabel: '账户密码',
-            vModel: 'accountPassword',
-            placeholder: '请输入账户密码',
-            type: 'password',
-            value: '88888888',
-            style: 'display: none;'
+            value: ''
           },
           {
             editLabel: '用户姓名',
             vModel: 'realName',
             placeholder: '请输入用户姓名',
             type: 'text',
-            value: '',
-            style: ''
+            value: ''
           },
           {
             editLabel: '手机号码',
             vModel: 'userTel',
             placeholder: '请输入手机号码',
             type: 'text',
-            value: '',
-            style: ''
+            value: ''
           },
           {
             editLabel: '税号',
             vModel: 'userEni',
             placeholder: '请输入税号',
             type: 'text',
-            value: '',
-            style: ''
+            value: ''
           }
         ];
         this.$store.commit('changeEditItem', editItem);
@@ -146,24 +134,21 @@
               vModel: 'accountName',
               placeholder: '请输入账号名称',
               type: 'text',
-              value: user.userName,
-              style: ''
+              value: user.userName
             },
             {
               editLabel: '用户姓名',
               vModel: 'realName',
               placeholder: '请输入用户姓名',
               type: 'text',
-              value: user.realName,
-              style: ''
+              value: user.realName
             },
             {
               editLabel: '手机号码',
               vModel: 'userTel',
               placeholder: '请输入手机号码',
               type: 'text',
-              value: user.phone,
-              style: ''
+              value: user.phone
             }
           ];
           this.$store.commit('changeEditItem', editItem);

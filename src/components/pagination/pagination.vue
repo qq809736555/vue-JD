@@ -88,7 +88,6 @@
           let data = {
             page: Number(val)
           };
-          console.log(1);
           this.$emit('showNewPageSize', data); // 告诉父组件，子组件修改了pageSize的值
         }
       }

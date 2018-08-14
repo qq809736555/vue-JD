@@ -9,7 +9,7 @@
         <div class="dialog_error" v-show="dialog_error">{{dialogError}}</div>
           <div class="edit_item" v-for="item in this.$store.getters.getEditItem" :key="item.id" :style="item.style">
             <div class="edit_label">{{item.editLabel}}：</div>
-            <input :type="item.type" :value="item.value" class="edit_input" :ref="item.vModel">
+            <input :type="item.type" value="" class="edit_input" :ref="item.vModel">
           </div>
           <div class="edit_item" style="display: none;">
             <div class="edit_label">状态：</div>
@@ -125,10 +125,6 @@
             this.dialog_error = true;
             this.dialogError = '请输入1-30位数字或字母的账户名称';
             return false;
-          } else if (this.$refs.accountPassword[0].value === '') {
-            this.dialog_error = true;
-            this.dialogError = '请输入账户密码';
-            return false;
           } else if (this.$refs.realName[0].value === '') {
             this.dialog_error = true;
             this.dialogError = '请输入2-10位汉字或字母的用户姓名';
@@ -144,10 +140,9 @@
           } else {
             let accountName = this.$refs.accountName[0].value;
             let realName = this.$refs.realName[0].value;
-            let accountPassword = this.$refs.accountPassword[0].value;
             let userTel = this.$refs.userTel[0].value;
             let userEni = this.$refs.userEni[0].value;
-            let formDate = {'userName': accountName, 'realName': realName, 'password': md5(accountPassword), 'phone': userTel, 'userEni': userEni, 'picked': 'open'};
+            let formDate = {'userName': accountName, 'realName': realName, 'password': md5(88888888), 'phone': userTel, 'userEni': userEni, 'picked': 'open'};
             this.$http.post('/rbac/mvc/user/add', formDate).then((response) => {
               console.log(response);
             });
