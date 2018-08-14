@@ -46,7 +46,7 @@
         </tr>
         </tbody>
       </table>
-      <pagination :total-count = "totalCount" :page-size="pageSize"></pagination>
+      <pagination :total-count = "totalCount" :page-size="pageSize" @showNewPageSize="updatePageSize"></pagination>
     </div>
   </div>
 </template>
@@ -67,12 +67,22 @@
       };
     },
     created () { // 初始化时currentPage赋值
-      let formDate = {'currentPage': '1', 'pageSize': '20', 'CREATOR': '1', 'START_TIME': '20180627', 'END_TIME': '20180807', 'FPQQLSH': '', 'YWLX': '', 'YWBH': '', 'LYXT': '', 'FP_DM': '', 'FP_HM': '', 'FPZT': '', 'GMF_MC': '', 'GMF_NSRSBH': '', 'XSF_ID': '007'};
-      this.$http.post('/api/mvc/EntinvoiceRecord/entIRList.do', formDate).then((response) => {
-        this.totalCount = response.count;
-        this.$store.commit('changeList', response.list);
-        this.pageSize = response.pageSize;
-      });
+      this.getList();
+    },
+    methods: {
+      getList() {
+        let formDate = {'currentPage': '1', 'pageSize': '' + this.pageSize};
+        this.$http.post('/api/mvc/EntinvoiceRecord/entIRList.do', formDate).then((response) => {
+          this.totalCount = response.count;
+          this.$store.commit('changeList', response.list);
+          this.pageSize = response.pageSize;
+        });
+      },
+      // 翻页组件修改每页显示条数
+      updatePageSize(data) {
+        this.pageSize = data.page;// 改变了父组件的值
+        this.getList();
+      }
     },
     components: {
       navAddress,

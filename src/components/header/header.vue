@@ -41,21 +41,24 @@
               vModel: 'oldPassword',
               placeholder: '请输入原密码',
               type: 'password',
-              value: ''
+              value: '',
+              style: ''
             },
             {
               editLabel: '请输入新密码',
               vModel: 'newPassword',
               placeholder: '请输入新密码',
               type: 'password',
-              value: ''
+              value: '',
+              style: ''
             },
             {
               editLabel: '请确认新密码',
               vModel: 'confirmPwd',
               placeholder: '请确认新密码',
               type: 'password',
-              value: ''
+              value: '',
+              style: ''
             }
           ];
           this.$store.commit('changeEditItem', editItem);

@@ -49,7 +49,7 @@
       data() {
         return {
           totalCount: 0,
-          pageSize: 20,
+          pageSize: 0,
           firstAdd: '统计查询',
           currentAdd: '发票库存查询'
         };
@@ -66,12 +66,10 @@
             this.pageSize = response.pageSize;
           });
         },
+        // 翻页组件修改每页显示条数
         updatePageSize(data) {
           this.pageSize = data.page;// 改变了父组件的值
-          console.log(this.pageSize, 123);
-          console.log('start');
           this.getList();
-          console.log('end');
         }
       },
       components: {

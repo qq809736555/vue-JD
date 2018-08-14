@@ -6,39 +6,14 @@
       <div class="left_bar">
         <div class="menu_item">
           <div class="first_menu" v-for="(item, index) in resourceList" :key="item.id" @click="showSeconedMenu(index, $event)">
-            <p class="first_menu_p" :class="index === showIndex? 'select_firstMenu' : ''"><span class="icon-下拉" @click="showSeconedMenu(index, $event)"></span>{{item.name}}</p>
+            <p class="first_menu_p" :class="index === showIndex? 'select_firstMenu' : ''"><span class="icon-dropDown"></span>{{item.name}}</p>
             <div class="second_menu" :class="index === showIndex? 'select_secondMenu' : ''">
-              <div class="second_menu_item">
-                <router-link to="billRepertory">
-                  发票库存查询
-                </router-link>
-              </div>
-              <div class="second_menu_item">
-                <router-link to="oilProducts">
-                成品油库存统计
-              </router-link>
-              </div>
-              <div class="second_menu_item">
-                <router-link to="monthlyQuery">
-                月度报表查询/导出
-                </router-link>
-              </div>
-              <div class="second_menu_item">
-                <router-link to="oldDateQuery">
-                  验旧数据查询/导出
-                </router-link>
-              </div>
-              <div class="second_menu_item">
-                <router-link to="invoiceState">
-                  发票状态统计查询
+              <div class="second_menu_item" v-for="child in item.children" :key="child.id">
+                <router-link :to="child.url">
+                  {{child.name}}
                 </router-link>
               </div>
             </div>
-          </div>
-          <div class="second_menu_item" style="height: auto;">
-            <router-link to="userSetting">
-              设置-用户设置
-            </router-link>
           </div>
         </div>
       </div>
@@ -88,7 +63,13 @@
         });
       },
       showSeconedMenu(index, event) {
-        if (event.target.className.indexOf('select_firstMenu') === -1) {
+        let targetClassName = ''
+        if (event.target.className === 'icon-dropDown') {
+          targetClassName = event.target.parentNode.className;
+        } else {
+          targetClassName = event.target.className;
+        }
+        if (targetClassName.indexOf('select_firstMenu') === -1) {
           this.showIndex = index;
         } else {
           this.showIndex = -1;

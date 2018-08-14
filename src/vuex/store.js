@@ -78,8 +78,7 @@ const GlobalData = new Vuex.Store({
     showHint: false,
     hintClass: '',
     hintContent: '',
-    list: [],
-    pageSize: 0
+    list: []
   },
   getters: {
     // 组件数据读取/输出，不能在这里直接修改状态
@@ -97,9 +96,6 @@ const GlobalData = new Vuex.Store({
     },
     getList(state) {
       return state.list;
-    },
-    getPageSize(state) {
-      return state.pageSize;
     }
   },
   mutations: {
@@ -114,9 +110,6 @@ const GlobalData = new Vuex.Store({
     },
     changeList(state, list) {
       state.list = list;
-    },
-    changePageSize(state, pageSize) {
-      state.pageSize = pageSize;
     }
   },
   modules: {

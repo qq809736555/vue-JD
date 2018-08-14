@@ -12,23 +12,16 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/rbac':{
-        target: 'http://192.168.7.21:80', //测试环境
+        target: 'http://192.168.2.83:8080', //测试环境
         pathRewrite: {
           '^/rbac': '/rbac'
         },
         changeOrigin: true,
       },
       '/api':{
-        target: 'http://192.168.7.21:80', //测试环境
+        target: 'http://192.168.2.83:8080', //测试环境
         pathRewrite: {
           '^/api': '/api'
-        },
-        changeOrigin: true,
-      },
-      '/testRest':{
-        target: 'http://192.168.4.56:80', //测试环境
-        pathRewrite: {
-          '^/testRest': '/testRest'
         },
         changeOrigin: true,
       }

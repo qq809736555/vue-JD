@@ -30,9 +30,9 @@
           <tbody>
           <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index <= pageSize">
             <td>{{index}}</td>
-            <td>{{item.createName}}</td>
             <td>{{item.userName}}</td>
-            <td>{{item.updateTime}}</td>
+            <td>{{item.realName}}</td>
+            <td>{{item.phone}}</td>
             <td v-if="item.enabled === 'Y'">启用</td>
             <td v-if="item.enabled === 'N'">停用</td>
             <td class="operation">
@@ -43,7 +43,7 @@
           </tr>
           </tbody>
         </table>
-        <pagination :total-count = "totalCount" :page-size="pageSize"></pagination>
+        <pagination :total-count = "totalCount" :page-size="pageSize" @showNewPageSize="updatePageSize"></pagination>
       </div>
     </div>
 </template>
@@ -57,7 +57,7 @@
     data() {
       return {
         totalCount: 0,
-        pageSize: 0,
+        pageSize: 20,
         firstAdd: '设置-用户设置',
         currentAdd: '用户设置',
         value: '',
@@ -77,6 +77,11 @@
           this.pageSize = response.pageSize;
         });
       },
+      // 翻页组件修改每页显示条数
+      updatePageSize(data) {
+        this.pageSize = data.page;// 改变了父组件的值
+        this.getUserInfoList();
+      },
       // 新增用户
       newUsers() {
         this.$store.commit('S');
@@ -87,28 +92,40 @@
             vModel: 'accountName',
             placeholder: '请输入账号名称',
             type: 'text',
-            value: ''
+            value: '',
+            style: ''
           },
           {
             editLabel: '账户密码',
             vModel: 'accountPassword',
             placeholder: '请输入账户密码',
             type: 'password',
-            value: ''
+            value: '88888888',
+            style: 'display: none;'
           },
           {
             editLabel: '用户姓名',
             vModel: 'realName',
             placeholder: '请输入用户姓名',
             type: 'text',
-            value: ''
+            value: '',
+            style: ''
           },
           {
             editLabel: '手机号码',
             vModel: 'userTel',
             placeholder: '请输入手机号码',
             type: 'text',
-            value: ''
+            value: '',
+            style: ''
+          },
+          {
+            editLabel: '税号',
+            vModel: 'userEni',
+            placeholder: '请输入税号',
+            type: 'text',
+            value: '',
+            style: ''
           }
         ];
         this.$store.commit('changeEditItem', editItem);
@@ -129,28 +146,24 @@
               vModel: 'accountName',
               placeholder: '请输入账号名称',
               type: 'text',
-              value: user.createName
-            },
-            {
-              editLabel: '账户密码',
-              vModel: 'accountPassword',
-              placeholder: '请输入账户密码',
-              type: 'password',
-              value: user.userName
+              value: user.userName,
+              style: ''
             },
             {
               editLabel: '用户姓名',
               vModel: 'realName',
               placeholder: '请输入用户姓名',
               type: 'text',
-              value: ''
+              value: user.realName,
+              style: ''
             },
             {
               editLabel: '手机号码',
               vModel: 'userTel',
               placeholder: '请输入手机号码',
               type: 'text',
-              value: ''
+              value: user.phone,
+              style: ''
             }
           ];
           this.$store.commit('changeEditItem', editItem);
