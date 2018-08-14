@@ -35,6 +35,7 @@
 
 <script type="text/ecmascript-6">
     import md5 from 'js-md5';
+    import global from 'components/Global/Global';
 
     export default {
       data() {
@@ -57,6 +58,7 @@
           this.$store.commit('changeStateShow', false);
           this.dialog_error = false;
           this.dialogError = '';
+          this.$store.commit('changeStateCChange', '');
         },
         // 判断确认按钮，对应执行函数
         dialogConfirm() {
@@ -121,15 +123,16 @@
         },
         // 新增用户
         newUsersBtn() {
-          if (this.$refs.accountName[0].value === '') {
+          let _this = this;
+          if (!global.userName.test(_this.$refs.accountName[0].value)) {
             this.dialog_error = true;
             this.dialogError = '请输入1-30位数字或字母的账户名称';
             return false;
-          } else if (this.$refs.realName[0].value === '') {
+          } else if (!global.realName.test(_this.$refs.realName[0].value)) {
             this.dialog_error = true;
             this.dialogError = '请输入2-10位汉字或字母的用户姓名';
             return false;
-          } else if (this.$refs.userTel[0].value === '') {
+          } else if (!global.userTel.test(_this.$refs.userTel[0].value)) {
             this.dialog_error = true;
             this.dialogError = '请输入正确的11位手机号码';
             return false;
@@ -142,14 +145,16 @@
             let realName = this.$refs.realName[0].value;
             let userTel = this.$refs.userTel[0].value;
             let userEni = this.$refs.userEni[0].value;
-            let formDate = {'userName': accountName, 'realName': realName, 'password': md5(88888888), 'phone': userTel, 'userEni': userEni, 'picked': 'open'};
+            let formDate = {'userName': accountName, 'realName': realName, 'password': md5('88888888'), 'phone': userTel, 'userEni': userEni, 'picked': 'open'};
             this.$http.post('/rbac/mvc/user/add', formDate).then((response) => {
               console.log(response);
             });
           }
         },
         // 修改用户信息
-        changeUserInfo() {},
+        changeUserInfo() {
+          console.log(this.$store.getters.getEditItem);
+        },
         // 重置密码
         confirmChange() {
           let formDate = {'userId': '' + this.$store.getters.getStateUserId, 'password': md5('88888888')};

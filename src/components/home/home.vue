@@ -63,7 +63,7 @@
         });
       },
       showSeconedMenu(index, event) {
-        let targetClassName = ''
+        let targetClassName = '';
         if (event.target.className === 'icon-dropDown') {
           targetClassName = event.target.parentNode.className;
         } else {

@@ -124,7 +124,6 @@
       modifyBtn(id) {
         console.log(id);
         this.$http.get('/rbac/mvc/user/getUserInfo?userId=' + id).then((response) => {
-          console.log(response);
           let user = response.user;
           this.$store.commit('S');
           this.$store.commit('changeDialogTitle', '新增用户信息');
@@ -154,6 +153,7 @@
           this.$store.commit('changeEditItem', editItem);
           this.$store.commit('changeBtnFunction', 'newUsersBtn');
           this.$store.commit('changeStateShow', true);
+          console.log(editItem);
         });
       },
       // 重置密码
