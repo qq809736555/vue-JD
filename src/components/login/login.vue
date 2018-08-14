@@ -3,7 +3,7 @@
     <div class="login_content">
       <div class="login_title">税控开票监控查询系统</div>
       <div class="login_pic"><img src="../header/header.png" width="166" height="80" alt=""></div>
-      <div class="login_form">
+      <div class="login_form" @keyup.enter="login">
         <div class="login_error" v-show="loginError">
           {{errorMessage}}
         </div>

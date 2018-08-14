@@ -31,5 +31,5 @@
       &.errorHint
         background rgba(237, 32, 38, .5)
       &.successHint
-        background rgba(237, 32, 38, .5)
+        background rgba(0, 180, 60, .5)
 </style>

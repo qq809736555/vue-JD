@@ -1,5 +1,5 @@
 <template>
-  <div class="dialog_wrapper" v-show="this.$store.getters.GS">
+  <div class="dialog_wrapper" v-show="this.$store.getters.GS" id="dialog">
     <div class="dialog_content">
       <div class="dialog_title">
         {{this.$store.getters.getDialogTitle}}
@@ -36,6 +36,7 @@
 <script type="text/ecmascript-6">
     import md5 from 'js-md5';
     import global from 'components/Global/Global';
+    import store from '../../vuex/store';
 
     export default {
       data() {
@@ -45,7 +46,7 @@
           accountName: '',
           accountPassword: '',
           realName: '',
-          userTel: '',
+          phone: '',
           picked: '',
           man: '',
           woman: ''
@@ -59,6 +60,18 @@
           this.dialog_error = false;
           this.dialogError = '';
           this.$store.commit('changeStateCChange', '');
+          let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
+          for (let i = 0; i < dialogInput.length; i++) {
+            dialogInput[i].value = '';
+          }
+        },
+        // 请求成功提示hint
+        hintShow() {
+          store.commit('changeHint', true);
+          store.commit('changeHintClass', 'successHint');
+          setTimeout(function() {
+            store.commit('changeHint', false);
+          }, 1000);
         },
         // 判断确认按钮，对应执行函数
         dialogConfirm() {
@@ -121,8 +134,8 @@
             this.$store.commit('changeList', response.list);
           });
         },
-        // 新增用户
-        newUsersBtn() {
+        // 用户添加、修改校验
+        regUser() {
           let _this = this;
           if (!global.userName.test(_this.$refs.accountName[0].value)) {
             this.dialog_error = true;
@@ -132,33 +145,57 @@
             this.dialog_error = true;
             this.dialogError = '请输入2-10位汉字或字母的用户姓名';
             return false;
-          } else if (!global.userTel.test(_this.$refs.userTel[0].value)) {
+          } else if (!global.phone.test(_this.$refs.phone[0].value)) {
             this.dialog_error = true;
             this.dialogError = '请输入正确的11位手机号码';
             return false;
-          } else if (this.$refs.userEni[0].value === '') {
-            this.dialog_error = true;
-            this.dialogError = '请输入税号';
-            return false;
-          } else {
-            let accountName = this.$refs.accountName[0].value;
-            let realName = this.$refs.realName[0].value;
-            let userTel = this.$refs.userTel[0].value;
-            let userEni = this.$refs.userEni[0].value;
-            let formDate = {'userName': accountName, 'realName': realName, 'password': md5('88888888'), 'phone': userTel, 'userEni': userEni, 'picked': 'open'};
-            this.$http.post('/rbac/mvc/user/add', formDate).then((response) => {
-              console.log(response);
-            });
           }
+        },
+        // 新增用户
+        newUsersBtn() {
+            this.regUser();
+            if (this.$refs.xfdm[0].value === '') {
+              this.dialog_error = true;
+              this.dialogError = '请输入税号';
+              return false;
+            } else {
+              this.dialog_error = false;
+              this.dialogError = '';
+              let accountName = this.$refs.accountName[0].value;
+              let realName = this.$refs.realName[0].value;
+              let phone = this.$refs.phone[0].value;
+              let xfdm = this.$refs.xfdm[0].value;
+              let formDate = {'userName': accountName, 'realName': realName, 'password': md5('88888888'), 'phone': phone, 'xfdm': xfdm, 'picked': 'open'};
+              this.$http.post('/rbac/mvc/user/add', formDate).then((response) => {
+                this.dialogClose();
+                this.hintShow();
+                store.commit('changeContent', '用户新增成功');
+                this.getUserInfoList();
+              });
+            }
         },
         // 修改用户信息
         changeUserInfo() {
-          console.log(this.$store.getters.getEditItem);
+          this.regUser();
+          console.log(this.$store.getters.getStateUserId);
+          let accountName = this.$refs.accountName[0].value;
+          let realName = this.$refs.realName[0].value;
+          let phone = this.$refs.phone[0].value;
+          let formDate = {'userId': '' + this.$store.getters.getStateUserId, 'userName': accountName, 'realName': realName, 'phone': phone};
+          this.$http.post('/rbac/mvc/user/update', formDate).then((response) => {
+            this.dialogClose();
+            this.hintShow();
+            store.commit('changeContent', '用户信息修改成功');
+            this.getUserInfoList();
+          });
         },
         // 重置密码
         confirmChange() {
           let formDate = {'userId': '' + this.$store.getters.getStateUserId, 'password': md5('88888888')};
           this.$http.post('/rbac/mvc/user/resetPassword', formDate).then((response) => {
+            this.dialogClose();
+            this.hintShow();
+            store.commit('changeContent', '密码重置成功');
             this.getUserInfoList();
           });
         },
@@ -166,6 +203,9 @@
         confirmDelete() {
           let formDate = {'userId': '' + this.$store.getters.getStateUserId};
           this.$http.post('/rbac/mvc/user/delete', formDate).then((response) => {
+            this.dialogClose();
+            this.hintShow();
+            store.commit('changeContent', '用户删除成功');
             this.getUserInfoList();
           });
         }

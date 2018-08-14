@@ -80,7 +80,7 @@
       },
       computed: {
         totalPage() {
-          return Math.ceil(this.totalCount / this.pageSize);
+          return Math.ceil(this.totalCount / this.pageSize) || 0;
         }
       },
       watch: {

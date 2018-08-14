@@ -5,13 +5,13 @@
         <div class="search_conditions">
           <div class="search_item">
             <div class="search_label">账号名称：</div>
-            <input type="text" class="search_input">
+            <input type="text" v-model="userName" class="search_input">
           </div>
           <div class="search_item">
             <div class="search_label">用户姓名：</div>
-            <input type="text" class="search_input">
+            <input type="text" v-model="realName" class="search_input">
           </div>
-          <div class="search_btn blue-btn">查询</div>
+          <div class="search_btn blue-btn" @click="queryBtn">查询</div>
           <div class="add_btn blue-btn" @click="newUsers">新增</div>
         </div>
       </div>
@@ -58,6 +58,8 @@
       return {
         totalCount: 0,
         pageSize: 20,
+        userName: '',
+        realName: '',
         firstAdd: '设置-用户设置',
         currentAdd: '用户设置',
         value: '',
@@ -71,6 +73,15 @@
       // 用户操作之后，重新获取新的用户列表
       getUserInfoList() {
         let formDate = {'currentPage': '1', 'pageSize': '20'};
+        this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
+          this.totalCount = response.count;
+          this.$store.commit('changeList', response.list);
+          this.pageSize = response.pageSize;
+        });
+      },
+      // 查询列表
+      queryBtn() {
+        let formDate = {'currentPage': '1', 'pageSize': '20', 'userName': this.userName, 'realName': this.realName};
         this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
           this.totalCount = response.count;
           this.$store.commit('changeList', response.list);
@@ -103,14 +114,14 @@
           },
           {
             editLabel: '手机号码',
-            vModel: 'userTel',
+            vModel: 'phone',
             placeholder: '请输入手机号码',
-            type: 'text',
+            type: 'number',
             value: ''
           },
           {
             editLabel: '税号',
-            vModel: 'userEni',
+            vModel: 'xfdm',
             placeholder: '请输入税号',
             type: 'text',
             value: ''
@@ -122,11 +133,10 @@
       },
       // 修改
       modifyBtn(id) {
-        console.log(id);
         this.$http.get('/rbac/mvc/user/getUserInfo?userId=' + id).then((response) => {
           let user = response.user;
           this.$store.commit('S');
-          this.$store.commit('changeDialogTitle', '新增用户信息');
+          this.$store.commit('changeDialogTitle', '修改用户信息');
           let editItem = [
             {
               editLabel: '账号名称',
@@ -144,16 +154,22 @@
             },
             {
               editLabel: '手机号码',
-              vModel: 'userTel',
+              vModel: 'phone',
               placeholder: '请输入手机号码',
-              type: 'text',
+              type: 'number',
               value: user.phone
             }
           ];
           this.$store.commit('changeEditItem', editItem);
-          this.$store.commit('changeBtnFunction', 'newUsersBtn');
+          this.$store.commit('changeBtnFunction', 'changeUserInfo');
           this.$store.commit('changeStateShow', true);
-          console.log(editItem);
+          // 修改用户信息，填入input内容
+          let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
+          for (let i = 0; i < 3; i++) {
+            this.$nextTick(function () {
+              dialogInput[i].value = editItem[i].value || '';
+            });
+          }
         });
       },
       // 重置密码
