@@ -11,7 +11,7 @@
           <div class="search_label">发票状态：</div>
           <span class="icon-dropDown"></span>
           <select v-model="dictCode" class="search_select">
-            <option :value="item.dictCode" v-for="item in taskType">{{item.dictName}}</option>
+            <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
           </select>
         </div>
         <div class="search_item">
@@ -61,7 +61,7 @@
         currentAdd: '发票状态统计查询',
         iframeSrc: '',
         dictCode: '',
-        taskType: '',
+        taskTypeList: '',
         kpdwdm: '',
         jqbh: ''
       };
@@ -74,12 +74,11 @@
       // 获取发票状态
       gitType() {
         this.$http.get('/api/getSysDictByType?dictType=预警').then((response) => {
-          console.log(response);
-          this.taskType = response;
+          this.taskTypeList = response;
         });
       },
       getList() {
-        let formDate = {'pageNum': '1', 'pageSize': '' + this.pageSize, 'dictCode': this.dictCode, 'kpdwdm': '', 'jqbh': this.jqbh};
+        let formDate = {'pageNum': '1', 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'kpdwdm': '', 'jqbh': this.jqbh};
         this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);

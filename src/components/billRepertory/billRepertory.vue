@@ -64,7 +64,6 @@
         getList() {
           let formDate = {'pageNum': '1', 'pageSize': '' + this.pageSize, 'nsrsbhs': [this.nsrsbhs], 'jqbhs': [this.jqbhs]};
           this.$http.post('/api/queryInvoiceStore', formDate).then((response) => {
-            console.log(response);
             this.totalCount = response.total;
             this.$store.commit('changeList', response.list);
             this.pageSize = response.pageSize;
