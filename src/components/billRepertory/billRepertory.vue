@@ -5,14 +5,14 @@
         <div class="search_conditions">
           <div class="search_item">
             <div class="search_label">税号：</div>
-            <input type="text" class="search_input">
+            <input type="text" v-model="nsrsbhs" class="search_input">
           </div>
           <div class="search_item">
             <div class="search_label">机器编号：</div>
-            <input type="text" class="search_input">
+            <input type="text" v-model="jqbhs" class="search_input">
           </div>
-          <div class="search_btn blue-btn">查询</div>
-          <div class="export_btn blue-btn">导出</div>
+          <div class="search_btn blue-btn" @click="queryBtn">查询</div>
+          <div class="export_btn blue-btn" @click="exportBtn">导出</div>
         </div>
       </div>
       <div class="search_table">
@@ -29,10 +29,10 @@
           <tbody>
             <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index < pageSize">
               <td>{{index + 1}}</td>
-              <td>{{item.EMAIL}}</td>
-              <td>{{item.FPQQLSH}}</td>
-              <td>{{item.FPZT}}</td>
-              <td>{{item.GMF_NSRSBH}}</td>
+              <td>{{item.nsrsbh}}</td>
+              <td>{{item.jqbh}}</td>
+              <td>{{item.nsrsbh}}</td>
+              <td>{{item.zdbs}}</td>
             </tr>
           </tbody>
         </table>
@@ -49,9 +49,12 @@
       data() {
         return {
           totalCount: 0,
-          pageSize: 0,
+          pageSize: 20,
           firstAdd: '统计查询',
-          currentAdd: '发票库存查询'
+          currentAdd: '发票库存查询',
+          iframeSrc: '',
+          nsrsbhs: '',
+          jqbhs: ''
         };
       },
       created () { // 初始化时currentPage赋值
@@ -59,9 +62,10 @@
       },
       methods: {
         getList() {
-          let formDate = {'currentPage': '1', 'pageSize': '' + this.pageSize};
-          this.$http.post('/api/mvc/EntinvoiceRecord/entIRList.do', formDate).then((response) => {
-            this.totalCount = response.count;
+          let formDate = {'pageNum': '1', 'pageSize': '' + this.pageSize, 'nsrsbhs': [this.nsrsbhs], 'jqbhs': [this.jqbhs]};
+          this.$http.post('/api/queryInvoiceStore', formDate).then((response) => {
+            console.log(response);
+            this.totalCount = response.total;
             this.$store.commit('changeList', response.list);
             this.pageSize = response.pageSize;
           });
@@ -70,6 +74,14 @@
         updatePageSize(data) {
           this.pageSize = data.page;// 改变了父组件的值
           this.getList();
+        },
+        // 查询
+        queryBtn() {
+          this.getList();
+        },
+        // 导出
+        exportBtn() {
+          window.open('/api/exportInvoiceStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
         }
       },
       components: {

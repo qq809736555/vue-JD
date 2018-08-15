@@ -2,19 +2,19 @@
     <div class="pagination_wrapper">
       <ul class="pagesInner">
         <li class="page">
-          <div class="page_btn" :class="currentPage > 1 ? '' : 'forbidClick'" @click="go(1)">首页</div>
+          <div class="page_btn" :class="pageNum > 1 ? '' : 'forbidClick'" @click="go(1)">首页</div>
         </li>
         <li class="page">
-          <div class="page_btn" :class="currentPage > 1 ? '' : 'forbidClick'" @click="go(currentPage - 1)">上页</div>
+          <div class="page_btn" :class="pageNum > 1 ? '' : 'forbidClick'" @click="go(pageNum - 1)">上页</div>
         </li>
         <li class="page">
-          <div class="page_btn" @click="go(currentPage)">第{{currentPage}}页</div>
+          <div class="page_btn" @click="go(pageNum)">第{{pageNum}}页</div>
         </li>
         <li class="page">
-          <div class="page_btn" :class="currentPage < totalPage ? '' : 'forbidClick'" @click="go(currentPage + 1)">下页</div>
+          <div class="page_btn" :class="pageNum < totalPage ? '' : 'forbidClick'" @click="go(pageNum + 1)">下页</div>
         </li>
         <li class="page">
-          <div class="page_btn" :class="currentPage < totalPage ? '' : 'forbidClick'" @click="go(totalPage)">尾页</div>
+          <div class="page_btn" :class="pageNum < totalPage ? '' : 'forbidClick'" @click="go(totalPage)">尾页</div>
         </li>
         <li class="page">
           每页
@@ -50,7 +50,7 @@
       },
       data () {
         return {
-          currentPage: 1,
+          pageNum: 1,
           page: 1,
           jumpPage: 0,
           changePageSize: 0
@@ -67,13 +67,21 @@
           } else if (page > this.totalPage) {
             page = this.totalPage;
             return false;
-          } else if (page === this.currentPage) {
+          } else if (page === this.pageNum) {
             return false;
           } else {
-            let formDate = {'currentPage': '' + page, 'pageSize': '' + this.pageSize};
-            this.$http.post('/api/mvc/EntinvoiceRecord/entIRList.do', formDate).then((response) => {
+            let formDate = {'pageNum': '' + page, 'pageSize': '' + this.pageSize};
+            let url = '';
+            if (this.$route.path.indexOf('billRepertory') !== -1) {
+              // 发票库存统计
+              url = '/api/queryInvoiceStore';
+            } else if (this.$route.path.indexOf('userSetting') !== -1) {
+              // 用户设置
+              url = '/rbac/mvc/user/getUserList';
+            }
+            this.$http.post(url, formDate).then((response) => {
               this.$store.commit('changeList', response.list);
-              this.currentPage = parseInt(page, 10);
+              this.pageNum = parseInt(page, 10);
             });
           }
         }

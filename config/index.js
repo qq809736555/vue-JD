@@ -19,7 +19,7 @@ module.exports = {
         changeOrigin: true,
       },
       '/api':{
-        target: 'http://192.168.2.83:8080', //测试环境
+        target: 'http://192.168.2.83:8099', //测试环境
         pathRewrite: {
           '^/api': '/api'
         },
