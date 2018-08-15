@@ -75,6 +75,9 @@
             if (this.$route.path.indexOf('billRepertory') !== -1) {
               // 发票库存统计
               url = '/api/queryInvoiceStore';
+            } else if (this.$route.path.indexOf('invoiceState') !== -1) {
+              // 发票状态
+              url = '/api/queryInvoiceStates';
             } else if (this.$route.path.indexOf('userSetting') !== -1) {
               // 用户设置
               url = '/rbac/mvc/user/getUserList';
