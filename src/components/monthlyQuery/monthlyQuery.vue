@@ -67,7 +67,7 @@
         return {
           firstAdd: '查询-统计查询',
           currentAdd: '月度报表查询/导出',
-          value: ''
+          value: new Date()
         };
       },
       components: {
