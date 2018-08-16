@@ -1,21 +1,8 @@
 <template>
   <div class="oilProducts">
     <navAddress :first-add="firstAdd" :current-add="currentAdd"></navAddress>
-    <div class="search_form">
-      <div class="search_conditions">
-        <div class="search_item">
-          <div class="search_label">税号：</div>
-          <input type="text" v-model="nsrsbhs" class="search_input">
-        </div>
-        <div class="search_item">
-          <div class="search_label">机器编号：</div>
-          <input type="text" v-model="jqbhs" class="search_input">
-        </div>
-        <div class="search_btn blue-btn">查询</div>
-        <div class="export_btn blue-btn">导出</div>
-      </div>
-    </div>
-    <div class="search_table">
+    <searchForm @tableShow="judgeTabShow" :type-show="typeShow"></searchForm>
+    <div class="search_table" v-show="tabIsShow">
       <table>
         <thead>
         <tr>
@@ -44,24 +31,24 @@
 <script type="text/ecmascript-6">
   import navAddress from 'components/navAddress/navAddress';
   import pagination from 'components/pagination/pagination';
+  import searchForm from 'components/searchForm/searchForm';
 
   export default {
     data() {
       return {
+        typeShow: false,
         totalCount: 0,
         pageSize: 20,
         firstAdd: '查询-统计查询',
         currentAdd: '成品油库存统计',
-        nsrsbhs: '',
-        jqbhs: ''
+        tabIsShow: false,
+        nsrsbh: '',
+        jqbh: ''
       };
-    },
-    created () { // 初始化时currentPage赋值
-      this.getList();
     },
     methods: {
       getList() {
-        let formDate = {'pageNum': '1', 'pageSize': '' + this.pageSize, 'nsrsbhs': [this.nsrsbhs], 'jqbhs': [this.jqbhs]};
+        let formDate = {'pageNum': '1', 'pageSize': '' + this.pageSize, 'nsrsbhs': this.nsrsbh, 'jqbhs': this.jqbh};
         this.$http.post('/api/queryOilProductStore', formDate).then((response) => {
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
@@ -73,18 +60,24 @@
         this.pageSize = data.page;// 改变了父组件的值
         this.getList();
       },
-      // 查询
-      queryBtn() {
+      // 改变当前页
+      currentPage(data) {
+        this.pageNum = data;
         this.getList();
       },
-      // 导出
-      exportBtn() {
-        window.open('/api/exportOilProductStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
+      // 判断列表展示
+      judgeTabShow(data) {
+        this.tabIsShow = data.tableShow;
+        this.pageNum = data.pageNum;
+        this.nsrsbh = data.nsrsbh;
+        this.jqbh = data.jqbh;
+        this.getList();
       }
     },
     components: {
       navAddress,
-      pagination
+      pagination,
+      searchForm
     }
   };
 </script>

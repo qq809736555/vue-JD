@@ -15,7 +15,7 @@
           <div class="add_btn blue-btn" @click="newUsers">新增</div>
         </div>
       </div>
-      <div class="search_table">
+      <div class="search_table" v-show="tableShow">
         <table>
           <thead>
           <tr>
@@ -43,7 +43,7 @@
           </tr>
           </tbody>
         </table>
-        <pagination :total-count = "totalCount" :page-size="pageSize" @showNewPageSize="updatePageSize"></pagination>
+        <pagination :total-count = "totalCount" :page-size="pageSize" :page-num="pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></pagination>
       </div>
     </div>
 </template>
@@ -57,22 +57,24 @@
     data() {
       return {
         totalCount: 0,
-        pageSize: 20,
+        pageSize: 1,
+        pageNum: 1,
         userName: '',
         realName: '',
         firstAdd: '设置-用户设置',
         currentAdd: '用户设置',
+        tableShow: false,
         value: '',
         btnFunction: ''
       };
     },
     created () { // 初始化时currentPage赋值
-      this.getUserInfoList();
+      // this.getUserInfoList();
     },
     methods: {
       // 用户操作之后，重新获取新的用户列表
       getUserInfoList() {
-        let formDate = {'currentPage': '1', 'pageSize': '20'};
+        let formDate = {'currentPage': this.pageNum, 'pageSize': '20', 'userName': this.userName, 'realName': this.realName};
         this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
           this.totalCount = response.count;
           this.$store.commit('changeList', response.list);
@@ -81,16 +83,17 @@
       },
       // 查询列表
       queryBtn() {
-        let formDate = {'currentPage': '1', 'pageSize': '20', 'userName': this.userName, 'realName': this.realName};
-        this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
-          this.totalCount = response.count;
-          this.$store.commit('changeList', response.list);
-          this.pageSize = response.pageSize;
-        });
+        this.tableShow = true;
+        this.getUserInfoList();
       },
       // 翻页组件修改每页显示条数
       updatePageSize(data) {
         this.pageSize = data.page;// 改变了父组件的值
+        this.getUserInfoList();
+      },
+      // 改变当前页
+      currentPage(data) {
+        this.pageNum = data;
         this.getUserInfoList();
       },
       // 新增用户

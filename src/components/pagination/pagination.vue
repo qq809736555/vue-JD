@@ -19,6 +19,7 @@
         <li class="page">
           每页
           <select name="" class="page_select" v-model="changePageSize">
+            <option value="1">1</option>
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
@@ -46,14 +47,18 @@
         pageSize: { // 总页数
           type: Number,
           default: 1
+        },
+        pageNum: { // 总页数
+          type: Number,
+          default: 1
         }
       },
       data () {
         return {
-          pageNum: 1,
           page: 1,
           jumpPage: 0,
-          changePageSize: 0
+          changePageSize: 0,
+          sumPage: 0
         };
       },
       created () {
@@ -70,22 +75,7 @@
           } else if (page === this.pageNum) {
             return false;
           } else {
-            let formDate = {'pageNum': '' + page, 'pageSize': '' + this.pageSize};
-            let url = '';
-            if (this.$route.path.indexOf('billRepertory') !== -1) {
-              // 发票库存统计
-              url = '/api/queryInvoiceStore';
-            } else if (this.$route.path.indexOf('invoiceState') !== -1) {
-              // 发票状态
-              url = '/api/queryInvoiceStates';
-            } else if (this.$route.path.indexOf('userSetting') !== -1) {
-              // 用户设置
-              url = '/rbac/mvc/user/getUserList';
-            }
-            this.$http.post(url, formDate).then((response) => {
-              this.$store.commit('changeList', response.list);
-              this.pageNum = parseInt(page, 10);
-            });
+            this.$emit('currentPage', parseInt(page, 10)); // 告诉父组件，子组件修改了pageNum的值
           }
         }
       },
