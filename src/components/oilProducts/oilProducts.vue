@@ -1,7 +1,7 @@
 <template>
   <div class="oilProducts">
     <navAddress :first-add="firstAdd" :current-add="currentAdd"></navAddress>
-    <searchForm @tableShow="judgeTabShow" :type-show="typeShow"></searchForm>
+    <searchForm @tableShow="judgeTabShow"></searchForm>
     <div class="search_table" v-show="tabIsShow">
       <table>
         <thead>
@@ -36,7 +36,6 @@
   export default {
     data() {
       return {
-        typeShow: false,
         totalCount: 0,
         pageSize: 20,
         firstAdd: '查询-统计查询',

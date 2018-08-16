@@ -1,21 +1,8 @@
 <template>
     <div class="monthlyQuery">
       <navAddress :first-add="firstAdd" :current-add="currentAdd"></navAddress>
-      <div class="search_form">
-        <div class="search_conditions">
-          <div class="search_item">
-            <div class="search_label">开票日期：</div>
-            <el-date-picker
-              v-model="value"
-              type="month"
-              placeholder="----年--月">
-            </el-date-picker>
-          </div>
-          <div class="search_btn blue-btn">查询</div>
-          <div class="export_btn blue-btn">导出</div>
-        </div>
-      </div>
-      <div class="search_table">
+      <searchForm @tableShow="judgeTabShow" :jqbh-show="JQBHShow" :data-show="dataShow"></searchForm>
+      <div class="search_table" v-show="tabIsShow">
         <div class="table_header">
           <p>开票数量统计</p>
         </div>
@@ -35,7 +22,7 @@
           </tbody>
         </table>
       </div>
-      <div class="search_table">
+      <div class="search_table" v-show="tabIsShow">
         <div class="table_header">
           <p>税率统计</p>
         </div>
@@ -61,19 +48,52 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import navAddress from 'components/navAddress/navAddress';
-    export default {
-      data() {
-        return {
-          firstAdd: '查询-统计查询',
-          currentAdd: '月度报表查询/导出',
-          value: new Date()
-        };
+  import navAddress from 'components/navAddress/navAddress';
+  import searchForm from 'components/searchForm/searchForm';
+
+  export default {
+    data() {
+      return {
+        JQBHShow: false,
+        dataShow: true,
+        firstAdd: '查询-统计查询',
+        currentAdd: '月度报表查询/导出',
+        tabIsShow: false
+      };
+    },
+    methods: {
+      getList() {
+        let formDate = {'nsrsbh': this.nsrsbh, 'kpyf': this.nowDate};
+        this.$http.post('/api/monthReport', formDate).then((response) => {
+          console.log(response);
+          this.totalCount = response.total;
+          this.$store.commit('changeList', response.list);
+          this.pageSize = response.pageSize;
+        });
       },
-      components: {
-        navAddress
+      // 翻页组件修改每页显示条数
+      updatePageSize(data) {
+        this.pageSize = data.page;// 改变了父组件的值
+        this.getList();
+      },
+      // 改变当前页
+      currentPage(data) {
+        this.pageNum = data;
+        this.getList();
+      },
+      // 判断列表展示
+      judgeTabShow(data) {
+        this.tabIsShow = data.tableShow;
+        this.nsrsbh = data.nsrsbh;
+        this.nowDate = data.nowDate;
+        this.getList();
       }
-    };
+    },
+    components: {
+      navAddress,
+      searchForm
+    }
+  };
 </script>
 
 <style lang="stylus" rel="stylesheet" scoped>

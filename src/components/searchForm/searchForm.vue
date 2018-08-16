@@ -2,6 +2,28 @@
     <div class="searchForm_wrapper">
       <div class="search_form">
         <div class="search_conditions">
+          <div class="search_item" v-show="dataShow">
+            <div class="search_label">开票日期：</div>
+            <el-date-picker
+              v-model="nowDate"
+              type="month"
+              placeholder="----年--月">
+            </el-date-picker>
+          </div>
+          <div class="search_item" v-show="scopShow">
+            <div class="search_label">开票日期：</div>
+            <el-date-picker
+              v-model="startTime"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+            <span class="line">-</span>
+            <el-date-picker
+              v-model="endTime"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+          </div>
           <div class="search_item">
             <div class="search_label">税号：</div>
             <span class="icon-dropDown"></span>
@@ -9,7 +31,7 @@
               <option v-for="option1 in shuiHao" :value="option1.nsrsbh" :key="option1.id">{{option1.nsrsbh}}</option>
             </select>
           </div>
-          <div class="search_item">
+          <div class="search_item" v-show="jqbhShow">
             <div class="search_label">机器编号：</div>
             <span class="icon-dropDown"></span>
             <select v-model="jqbh" class="search_select">
@@ -33,6 +55,18 @@
 <script type="text/ecmascript-6">
     export default {
       props: {
+        dataShow: {
+          type: Boolean,
+          default: false
+        },
+        scopShow: {
+          type: Boolean,
+          default: false
+        },
+        jqbhShow: {
+          type: Boolean,
+          default: true
+        },
         typeShow: {
           type: Boolean,
           default: false
@@ -40,6 +74,9 @@
       },
       data() {
         return {
+          nowDate: new Date(),
+          startTime: new Date(),
+          endTime: new Date(),
           nsrsbh: '',
           jqbh: '',
           dictCode: '',
@@ -64,7 +101,7 @@
         // 获取税号
         getSH() {
           this.$http.get('/rbac/mvc/sallerInfo/getByNsrsbh?xfdm=' + JSON.parse(window.localStorage.getItem('userInfo')).xfdm).then((response) => {
-            this.shuiHao = response.nsrsbhList;
+            this.shuiHao = response.nsrsbhList || [];
           });
         },
         // 获取发票状态
@@ -79,14 +116,32 @@
             tableShow: true,
             pageNum: 1,
             nsrsbh: this.nsrsbh,
-            jqbh: this.jqbh,
-            dictCode: this.dictCode || ''
+            jqbh: this.jqbh || '',
+            dictCode: this.dictCode || '',
+            nowDate: this.nowDate || new Date(),
+            startTime: this.startTime || new Date(),
+            endTime: this.endTime || new Date()
           };
           this.$emit('tableShow', data); // 告诉父组件，子组件改变
         },
         // 导出
         exportBtn() {
-          window.open('/api/exportInvoiceStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
+          console.log(this.$route.path);
+          let router = this.$route.path;
+          if (router.indexOf('billRepertory') !== -1) {
+            // 库存查询导出
+            window.open('/api/exportInvoiceStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
+          } else if (router.indexOf('billRepertory') !== -1) {
+            // 成品油查询导出
+            window.open('/api/exportOilProductStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
+          } else if (router.indexOf('monthlyQuery') !== -1) {
+            // 月度报表查询导出
+            window.open('/api/exportMonthReport?nsrsbh=' + this.nsrsbh + '&kpyf=' + this.nowDate);
+          } else if (router.indexOf('invoiceState') !== -1) {
+            // 发票状态查询导出
+            window.open('/api/exportInvoiceStates?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jq + '&taskType=' + this.dictCode);
+          }
+          // window.open('/api/exportInvoiceStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
         }
       }
     };

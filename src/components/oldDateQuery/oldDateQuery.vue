@@ -1,27 +1,8 @@
 <template>
   <div class="invoiceInventory">
     <navAddress :first-add="firstAdd" :current-add="currentAdd"></navAddress>
-    <div class="search_form">
-      <div class="search_conditions">
-        <div class="search_item">
-          <div class="search_label">开票日期：</div>
-          <el-date-picker
-            v-model="startTime"
-            type="date"
-            placeholder="选择日期">
-          </el-date-picker>
-          <span class="line">-</span>
-          <el-date-picker
-            v-model="endTime"
-            type="date"
-            placeholder="选择日期">
-          </el-date-picker>
-        </div>
-        <div class="search_btn blue-btn">查询</div>
-        <div class="export_btn blue-btn">导出</div>
-      </div>
-    </div>
-    <div class="search_table">
+    <searchForm @tableShow="judgeTabShow" :scop-show="scopShow" :jqbh-show="jqbhShow"></searchForm>
+    <div class="search_table" v-show="tabIsShow">
       <table>
         <thead>
         <tr>
@@ -54,25 +35,29 @@
 <script type="text/ecmascript-6">
   import navAddress from 'components/navAddress/navAddress';
   import pagination from 'components/pagination/pagination';
+  import searchForm from 'components/searchForm/searchForm';
 
   export default {
     data() {
       return {
-        startTime: new Date(),
-        endTime: new Date(),
+        scopShow: true,
+        jqbhShow: false,
         totalCount: 0,
-        pageSize: 0,
+        pageSize: 1,
+        pageNum: 1,
         firstAdd: '查询-统计查询',
-        currentAdd: '验旧数据查询/导出'
+        currentAdd: '验旧数据查询/导出',
+        tabIsShow: false,
+        nsrsbh: '',
+        jqbh: '',
+        startTime: new Date(),
+        endTime: new Date()
       };
-    },
-    created () { // 初始化时currentPage赋值
-      this.getList();
     },
     methods: {
       getList() {
-        let formDate = {'currentPage': '1', 'pageSize': '' + this.pageSize};
-        this.$http.post('/api/mvc/EntinvoiceRecord/entIRList.do', formDate).then((response) => {
+        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'startTime': this.startTime, 'endTime': this.endTime};
+        this.$http.post('/api/queryYjsj', formDate).then((response) => {
           this.totalCount = response.count;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;
@@ -82,11 +67,26 @@
       updatePageSize(data) {
         this.pageSize = data.page;// 改变了父组件的值
         this.getList();
+      },
+      // 改变当前页
+      currentPage(data) {
+        this.pageNum = data;
+        this.getList();
+      },
+      // 判断列表展示
+      judgeTabShow(data) {
+        this.tabIsShow = data.tableShow;
+        this.pageNum = data.pageNum;
+        this.nsrsbh = data.nsrsbh;
+        this.startTime = data.startTime;
+        this.endTime = data.endTime;
+        this.getList();
       }
     },
     components: {
       navAddress,
-      pagination
+      pagination,
+      searchForm
     }
   };
 </script>
