@@ -5,11 +5,11 @@
         <div class="search_conditions">
           <div class="search_item">
             <div class="search_label">账号名称：</div>
-            <input type="text" v-model="userName" class="search_input">
+            <input type="text" v-model="accountNo" class="search_input">
           </div>
           <div class="search_item">
             <div class="search_label">用户姓名：</div>
-            <input type="text" v-model="realName" class="search_input">
+            <input type="text" v-model="name" class="search_input">
           </div>
           <div class="search_btn blue-btn" @click="queryBtn">查询</div>
           <div class="add_btn blue-btn" @click="newUsers">新增</div>
@@ -57,10 +57,10 @@
     data() {
       return {
         totalCount: 0,
-        pageSize: 1,
+        pageSize: 5,
         pageNum: 1,
-        userName: '',
-        realName: '',
+        accountNo: '',
+        name: '',
         firstAdd: '设置-用户设置',
         currentAdd: '用户设置',
         tableShow: false,
@@ -74,7 +74,7 @@
     methods: {
       // 用户操作之后，重新获取新的用户列表
       getUserInfoList() {
-        let formDate = {'currentPage': this.pageNum, 'pageSize': '20', 'userName': this.userName, 'realName': this.realName};
+        let formDate = {'currentPage': this.pageNum, 'pageSize': '20', 'accountNo': this.accountNo, 'name': this.name};
         this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
           this.totalCount = response.count;
           this.$store.commit('changeList', response.list);

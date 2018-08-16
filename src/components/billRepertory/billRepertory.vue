@@ -37,7 +37,7 @@
       data() {
         return {
           totalCount: 0,
-          pageSize: 1,
+          pageSize: 5,
           pageNum: 1,
           firstAdd: '统计查询',
           currentAdd: '发票库存查询',

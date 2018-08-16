@@ -129,7 +129,7 @@
         },
         // 用户操作之后，重新获取新的用户列表
         getUserInfoList() {
-          let formDate = {'pageNum': '1', 'pageSize': '20'};
+          let formDate = {'pageNum': '1', 'pageSize': '5'};
           this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
             this.$store.commit('changeList', response.list);
           });

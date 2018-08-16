@@ -37,7 +37,7 @@
     data() {
       return {
         totalCount: 0,
-        pageSize: 20,
+        pageSize: 5,
         firstAdd: '查询-统计查询',
         currentAdd: '成品油库存统计',
         tabIsShow: false,

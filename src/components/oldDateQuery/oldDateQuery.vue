@@ -43,7 +43,7 @@
         scopShow: true,
         jqbhShow: false,
         totalCount: 0,
-        pageSize: 1,
+        pageSize: 5,
         pageNum: 1,
         firstAdd: '查询-统计查询',
         currentAdd: '验旧数据查询/导出',
