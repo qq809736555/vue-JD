@@ -126,12 +126,11 @@
         },
         // 导出
         exportBtn() {
-          console.log(this.$route.path);
           let router = this.$route.path;
           if (router.indexOf('billRepertory') !== -1) {
             // 库存查询导出
             window.open('/api/exportInvoiceStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
-          } else if (router.indexOf('billRepertory') !== -1) {
+          } else if (router.indexOf('oilProducts') !== -1) {
             // 成品油查询导出
             window.open('/api/exportOilProductStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
           } else if (router.indexOf('monthlyQuery') !== -1) {
@@ -139,9 +138,8 @@
             window.open('/api/exportMonthReport?nsrsbh=' + this.nsrsbh + '&kpyf=' + this.nowDate);
           } else if (router.indexOf('invoiceState') !== -1) {
             // 发票状态查询导出
-            window.open('/api/exportInvoiceStates?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jq + '&taskType=' + this.dictCode);
+            window.open('/api/exportInvoiceStates?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh + '&taskType=' + this.dictCode);
           }
-          // window.open('/api/exportInvoiceStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
         }
       }
     };

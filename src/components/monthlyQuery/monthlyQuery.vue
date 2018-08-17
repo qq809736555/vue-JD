@@ -13,11 +13,11 @@
           <tbody>
           <tr>
             <td width="16.666666%">合计</td>
-            <td width="16.666666%">100</td>
+            <td width="16.666666%">{{tabList.zfs}}</td>
             <td  width="16.666666%">正数发票份数</td>
-            <td width="16.666666%">20</td>
+            <td width="16.666666%">{{tabList.zsfs}}</td>
             <td width="16.666666%">负数发票份数</td>
-            <td  width="16.666666%">10</td>
+            <td  width="16.666666%">{{tabList.fsfs}}</td>
           </tr>
           </tbody>
         </table>
@@ -31,16 +31,24 @@
           <tr>税率统计</tr>
           </thead>
           <tbody>
-          <tr>
-            <td width="23%">项目名称</td>
-            <td width="11%">1</td>
-            <td width="11%">2</td>
-            <td width="11%">3</td>
-            <td width="11%">4</td>
-            <td width="11%">5</td>
-            <td width="11%">6</td>
-            <td width="11%">7</td>
-          </tr>
+            <tr>
+              <td width="10">项目名称</td>
+              <td width="15">销项正数金额</td>
+              <td width="15">销项负数金额</td>
+              <td width="15">实际销售金额</td>
+              <td width="15">销项正数税额</td>
+              <td width="15">销项负数税额</td>
+              <td width="15">实际销项税额</td>
+            </tr>
+            <tr>
+              <td width="10">项目名称</td>
+              <td width="15">销项正数金额</td>
+              <td width="15">销项负数金额</td>
+              <td width="15">实际销售金额</td>
+              <td width="15">销项正数税额</td>
+              <td width="15">销项负数税额</td>
+              <td width="15">实际销项税额</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -58,17 +66,15 @@
         dataShow: true,
         firstAdd: '查询-统计查询',
         currentAdd: '月度报表查询/导出',
-        tabIsShow: false
+        tabIsShow: false,
+        tabList: {}
       };
     },
     methods: {
       getList() {
         let formDate = {'nsrsbh': this.nsrsbh, 'kpyf': this.nowDate};
         this.$http.post('/api/monthReport', formDate).then((response) => {
-          console.log(response);
-          this.totalCount = response.total;
-          this.$store.commit('changeList', response.list);
-          this.pageSize = response.pageSize;
+          this.tabList = response;
         });
       },
       // 翻页组件修改每页显示条数

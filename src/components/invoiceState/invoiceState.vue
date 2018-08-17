@@ -10,7 +10,7 @@
           <th width="28%">税号</th>
           <th width="25%">机器编号</th>
           <th width="25%">发票标志</th>
-          <th width="15%">分发未开具发票份数</th>
+          <th width="15%">数量</th>
         </tr>
         </thead>
         <tbody>
