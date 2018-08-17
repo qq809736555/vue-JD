@@ -15,11 +15,11 @@
         </thead>
         <tbody>
         <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index <= pageSize">
-          <td>{{index}}</td>
-          <td>{{item.EMAIL}}</td>
-          <td>{{item.FPQQLSH}}</td>
-          <td>{{item.FPZT}}</td>
-          <td>{{item.GMF_NSRSBH}}</td>
+          <td>{{index+1}}</td>
+          <td>{{item.nsrsbh}}</td>
+          <td>{{item.jqbh}}</td>
+          <td>{{item.flbm}}</td>
+          <td>{{item.sysl}}</td>
         </tr>
         </tbody>
       </table>

@@ -17,13 +17,13 @@
         </thead>
         <tbody>
         <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index <= pageSize">
-          <td>{{index}}</td>
-          <td>{{item.FP_DM}}</td>
-          <td>{{item.JSHJ}}</td>
-          <td>{{item.FPQQLSH}}</td>
-          <td>{{item.FPQQLSH}}</td>
-          <td>{{item.KPRQ}}</td>
-          <td>{{item.KPRQ}}</td>
+          <td>{{index+1}}</td>
+          <td>{{item.fpdm}}</td>
+          <td>{{item.number}}</td>
+          <td>{{item.startNumber}}</td>
+          <td>{{item.endNumber}}</td>
+          <td>{{item.startTime}}</td>
+          <td>{{item.endTime}}</td>
         </tr>
         </tbody>
       </table>
@@ -58,7 +58,7 @@
       getList() {
         let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'startTime': this.startTime, 'endTime': this.endTime};
         this.$http.post('/api/queryYjsj', formDate).then((response) => {
-          this.totalCount = response.count;
+          this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;
         });

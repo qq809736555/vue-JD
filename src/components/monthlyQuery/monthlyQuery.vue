@@ -40,14 +40,14 @@
               <td width="15">销项负数税额</td>
               <td width="15">实际销项税额</td>
             </tr>
-            <tr>
-              <td width="10">项目名称</td>
-              <td width="15">销项正数金额</td>
-              <td width="15">销项负数金额</td>
-              <td width="15">实际销售金额</td>
-              <td width="15">销项正数税额</td>
-              <td width="15">销项负数税额</td>
-              <td width="15">实际销项税额</td>
+            <tr v-for="item in sjList" :key="item.id">
+              <td width="10">{{item.sl}}</td>
+              <td width="15">{{item.zsje}}</td>
+              <td width="15">{{item.fsje}}</td>
+              <td width="15">{{item.sjje}}</td>
+              <td width="15">{{item.zsse}}</td>
+              <td width="15">{{item.fsse}}</td>
+              <td width="15">{{item.sjse}}</td>
             </tr>
           </tbody>
         </table>
@@ -67,7 +67,8 @@
         firstAdd: '查询-统计查询',
         currentAdd: '月度报表查询/导出',
         tabIsShow: false,
-        tabList: {}
+        tabList: {},
+        sjList: {}
       };
     },
     methods: {
@@ -75,6 +76,7 @@
         let formDate = {'nsrsbh': this.nsrsbh, 'kpyf': this.nowDate};
         this.$http.post('/api/monthReport', formDate).then((response) => {
           this.tabList = response;
+          this.sjList = response.sjList;
         });
       },
       // 翻页组件修改每页显示条数

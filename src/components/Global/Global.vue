@@ -6,7 +6,8 @@
     export default {
       userName: /^[a-zA-Z0-9]{1,30}$/,
       realName: /^[\u4E00-\u9FA5a-zA-Z]{2,10}$/,
-      phone: /^1[0-9]{10}$/
+      phone: /^1[0-9]{10}$/,
+      regPassWord: /^.*([\u4E00-\u9FA5])+.*$/
     };
 </script>
 

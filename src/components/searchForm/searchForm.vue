@@ -41,7 +41,7 @@
             </select>
           </div>
           <div class="search_item" v-show="typeShow">
-            <div class="search_label">发票状态：</div>
+            <div class="search_label">发票标志：</div>
             <span class="icon-dropDown"></span>
             <select v-model="dictCode" class="search_select">
               <option value="">全部</option>
@@ -78,8 +78,11 @@
       data() {
         return {
           nowDate: new Date(),
+          CnowDate: '',
           startTime: new Date(),
+          CstartTime: '',
           endTime: new Date(),
+          CendTime: '',
           nsrsbh: '全部',
           Cnsrsbh: '',
           jqbh: '全部',
@@ -129,6 +132,14 @@
             this.taskTypeList = response;
           });
         },
+        //  日期处理函数
+        dateDeal(el) {
+          if (el < 10) {
+            return '0' + el;
+          } else {
+            return el;
+          }
+        },
         lastData() {
           if (this.nsrsbh !== '全部') {
             this.Cnsrsbh = this.nsrsbh;
@@ -143,6 +154,12 @@
           } else {
             this.CdictCode = this.dictCode;
           }
+          let dateA = new Date(this.startTime);
+          let dateB = new Date(this.endTime);
+          this.CstartTime = dateA.getFullYear() + this.dateDeal(dateA.getMonth() + 1) + this.dateDeal(dateA.getDate());
+          this.CendTime = dateB.getFullYear() + this.dateDeal(dateB.getMonth() + 1) + this.dateDeal(dateB.getDate());
+          let dateC = new Date(this.nowDate);
+          this.CnowTime = dateC.getFullYear() + this.dateDeal(dateC.getMonth() + 1);
         },
         // 查询
         queryBtn() {
@@ -153,9 +170,9 @@
             nsrsbh: this.Cnsrsbh,
             jqbh: this.Cjqbh || '',
             dictCode: this.CdictCode || '',
-            nowDate: this.nowDate || new Date(),
-            startTime: this.startTime || new Date(),
-            endTime: this.endTime || new Date()
+            nowDate: this.CnowTime || new Date(),
+            startTime: this.CstartTime || new Date(),
+            endTime: this.CendTime || new Date()
           };
           this.$emit('tableShow', data); // 告诉父组件，子组件改变
         },
@@ -163,19 +180,26 @@
         exportBtn() {
           let router = this.$route.path;
           this.lastData();
-          if (router.indexOf('billRepertory') !== -1) {
-            // 库存查询导出
-            window.open('/api/exportInvoiceStore?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh);
-          } else if (router.indexOf('oilProducts') !== -1) {
-            // 成品油查询导出
-            window.open('/api/exportOilProductStore?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh);
-          } else if (router.indexOf('monthlyQuery') !== -1) {
-            // 月度报表查询导出
-            window.open('/api/exportMonthReport?nsrsbh=' + this.Cnsrsbh + '&kpyf=' + this.nowDate);
-          } else if (router.indexOf('invoiceState') !== -1) {
-            // 发票状态查询导出
-            window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
-          }
+          this.$nextTick(function () {
+            if (router.indexOf('billRepertory') !== -1) {
+              // 库存查询导出
+              window.open('/api/exportInvoiceStore?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh);
+            } else if (router.indexOf('oilProducts') !== -1) {
+              // 成品油查询导出
+              window.open('/api/exportOilProductStore?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh);
+            } else if (router.indexOf('monthlyQuery') !== -1) {
+              // 月度报表查询导出
+              console.log('/api/exportMonthReport?nsrsbh=' + this.Cnsrsbh + '&kpyf=' + this.CnowTime);
+              window.open('/api/exportMonthReport?nsrsbh=' + this.Cnsrsbh + '&kpyf=' + this.CnowTime);
+            } else if (router.indexOf('oldDateQuery') !== -1) {
+              // 验旧数据查询导出
+              console.log(123);
+              window.open('/api/exportFpyjInfo?nsrsbh=' + this.Cnsrsbh + '&startTime=' + this.CstartTime + '&endTime=' + this.CendTime);
+            } else if (router.indexOf('invoiceState') !== -1) {
+              // 发票状态查询导出
+              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
+            }
+          });
         }
       }
     };

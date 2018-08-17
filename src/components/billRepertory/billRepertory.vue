@@ -18,8 +18,8 @@
               <td>{{index + 1}}</td>
               <td>{{item.nsrsbh}}</td>
               <td>{{item.jqbh}}</td>
-              <td>{{item.nsrsbh}}</td>
               <td>{{item.zdbs}}</td>
+              <td>{{item.fpfs}}</td>
             </tr>
           </tbody>
         </table>
