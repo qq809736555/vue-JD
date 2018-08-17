@@ -54,8 +54,6 @@
         endTime: new Date()
       };
     },
-    mounted() {
-    },
     methods: {
       getList() {
         let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'startTime': this.startTime, 'endTime': this.endTime};

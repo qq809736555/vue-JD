@@ -38,7 +38,7 @@
       return {
         typeShow: true,
         totalCount: 0,
-        pageSize: 1,
+        pageSize: 5,
         pageNum: 1,
         firstAdd: '查询-统计查询',
         currentAdd: '发票状态统计查询',

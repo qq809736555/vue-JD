@@ -28,6 +28,7 @@
             <div class="search_label">税号：</div>
             <span class="icon-dropDown"></span>
             <select @change="SHSelect" v-model="nsrsbh" class="search_select">
+              <option value="全部">全部</option>
               <option v-for="option1 in shuiHao" :value="option1.nsrsbh" :key="option1.id">{{option1.nsrsbh}}</option>
             </select>
           </div>
@@ -35,6 +36,7 @@
             <div class="search_label">机器编号：</div>
             <span class="icon-dropDown"></span>
             <select v-model="jqbh" class="search_select">
+              <option value="全部">全部</option>
               <option v-for="option2 in selection" :value="option2.jqbh" :key="option2.id">{{option2.jqbh}}</option>
             </select>
           </div>
@@ -42,6 +44,7 @@
             <div class="search_label">发票状态：</div>
             <span class="icon-dropDown"></span>
             <select v-model="dictCode" class="search_select">
+              <option value="">全部</option>
               <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
@@ -77,9 +80,12 @@
           nowDate: new Date(),
           startTime: new Date(),
           endTime: new Date(),
-          nsrsbh: '',
-          jqbh: '',
+          nsrsbh: '全部',
+          Cnsrsbh: '',
+          jqbh: '全部',
+          Cjqbh: '',
           dictCode: '',
+          CdictCode: '',
           taskTypeList: '',
           shuiHao: [],
           selection: []
@@ -92,7 +98,15 @@
       methods: {
         // 税号选择，机器编码对应改变
         SHSelect() {
-          this.$http.get('/api/getMachNumByNsrsbh?nsrsbh=' + this.nsrsbh).then((response) => {
+          if (this.nsrsbh === '全部') {
+            this.Cnsrsbh = '';
+            this.jqbh = '全部';
+            this.selection = [];
+            return;
+          } else {
+            this.Cnsrsbh = this.nsrsbh;
+          }
+          this.$http.get('/api/getMachNumByNsrsbh?nsrsbh=' + this.Cnsrsbh).then((response) => {
             for (var i = 0; i < response.length; i++) {
               this.selection.push(response[i]);
             }
@@ -102,6 +116,11 @@
         getSH() {
           this.$http.get('/rbac/mvc/sallerInfo/getByNsrsbh?xfdm=' + JSON.parse(window.localStorage.getItem('userInfo')).xfdm).then((response) => {
             this.shuiHao = response.nsrsbhList || [];
+            if (this.nsrsbh === '全部') {
+              for (let i = 0; i < this.shuiHao.length; i++) {
+                this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
+              }
+            }
           });
         },
         // 获取发票状态
@@ -110,14 +129,30 @@
             this.taskTypeList = response;
           });
         },
+        lastData() {
+          if (this.nsrsbh !== '全部') {
+            this.Cnsrsbh = this.nsrsbh;
+          }
+          if (this.jqbh === '全部') {
+            this.Cjqbh = '';
+          } else {
+            this.Cjqbh = this.jqbh;
+          }
+          if (this.dictCode === '全部') {
+            this.CdictCode = '';
+          } else {
+            this.CdictCode = this.dictCode;
+          }
+        },
         // 查询
         queryBtn() {
+          this.lastData();
           let data = {
             tableShow: true,
             pageNum: 1,
-            nsrsbh: this.nsrsbh,
-            jqbh: this.jqbh || '',
-            dictCode: this.dictCode || '',
+            nsrsbh: this.Cnsrsbh,
+            jqbh: this.Cjqbh || '',
+            dictCode: this.CdictCode || '',
             nowDate: this.nowDate || new Date(),
             startTime: this.startTime || new Date(),
             endTime: this.endTime || new Date()
@@ -127,18 +162,19 @@
         // 导出
         exportBtn() {
           let router = this.$route.path;
+          this.lastData();
           if (router.indexOf('billRepertory') !== -1) {
             // 库存查询导出
-            window.open('/api/exportInvoiceStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
+            window.open('/api/exportInvoiceStore?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh);
           } else if (router.indexOf('oilProducts') !== -1) {
             // 成品油查询导出
-            window.open('/api/exportOilProductStore?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh);
+            window.open('/api/exportOilProductStore?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh);
           } else if (router.indexOf('monthlyQuery') !== -1) {
             // 月度报表查询导出
-            window.open('/api/exportMonthReport?nsrsbh=' + this.nsrsbh + '&kpyf=' + this.nowDate);
+            window.open('/api/exportMonthReport?nsrsbh=' + this.Cnsrsbh + '&kpyf=' + this.nowDate);
           } else if (router.indexOf('invoiceState') !== -1) {
             // 发票状态查询导出
-            window.open('/api/exportInvoiceStates?nsrsbh=' + this.nsrsbh + '&jqbh=' + this.jqbh + '&taskType=' + this.dictCode);
+            window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
           }
         }
       }

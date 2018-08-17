@@ -57,7 +57,7 @@
         return {
           page: 1,
           jumpPage: 0,
-          changePageSize: 0,
+          changePageSize: 5,
           sumPage: 0
         };
       },
