@@ -29,7 +29,7 @@
             <span class="icon-dropDown"></span>
             <select @change="SHSelect" v-model="nsrsbh" class="search_select">
               <option value="全部">全部</option>
-              <option v-for="option1 in shuiHao" :value="option1.nsrsbh" :key="option1.id">{{option1.nsrsbh}}</option>
+              <option v-for="option1 in shuiHao" :value="option1.nsrsbh" :key="option1.id">{{option1.nsrsbh}}<span>/{{option1.dwmc}}</span></option>
             </select>
           </div>
           <div class="search_item" v-show="jqbhShow">
