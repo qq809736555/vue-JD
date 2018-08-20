@@ -14,6 +14,7 @@
             <div class="search_label">开票日期：</div>
             <el-date-picker
               v-model="startTime"
+              :picker-options="pickerBeginDateBefore"
               type="date"
               placeholder="选择日期">
             </el-date-picker>
@@ -21,6 +22,7 @@
             <el-date-picker
               v-model="endTime"
               type="date"
+              :picker-options="pickerBeginDateAfter"
               placeholder="选择日期">
             </el-date-picker>
           </div>
@@ -82,6 +84,22 @@
           startTime: new Date(),
           CstartTime: '',
           endTime: new Date(),
+          pickerBeginDateBefore: {
+            disabledDate: (time) => {
+              let beginDateVal = this.endTime;
+              if (beginDateVal) {
+                return time.getTime() > beginDateVal;
+              }
+            }
+          },
+          pickerBeginDateAfter: {
+            disabledDate: (time) => {
+              let beginDateVal = this.startTime;
+              if (beginDateVal) {
+                return time.getTime() < beginDateVal;
+              }
+            }
+          },
           CendTime: '',
           nsrsbh: '全部',
           Cnsrsbh: '',
