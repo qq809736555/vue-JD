@@ -37,6 +37,7 @@
     import md5 from 'js-md5';
     import global from 'components/Global/Global';
     import store from '../../vuex/store';
+    import Bus from '../../common/js/bus.js';
 
     export default {
       data() {
@@ -129,10 +130,7 @@
         },
         // 用户操作之后，重新获取新的用户列表
         getUserInfoList() {
-          let formDate = {'pageNum': '1', 'pageSize': '5'};
-          this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
-            this.$store.commit('changeList', response.list);
-          });
+          Bus.$emit('changePagination', true);
         },
         // 用户添加、修改校验
         regUser() {
@@ -167,46 +165,53 @@
               let xfdm = this.$refs.xfdm[0].value;
               let formDate = {'userName': accountName, 'realName': realName, 'password': md5('88888888'), 'phone': phone, 'xfdm': xfdm, 'picked': 'open'};
               this.$http.post('/rbac/mvc/user/add', formDate).then((response) => {
-                this.dialogClose();
-                this.hintShow();
-                store.commit('changeContent', '用户新增成功');
-                this.getUserInfoList();
+                if (response === 'success') {
+                  this.dialogClose();
+                  this.hintShow();
+                  store.commit('changeContent', '用户新增成功');
+                  this.getUserInfoList();
+                }
               });
             }
         },
         // 修改用户信息
         changeUserInfo() {
           this.regUser();
-          console.log(this.$store.getters.getStateUserId);
           let accountName = this.$refs.accountName[0].value;
           let realName = this.$refs.realName[0].value;
           let phone = this.$refs.phone[0].value;
-          let formDate = {'userId': '' + this.$store.getters.getStateUserId, 'userName': accountName, 'realName': realName, 'phone': phone};
+          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'userName': accountName, 'realName': realName, 'phone': phone};
           this.$http.post('/rbac/mvc/user/update', formDate).then((response) => {
-            this.dialogClose();
-            this.hintShow();
-            store.commit('changeContent', '用户信息修改成功');
-            this.getUserInfoList();
+            if (response === 'success') {
+              this.dialogClose();
+              this.hintShow();
+              store.commit('changeContent', '用户信息修改成功');
+              this.getUserInfoList();
+            }
           });
         },
         // 重置密码
         confirmChange() {
           let formDate = {'userId': '' + this.$store.getters.getStateUserId, 'password': md5('88888888')};
           this.$http.post('/rbac/mvc/user/resetPassword', formDate).then((response) => {
-            this.dialogClose();
-            this.hintShow();
-            store.commit('changeContent', '密码重置成功');
-            this.getUserInfoList();
+            if (response === 'success') {
+              this.dialogClose();
+              this.hintShow();
+              store.commit('changeContent', '密码重置成功');
+              this.getUserInfoList();
+            }
           });
         },
         // 删除用户
         confirmDelete() {
           let formDate = {'userId': '' + this.$store.getters.getStateUserId};
           this.$http.post('/rbac/mvc/user/delete', formDate).then((response) => {
-            this.dialogClose();
-            this.hintShow();
-            store.commit('changeContent', '用户删除成功');
-            this.getUserInfoList();
+            if (response === 'success') {
+              this.dialogClose();
+              this.hintShow();
+              store.commit('changeContent', '用户删除成功');
+              this.getUserInfoList();
+            }
           });
         }
       }

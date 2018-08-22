@@ -38,17 +38,18 @@
 </template>
 
 <script type="text/ecmascript-6">
+
     export default {
       props: {
         totalCount: { // 总页数
           type: Number,
-          default: 1
+          default: 0
         },
-        pageSize: { // 总页数
+        pageSize: { // 显示条数
           type: Number,
           default: 1
         },
-        pageNum: { // 总页数
+        pageNum: { // 当前页
           type: Number,
           default: 1
         }

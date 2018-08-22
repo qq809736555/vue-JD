@@ -29,7 +29,7 @@
           </thead>
           <tbody>
           <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index <= pageSize">
-            <td>{{index}}</td>
+            <td>{{index + 1}}</td>
             <td>{{item.userName}}</td>
             <td>{{item.realName}}</td>
             <td>{{item.phone}}</td>
@@ -52,6 +52,7 @@
   import navAddress from 'components/navAddress/navAddress';
   import pagination from 'components/pagination/pagination';
   import dialog from 'components/dialog/dialog';
+  import Bus from '../../common/js/bus.js';
 
   export default {
     data() {
@@ -71,12 +72,17 @@
     created () { // 初始化时currentPage赋值
       // this.getUserInfoList();
     },
+    mounted() {
+      Bus.$on('changePagination', (e) => {
+        this.getUserInfoList();
+      });
+    },
     methods: {
       // 用户操作之后，重新获取新的用户列表
       getUserInfoList() {
-        let formDate = {'currentPage': this.pageNum, 'pageSize': '20', 'accountNo': this.accountNo, 'name': this.name};
+        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'accountNo': this.accountNo, 'name': this.name};
         this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
-          this.totalCount = response.count;
+          this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;
         });
@@ -137,6 +143,7 @@
       // 修改
       modifyBtn(id) {
         this.$http.get('/rbac/mvc/user/getUserInfo?userId=' + id).then((response) => {
+          this.$store.commit('changeStateUserId', id);
           let user = response.user;
           this.$store.commit('S');
           this.$store.commit('changeDialogTitle', '修改用户信息');

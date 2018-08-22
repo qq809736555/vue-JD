@@ -42,6 +42,7 @@ axios.interceptors.response.use(function (response) {
     delCookie('JD_token');
     router.push('/login');
   } else {
+    console.log(123);
     store.commit('changeHint', true);
     store.commit('changeHintClass', 'errorHint');
     store.commit('changeContent', response.data.message);
