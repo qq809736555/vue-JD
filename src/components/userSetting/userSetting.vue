@@ -177,6 +177,7 @@
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
           for (let i = 0; i < 3; i++) {
             this.$nextTick(function () {
+              dialogInput[0].disabled = true;
               dialogInput[i].value = editItem[i].value || '';
             });
           }

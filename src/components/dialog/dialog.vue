@@ -64,6 +64,7 @@
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
           for (let i = 0; i < dialogInput.length; i++) {
             dialogInput[i].value = '';
+            dialogInput[i].disabled = false;
           }
         },
         // 请求成功提示hint
