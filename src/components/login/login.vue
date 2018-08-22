@@ -52,9 +52,9 @@
           let responseData = {'username': this.username, 'password': md5(this.password)};
           this.$http.post('/rbac/mvc/login', responseData).then((response) => {
             if (response instanceof Object) {
-              setCookie('fapiao_token', response.token);
+              setCookie('JD_token', response.token);
               window.localStorage.setItem('userInfo', JSON.stringify(response.user));
-              Vue.prototype.$http.defaults.headers.common['x-access-token'] = getCookie('fapiao_token') || '';
+              Vue.prototype.$http.defaults.headers.common['x-access-token'] = getCookie('JD_token') || '';
               this.loginError = false;
               this.errorMessage = '';
               this.$router.push('/');

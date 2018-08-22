@@ -18,13 +18,13 @@ Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
 
-if (!getCookie('fapiao_token') || getCookie('fapiao_token') === 'undefined') {
+if (!getCookie('JD_token') || getCookie('JD_token') === 'undefined') {
   router.push('/login');
 }
 
 Vue.prototype.$http = axios;
 
-Vue.prototype.$http.defaults.headers.common['x-access-token'] = getCookie('fapiao_token') || '';
+Vue.prototype.$http.defaults.headers.common['x-access-token'] = getCookie('JD_token') || '';
 
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
@@ -39,7 +39,7 @@ axios.interceptors.response.use(function (response) {
   if (response.data.code === '0000' || response.data.code === '9012') {
     return response.data.data;
   } else if (response.data.code === '5999') {
-    delCookie('fapiao_token');
+    delCookie('JD_token');
     router.push('/login');
   } else {
     store.commit('changeHint', true);

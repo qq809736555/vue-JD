@@ -63,7 +63,7 @@
         },
         loginOut() {
           this.$http.get('/rbac/mvc/logout').then(() => {
-            delCookie('fapiao_token');
+            delCookie('JD_token');
             this.$router.push('/login');
           });
         }
