@@ -13,6 +13,7 @@
           </div>
           <div class="search_btn blue-btn" @click="queryBtn">查询</div>
           <div class="add_btn blue-btn" @click="newUsers">新增</div>
+          <!--<div class="import_btn blue-btn" @click="importExcel">导入</div>-->
         </div>
       </div>
       <div class="search_table" v-show="tableShow">
@@ -92,6 +93,14 @@
         this.tableShow = true;
         this.getUserInfoList();
       },
+      // 导入excel
+      importExcel() {
+        this.$store.commit('S');
+        this.$store.commit('changeDialogTitle', '批量导入用户');
+        this.$store.commit('changeBtnFunction', 'importExcel');
+        this.$store.commit('changeStateShow', true);
+        this.$store.commit('changeImportShow', true);
+      },
       // 翻页组件修改每页显示条数
       updatePageSize(data) {
         this.pageSize = data.page;// 改变了父组件的值
@@ -126,7 +135,8 @@
             vModel: 'phone',
             placeholder: '请输入手机号码',
             type: 'number',
-            value: ''
+            value: '',
+            onInput: 'if(value.length > 11) value = value.slice(0,11)'
           },
           {
             editLabel: '税号',
@@ -167,7 +177,8 @@
               vModel: 'phone',
               placeholder: '请输入手机号码',
               type: 'number',
-              value: user.phone
+              value: user.phone,
+              onInput: 'if(value.length > 11) value = value.slice(0,11)'
             }
           ];
           this.$store.commit('changeEditItem', editItem);

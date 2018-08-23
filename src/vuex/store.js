@@ -8,12 +8,18 @@ const dialog = {
   state: {
     // 控制弹窗显示
     dialogShow: false,
+    // 弹框头部显示
     dialogTitle: '',
+    // 弹框内部input
     editItem: [],
+    // 确定按钮执行函数
     btnFunction: '',
+    // 启用停用显示
     stateShow: false,
     confirmChange: '',
-    selectUserId: ''
+    selectUserId: '',
+    // 是否显示导入文件
+    importShow: false
   },
   getters: {
     // 组件数据读取/输出，不能在这里直接修改状态
@@ -40,6 +46,9 @@ const dialog = {
     },
     getStateUserId(state) {
       return state.selectUserId;
+    },
+    getImportShow(state) {
+      return state.importShow;
     }
   },
   mutations: {
@@ -67,6 +76,9 @@ const dialog = {
     },
     changeStateUserId(state, selectUserId) {
       state.selectUserId = selectUserId;
+    },
+    changeImportShow(state, importShow) {
+      state.importShow = importShow;
     }
   }
 };

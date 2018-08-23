@@ -9,7 +9,7 @@
         <div class="dialog_error" v-show="dialog_error">{{dialogError}}</div>
           <div class="edit_item" v-for="item in this.$store.getters.getEditItem" :key="item.id" :style="item.style">
             <div class="edit_label">{{item.editLabel}}：</div>
-            <input :type="item.type" value="" class="edit_input" :ref="item.vModel">
+            <input :type="item.type" value="" class="edit_input" :ref="item.vModel" :oninput="item.onInput">
           </div>
           <div class="edit_item" style="display: none;">
             <div class="edit_label">状态：</div>
@@ -24,6 +24,11 @@
           </div>
           <!-- 重置密码等情况显示 -->
           <div class="confirmChange" v-if="this.$store.getters.getStateCChange !== ''">{{this.$store.getters.getStateCChange}}</div>
+          <!-- 批量导入用户 -->
+          <div class="importFile" v-if="this.$store.getters.getImportShow">
+            <div class="import_name">请选择Excel文件：</div>
+            <input class="upload" id="selectFile" @change="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+          </div>
           <div class="edit_btn">
             <div class="edit_confirm blue-btn" :name="this.$store.getters.getBtnFunction" @click="dialogConfirm">确认</div>
             <div class="edit_cancel blue-btn" @click="dialogClose">取消</div>
@@ -39,6 +44,7 @@
     import store from '../../vuex/store';
     import Bus from '../../common/js/bus.js';
 
+    const XLSX = require('xlsx');
     export default {
       data() {
         return {
@@ -57,10 +63,15 @@
         // 弹窗关闭
         dialogClose() {
           this.$store.commit('S');
+          this.$store.commit('changeDialogTitle', '');
+          this.$store.commit('changeEditItem', '');
+          this.$store.commit('changeBtnFunction', '');
           this.$store.commit('changeStateShow', false);
+          this.$store.commit('changeStateCChange', '');
+          this.$store.commit('changeStateUserId', '');
+          this.$store.commit('changeImportShow', false);
           this.dialog_error = false;
           this.dialogError = '';
-          this.$store.commit('changeStateCChange', '');
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
           for (let i = 0; i < dialogInput.length; i++) {
             dialogInput[i].value = '';
@@ -84,6 +95,10 @@
           } else if (this.$store.getters.getBtnFunction === 'newUsersBtn') {
             // 新建用户
             this.newUsersBtn();
+            return false;
+          } else if (this.$store.getters.getBtnFunction === 'importExcel') {
+            // 导入用户
+            this.importExcel();
             return false;
           } else if (this.$store.getters.getBtnFunction === 'changeUserInfo') {
             // 修改用户信息
@@ -132,6 +147,60 @@
         // 用户操作之后，重新获取新的用户列表
         getUserInfoList() {
           Bus.$emit('changePagination', true);
+        },
+        //  选择Excel文件
+        fixData(data) {
+          var o = '';
+          var l = 0;
+          var w = 10240;
+          for (; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+          o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+          return o;
+        },
+        selectFile() {
+          let file = event.currentTarget.files[0];
+
+          if (file === undefined) {
+            return;
+          }
+
+          let rABS = false; // 是否将文件读取为二进制字符串
+
+          let reader = new FileReader();
+          FileReader.prototype.readAsBinaryString = function(f) {
+            let binary = '';
+            let rABS = false; // 是否将文件读取为二进制字符串
+            let wb; // 读取完成的数据
+            let outData; // 得到最终要的数据
+            reader.onload = function() {
+              let bytes = new Uint8Array(reader.result);
+              let length = bytes.byteLength;
+              for (let i = 0; i < length; i++) {
+                binary += String.fromCharCode(bytes[i]);
+              }
+              if (rABS) {
+                wb = XLSX.read(btoa(this.fixData(binary)), {
+                  // 手动转化
+                  type: 'base64'
+                });
+              } else {
+                wb = XLSX.read(binary, {
+                  type: 'binary'
+                });
+              }
+              outData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]); // outdata就是你想要的东西
+              console.log(outData);
+            };
+            reader.readAsArrayBuffer(file);
+          };
+          if (rABS) {
+            reader.readAsArrayBuffer(file);
+          } else {
+            reader.readAsBinaryString(file);
+          }
+        },
+        // 用户批量导入
+        importExcel() {
         },
         // 用户添加、修改校验
         regUser() {
@@ -293,6 +362,13 @@
               margin-left 8px
         .confirmChange
           padding 20px 0
+        .importFile
+          .import_name
+            padding-bottom 20px
+          .upload
+            height 36px
+            padding 8px 5px
+            font-size 12px
         .edit_btn
           width 100%
           height auto
