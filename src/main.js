@@ -7,8 +7,8 @@ import 'common/stylus/base.styl';
 import 'common/stylus/common.styl';
 import 'common/stylus/icon.css';
 import {getCookie, delCookie} from './common/js/cookie';
-import Blob from './common/js/excel/Blob.js';
-import Export2Excel from './common/js/excel/Export2Excel.js';
+import './common/js/excel/Blob.js';
+import './common/js/excel/Export2Excel.js';
 // axios 配置
 import axios from 'axios';
 import store from './vuex/store';
