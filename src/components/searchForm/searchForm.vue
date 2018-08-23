@@ -128,6 +128,7 @@
             this.Cnsrsbh = this.nsrsbh;
           }
           this.$http.get('/api/getMachNumByNsrsbh?nsrsbh=' + this.Cnsrsbh).then((response) => {
+            this.selection.length = 0;
             for (var i = 0; i < response.length; i++) {
               this.selection.push(response[i]);
             }
