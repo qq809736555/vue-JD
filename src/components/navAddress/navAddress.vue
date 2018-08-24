@@ -1,10 +1,11 @@
 <template>
   <div class="navAddress_wrapper">
+    <span class="currentPosition">当前位置：</span>
     <span class="parentAdd">首页</span>
-    <span class="separated">/</span>
-    <span class="firstAdd">{{firstAdd}}</span>
-    <span class="separated">/</span>
-    <span class="currentAdd">{{currentAdd}}</span>
+    <span class="separated" v-if="firstShow">/</span>
+    <span class="firstAdd" v-if="firstShow">{{firstAdd}}</span>
+    <span class="separated" v-if="secondShow">/</span>
+    <span class="secondAdd" v-if="secondShow">{{secondAdd}}</span>
   </div>
 </template>
 
@@ -15,9 +16,17 @@
           type: String,
           defaults: ''
         },
-        currentAdd: {
+        secondAdd: {
           type: String,
           defaults: ''
+        },
+        firstShow: {
+          type: Boolean,
+          defaults: false
+        },
+        secondShow: {
+          type: Boolean,
+          defaults: false
         }
       }
     };
@@ -25,19 +34,17 @@
 
 <style lang="stylus" rel="stylesheet" scoped>
   .navAddress_wrapper
-    width 100%
-    height 35px
-    line-height 35px
-    padding 0 30px
-    color #33CCFF
-    background #e6ebf2
-    border-radius 5px
-    box-shadow 0 3px 5px 0 rgba(210,210,210,0.5)
+    margin auto
+    width 1200px
+    height 45px
+    line-height 60px
+    padding-left 230px
+    color #aaaaaa
+    background #e0e0e0
+    span
+      color #aaaaaa
+    .currentPosition
+      padding-right 20px
     .separated
-      color #49aafb
-      padding 0 10px
-    .currentAdd
-      color #33CCFF
-    .parentAdd, .firstAdd
-      color #169BD5
+      padding 0 5px
 </style>

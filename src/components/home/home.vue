@@ -1,12 +1,13 @@
 <template>
   <div class="home_wrapper">
     <v-header :real-name="userInfo.realName"></v-header>
+    <navAddress :first-add="firstAdd" :second-add="secondAdd" :first-show="firstShow" :second-show="secondShow"></navAddress>
     <div class="content_wrapper">
       <!-- 左侧菜单 -->
       <div class="left_bar">
         <div class="menu_item">
           <div class="first_menu" v-for="(item, index) in resourceList" :key="item.id" @click="showSeconedMenu(index, $event)">
-            <p class="first_menu_p" :class="index === showIndex? 'select_firstMenu' : ''"><span class="icon-dropDown"></span>{{item.name}}</p>
+            <p class="first_menu_p" :class="index === showIndex? 'select_firstMenu' : ''"><span class="icon-add"></span>{{item.name}}</p>
             <div class="second_menu" :class="index === showIndex? 'select_secondMenu' : ''">
               <div class="second_menu_item" v-for="child in item.children" :key="child.id">
                 <router-link :to="child.url">
@@ -27,13 +28,17 @@
     <!-- 弹窗部分 -->
     <v-dialog></v-dialog>
     <v-hint></v-hint>
+    <!-- loading -->
+    <v-loading></v-loading>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import header from 'components/header/header';
+  import navAddress from 'components/navAddress/navAddress';
   import dialog from 'components/dialog/dialog';
   import hint from 'components/hint/hint';
+  import vueLoading from 'components/vueLoading/vueLoading';
 
   export default {
     data() {
@@ -41,7 +46,11 @@
         userInfo: {},
         userId: JSON.parse(window.localStorage.getItem('userInfo')).id,
         resourceList: {},
-        showIndex: -1
+        showIndex: -1,
+        firstAdd: '',
+        secondAdd: '',
+        firstShow: false,
+        secondShow: false
       };
     },
     mounted() {
@@ -50,6 +59,31 @@
       this.navData();
     },
     methods: {
+      breadCrumbShow() {
+        this.$nextTick(() => {
+          let firstAdd = document.getElementsByClassName('select_firstMenu')[0].innerText;
+          this.firstAdd = firstAdd;
+          let secondAdd = document.getElementsByClassName('select_secondMenu')[0].getElementsByClassName('active')[0].innerText;
+          this.secondAdd = secondAdd;
+        });
+      },
+      breadCrumb() {
+        if (this.$route.path === '/') {
+          this.firstShow = false;
+          this.secondShow = false;
+          this.showIndex = -1;
+        } else {
+          this.firstShow = true;
+          this.secondShow = true;
+          if (this.$route.path.indexOf('user') > 0) {
+            this.showIndex = 1;
+            this.breadCrumbShow();
+          } else {
+            this.showIndex = 0;
+            this.breadCrumbShow();
+          }
+        }
+      },
       getUserInfo() {
         let url = '/rbac/mvc/user/getUserInfo?userId=' + this.userId;
         this.$http.get(url, {emulateJSON: true}).then((response) => {
@@ -64,7 +98,7 @@
       },
       showSeconedMenu(index, event) {
         let targetClassName = '';
-        if (event.target.className === 'icon-dropDown') {
+        if (event.target.className === 'icon-add') {
           targetClassName = event.target.parentNode.className;
         } else {
           targetClassName = event.target.className;
@@ -79,7 +113,19 @@
     components: {
       'v-header': header,
       'v-dialog': dialog,
-      'v-hint': hint
+      'v-hint': hint,
+      navAddress,
+      'v-loading': vueLoading
+    },
+    watch: {
+      $route() {
+        this.breadCrumb();
+      },
+      resourceList() {
+        this.$nextTick(() => {
+          this.breadCrumb();
+        });
+      }
     }
   };
 </script>
@@ -89,64 +135,69 @@
     width 100%
     height auto
     min-width 1200px
+    min-height 100%
     margin auto
+    background #f5f5f5
     .content_wrapper
-      width 100%
+      margin auto
+      width 1200px
       height auto
-      background #f9f9f9
       display flex
       .left_bar
-        flex 0 0 170px
+        flex 0 0 180px
         .menu_item
           position relative
           font-size 12px
-          height auto
-          color #666
-          background #eef1f6
+          height 100%
+          color #333333
+          background #e0e0e0
           cursor pointer
           .first_menu
             width 100%
             height auto
             .first_menu_p
               position relative
-              padding-left 40px
-              height 45px
-              line-height 45px
+              padding-left 50px
+              height 30px
+              line-height 30px
+              font-size 12px
               span
                 position absolute
                 left 20px
-                top 16px
-                color #777
+                top 9px
+                color #e2231a
                 margin-right 5px
                 font-size 12px
                 transition all linear 0.1s
-                transform rotate(-90deg)
               &.select_firstMenu
+                background #e2231a
+                color #fff
                 span
-                  transform rotate(0deg)
+                  color #fff
+                  &::before
+                    content "\e903";
             .second_menu
-              background #e4e8f1
               height 0
               overflow hidden
               transition all linear 2s
               &.select_secondMenu
                 height auto
               .second_menu_item
-                height 35px
-                line-height 35px
+                height 30px
+                line-height 30px
                 a
                   display block
-                  padding-left 30px
+                  padding-left 50px
                   width 100%
                   height 100%
+                  font-size 12px
                   &.active
-                    background  #c8dff0
-                    color #4a4a4a
+                    color #e2231a
       .right_content
         flex 1
-        min-height 600px
+        min-height 470px
         .rightCon_wrapper
-          padding 15px 10px
+          padding 20px 0 0 20px
           width 100%
           height 100%
 </style>
