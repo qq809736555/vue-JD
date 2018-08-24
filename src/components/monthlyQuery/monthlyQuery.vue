@@ -1,6 +1,5 @@
 <template>
     <div class="monthlyQuery">
-      <navAddress :first-add="firstAdd" :current-add="currentAdd"></navAddress>
       <searchForm @tableShow="judgeTabShow" :jqbh-show="JQBHShow" :data-show="dataShow"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_header">
@@ -56,7 +55,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navAddress from 'components/navAddress/navAddress';
   import searchForm from 'components/searchForm/searchForm';
 
   export default {
@@ -64,8 +62,6 @@
       return {
         JQBHShow: false,
         dataShow: true,
-        firstAdd: '查询-统计查询',
-        currentAdd: '月度报表查询/导出',
         tabIsShow: false,
         tabList: {},
         sjList: {}
@@ -98,7 +94,6 @@
       }
     },
     components: {
-      navAddress,
       searchForm
     }
   };
@@ -119,7 +114,7 @@
         padding-left 10px
         width 100%
         background #f2f2f2
-        border 1px solid #797979
+        border 1px solid #e0e0e0
         border-bottom 0
     td
       text-align left

@@ -1,8 +1,9 @@
 <template>
   <div class="login_wrapper">
     <div class="login_content">
-      <div class="login_title">税控开票监控查询系统</div>
-      <div class="login_pic"><img src="../header/header.png" width="166" height="80" alt=""></div>
+      <div class="login_title">
+        <img src="./login_header.png" width="340" height="148" alt="">
+      </div>
       <div class="login_form" @keyup.enter="login">
         <div class="login_error" v-show="loginError">
           {{errorMessage}}
@@ -86,7 +87,7 @@
       bottom 0
       margin auto
       width 400px
-      height 350px
+      height 375px
       text-align center
       background #fff
       border-radius 5px
@@ -133,7 +134,7 @@
           text-align: center
           font-size 18px
           color #ffffff
-          background: #ec1f28
+          background: #e2231a
           border-radius 5px
           cursor: pointer
 </style>

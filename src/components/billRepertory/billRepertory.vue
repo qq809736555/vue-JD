@@ -1,6 +1,5 @@
 <template>
     <div class="invoiceInventory_wrapper">
-      <navAddress :first-add="firstAdd" :current-add="currentAdd"></navAddress>
       <searchForm @tableShow="judgeTabShow"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <table>
@@ -29,7 +28,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import navAddress from 'components/navAddress/navAddress';
     import pagination from 'components/pagination/pagination';
     import searchForm from 'components/searchForm/searchForm';
 
@@ -39,8 +37,6 @@
           totalCount: 0,
           pageSize: 5,
           pageNum: 1,
-          firstAdd: '统计查询',
-          currentAdd: '发票库存查询',
           tabIsShow: false,
           nsrsbh: '',
           jqbh: ''
@@ -75,7 +71,6 @@
         }
       },
       components: {
-        navAddress,
         pagination,
         searchForm
       }

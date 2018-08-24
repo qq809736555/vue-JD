@@ -118,7 +118,7 @@
           width auto
           height 100%
           text-align center
-          background rgba(22, 155, 213, 1)
+          background #e2231a
           color #fff
           border-radius 5px
           cursor pointer

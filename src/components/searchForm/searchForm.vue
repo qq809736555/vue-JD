@@ -50,8 +50,10 @@
               <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
-          <div class="search_btn blue-btn" @click="queryBtn">查询</div>
-          <div class="export_btn blue-btn" @click="exportBtn">导出</div>
+          <div class="search_btn_wrapper">
+            <div class="search_btn red-btn" @click="queryBtn">查询</div>
+            <div class="export_btn red-btn" @click="exportBtn">导出</div>
+          </div>
         </div>
       </div>
     </div>
@@ -79,11 +81,11 @@
       },
       data() {
         return {
-          nowDate: new Date(),
+          nowDate: new Date().setMonth((new Date()).getMonth() - 1),
           CnowDate: '',
-          startTime: new Date(),
+          startTime: new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000),
           CstartTime: '',
-          endTime: new Date(),
+          endTime: new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000),
           dateBefore: {
             disabledDate: (time) => {
               let beginDateVal = this.endTime;

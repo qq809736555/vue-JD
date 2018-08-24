@@ -24,8 +24,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-add:before {
+  content: "\e902";
+}
+.icon-reduce:before {
+  content: "\e903";
+}
 .icon-lock:before {
   content: "\e900";
+}
+.icon-dropDown:before {
+  content: "\e901";
 }
 .icon-user:before {
   content: "\e971";
@@ -36,6 +45,4 @@
 .icon-switch:before {
   content: "\e9b6";
 }
-.icon-dropDown:before {
-  content: "\e901";
-}
+

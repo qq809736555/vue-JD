@@ -1,6 +1,5 @@
 <template>
     <div class="userSetting_wrapper">
-      <navAddress :first-add="firstAdd" :current-add="currentAdd"></navAddress>
       <div class="search_form">
         <div class="search_conditions">
           <div class="search_item">
@@ -11,9 +10,11 @@
             <div class="search_label">用户姓名：</div>
             <input type="text" v-model="name" class="search_input">
           </div>
-          <div class="search_btn blue-btn" @click="queryBtn">查询</div>
-          <div class="add_btn blue-btn" @click="newUsers">新增</div>
-          <!--<div class="import_btn blue-btn" @click="importExcel">导入</div>-->
+          <div class="search_btn_wrapper">
+            <div class="search_btn red-btn" @click="queryBtn">查询</div>
+            <div class="add_btn red-btn" @click="newUsers">新增</div>
+            <!--<div class="import_btn blue-btn" @click="importExcel">导入</div>-->
+          </div>
         </div>
       </div>
       <div class="search_table" v-show="tableShow">
@@ -37,9 +38,9 @@
             <td v-if="item.enabled === 'Y'">启用</td>
             <td v-if="item.enabled === 'N'">停用</td>
             <td class="operation">
-              <div class="modify blue-btn" @click="modifyBtn(item.id)">修改</div>
-              <div class="reset blue-btn" @click="resetBtn(item.id, item.userName)">重置密码</div>
-              <div class="delete blue-btn" @click="deleteBtn(item.id, item.userName)">删除</div>
+              <div class="modify red-btn" @click="modifyBtn(item.id)">修改</div>
+              <div class="reset red-btn" @click="resetBtn(item.id, item.userName)">重置密码</div>
+              <div class="delete red-btn" @click="deleteBtn(item.id, item.userName)">删除</div>
             </td>
           </tr>
           </tbody>
@@ -50,7 +51,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navAddress from 'components/navAddress/navAddress';
   import pagination from 'components/pagination/pagination';
   import dialog from 'components/dialog/dialog';
   import Bus from '../../common/js/bus.js';
@@ -63,8 +63,6 @@
         pageNum: 1,
         accountNo: '',
         name: '',
-        firstAdd: '设置-用户设置',
-        currentAdd: '用户设置',
         tableShow: false,
         value: '',
         btnFunction: ''
@@ -83,6 +81,7 @@
       getUserInfoList() {
         let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'accountNo': this.accountNo, 'name': this.name};
         this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
+          this.tableShow = true;
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;
@@ -90,7 +89,6 @@
       },
       // 查询列表
       queryBtn() {
-        this.tableShow = true;
         this.getUserInfoList();
       },
       // 导入excel
@@ -220,7 +218,6 @@
       }
     },
     components: {
-      navAddress,
       pagination,
       'v-dialog': dialog
     }

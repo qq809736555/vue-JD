@@ -1,15 +1,17 @@
 <template>
     <div class="header_wrapper">
-      <div class="logo">
-        <img src="./header.png" width="166" height="80" alt="">
-      </div>
-      <div class="index_name">
-        税控监控查询系统v1.0
-      </div>
-      <div class="user">
-        <div class="userName">{{realName}}，您好！</div>
-        <div class="changePWD" @click="changePWD"><span class="icon-cog"></span>修改密码</div>
-        <div class="loginOut" @click="loginOut"><span class="icon-switch"></span>退出</div>
+      <div class="header_content">
+        <div class="logo">
+          <img src="./header.png" width="166" height="80" alt="">
+        </div>
+        <div class="index_name">
+          税控监控查询系统v1.0
+        </div>
+        <div class="user">
+          <div class="userName">{{realName}}，您好！</div>
+          <div class="changePWD" @click="changePWD">修改密码</div>
+          <div class="loginOut" @click="loginOut">退出</div>
+        </div>
       </div>
     </div>
 </template>
@@ -73,46 +75,54 @@
 
 <style lang="stylus" rel="stylesheet" scoped>
   .header_wrapper
-    position relative
     width 100%
     height 80px
+    background #e2231a
     box-shadow 0 3px 5px 0 rgba(210,210,210,.5)
-    .logo, .index_name
-      display inline-block
-      vertical-align top
-    .logo
-      width 170px
-      height 80px
-      padding 0 2px
-    .index_name
-      font-size 26px
-      padding-left 30px
-      line-height 80px
-    .user
-      position absolute
-      top 0
-      right 20px
-      margin 20px 0
-      padding 10px
-      width auto
-      height 40px
-      background #e4e4e4
-      border-radius 20px
-      font-size 0
-      border 1px dotted #333
-      cursor pointer
-      .userName, .changePWD, .loginOut
+    .header_content
+      position relative
+      width 1200px
+      margin auto
+      .logo, .index_name
         display inline-block
         vertical-align top
-        padding 0 10px
-        height: 20px
-        line-height 20px
-        font-size 14px
-        border-right 1px dotted #333
-      .changePWD, .loginOut
-        span
-          margin-right 5px
-          vertical-align -1px
-      .loginOut
-        border none
+      .logo
+        width 180px
+        height 80px
+        padding 0 8px
+      .index_name
+        font-size 20px
+        padding-left 120px
+        letter-spacing 5px
+        line-height 80px
+        color #fff
+      .user
+        position absolute
+        top 0
+        right 0
+        margin 20px 0
+        padding 8px 10px
+        width auto
+        height 40px
+        border-radius 20px
+        font-size 0
+        cursor pointer
+        .userName, .changePWD, .loginOut
+          display inline-block
+          vertical-align top
+          padding 0 16px
+          height: 24px
+          line-height 24px
+          font-size 12px
+          color #fff
+          border-radius 12px
+        .changePWD
+          margin-right 15px
+        .changePWD
+          line-height 22px
+          border 1px solid #fff
+        .loginOut
+          border none
+          color #e2231a
+          background #fff
 </style>
