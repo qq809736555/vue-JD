@@ -1,9 +1,9 @@
 <template>
   <div class="dialog_wrapper" v-show="this.$store.getters.GS" id="dialog">
-    <div class="dialog_content">
+    <div class="dialog_content" @mousedown="drag">
       <div class="dialog_title">
         {{this.$store.getters.getDialogTitle}}
-        <img class="dialog_close" src="./icon_close.png" width="20" height="20" alt="" @click="dialogClose()">
+        <img class="dialog_close" src="./icon_close.png" width="20" height="20" alt="" @click.stop.prevent="dialogClose()">
       </div>
       <div class="edit_content">
         <div class="dialog_error" v-show="dialog_error">{{dialogError}}</div>
@@ -30,8 +30,8 @@
             <input class="upload" id="selectFile" @change="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
           </div>
           <div class="edit_btn">
-            <div class="edit_confirm blue-btn" :name="this.$store.getters.getBtnFunction" @click="dialogConfirm">确认</div>
-            <div class="edit_cancel blue-btn" @click="dialogClose">取消</div>
+            <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click="dialogConfirm">确认</div>
+            <div class="edit_cancel red-btn" @click="dialogClose">取消</div>
           </div>
       </div>
     </div>
@@ -60,6 +60,53 @@
         };
       },
       methods: {
+        drag(e) {
+          let dialog = document.querySelector('.dialog_content');
+          let marginLeft = parseFloat(getComputedStyle(dialog).marginLeft);
+          let marginTop = parseFloat(getComputedStyle(dialog).marginTop);
+          let width = parseFloat(getComputedStyle(dialog).width);
+          let height = parseFloat(getComputedStyle(dialog).height);
+          // 获取鼠标当前的坐标
+          let beginX = e.clientX;
+          let beginY = e.clientY;
+          // 创建一个变量，保存鼠标移动的距离
+          let disX = 0;
+          let disY = 0;
+          document.onmousemove = function(event) {
+            event.preventDefault();
+            // 处理兼容性问题
+            event = event || window.event;
+
+            // 获取鼠标当前的坐标
+            let nowX = event.clientX;
+            let nowY = event.clientY;
+
+            // 获取鼠标移动的距离
+            disX = nowX - beginX;
+            disY = nowY - beginY;
+
+            // 水平方向
+            if ((marginLeft + disX) <= 5) {
+              dialog.style.marginLeft = 5 + 'px';
+            } else if ((marginLeft + disX) >= (document.body.clientWidth - width - 5)) {
+              dialog.style.marginLeft = document.body.clientWidth - width - 5 + 'px';
+            } else {
+              dialog.style.marginLeft = marginLeft + disX + 'px';
+            }
+
+            // 垂直方向
+            if ((marginTop + disY) <= 5) {
+              dialog.style.marginTop = 5 + 'px';
+            } else if ((marginTop + disY) >= (document.body.clientHeight - height - 5)) {
+              dialog.style.marginTop = document.body.clientHeight - height - 5 + 'px';
+            } else {
+              dialog.style.marginTop = marginTop + disY + 'px';
+            }
+          };
+          document.onmouseup = function() {
+            document.onmousemove = null;
+          };
+        },
         // 弹窗关闭
         dialogClose() {
           this.$store.commit('S');
@@ -77,6 +124,11 @@
             dialogInput[i].value = '';
             dialogInput[i].disabled = false;
           }
+          // 关闭弹窗，恢复弹框默认位置
+          let dialog = document.getElementById('dialog').getElementsByClassName('dialog_content')[0];
+          dialog.style.margin = '100px auto';
+          dialog.style.left = 0 + 'px';
+          dialog.style.top = 0 + 'px';
         },
         // 请求成功提示hint
         hintShow() {
@@ -140,7 +192,12 @@
             this.dialogError = '';
             let responseData = {'oldPassword': md5(oldPassword), 'newPassword': md5(newPassword)};
             this.$http.post('/rbac/mvc/user/updatePassword.do', responseData).then((response) => {
-              console.log(response);
+              if (response === 'success') {
+                this.dialogClose();
+                this.hintShow();
+                store.commit('changeContent', '密码修改成功');
+                this.getUserInfoList();
+              }
             });
           }
         },
@@ -306,18 +363,18 @@
       width 400px
       margin 100px auto
       background #fff
-      border: 1px solid #666;
-      box-shadow: 0 0 10px #333;
+      box-shadow 0 0 5px rgba(226, 35, 26, 0.5)
       .dialog_title
         position relative
         width 100%
         height 48px
         line-height 48px
         text-align center
-        font-size 18px
+        font-size 16px
+        letter-spacing 5px
         color #fff
-        background #33CCFF
-        box-shadow 0 3px 5px 0 rgba(210, 210, 210, 0.5)
+        background #e2231a
+        box-shadow 0 3px 5px 0 rgba(226, 35, 26, 0.5)
         .dialog_close
           position absolute
           top 13px
@@ -349,7 +406,7 @@
             height 36px
             line-height 36px
             padding-left 5px
-            border 1px solid #acbaca
+            border 1px solid #e0e0e0
             border-radius 5px
             color #495362
           .edit_radio
@@ -374,10 +431,20 @@
           height auto
           padding-top 20px
           font-size 0px
-          .blue-btn
+          .red-btn
             display inline-block
             vertical-align top
-            font-size 14px
+            width auto
+            height 30px
+            line-height 28px
+            padding 0 15px
+            border-radius 5px
+            color #e2231a
+            letter-spacing 5px
+            border 1px solid #e2231a
           .edit_confirm
             margin-right 30px
+            line-height 30px
+            color #fff
+            background #e2231a
 </style>
