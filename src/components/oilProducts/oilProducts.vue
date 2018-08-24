@@ -1,6 +1,5 @@
 <template>
   <div class="oilProducts">
-    <navAddress :first-add="firstAdd" :current-add="currentAdd"></navAddress>
     <searchForm @tableShow="judgeTabShow"></searchForm>
     <div class="search_table" v-show="tabIsShow">
       <table>
@@ -29,7 +28,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import navAddress from 'components/navAddress/navAddress';
   import pagination from 'components/pagination/pagination';
   import searchForm from 'components/searchForm/searchForm';
 
@@ -38,8 +36,7 @@
       return {
         totalCount: 0,
         pageSize: 5,
-        firstAdd: '查询-统计查询',
-        currentAdd: '成品油库存统计',
+        pageNum: 1,
         tabIsShow: false,
         nsrsbh: '',
         jqbh: ''
@@ -47,7 +44,7 @@
     },
     methods: {
       getList() {
-        let formDate = {'pageNum': '1', 'pageSize': '' + this.pageSize, 'nsrsbhs': this.nsrsbh, 'jqbhs': this.jqbh};
+        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbhs': this.nsrsbh, 'jqbhs': this.jqbh};
         this.$http.post('/api/queryOilProductStore', formDate).then((response) => {
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
@@ -74,7 +71,6 @@
       }
     },
     components: {
-      navAddress,
       pagination,
       searchForm
     }
