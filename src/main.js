@@ -28,7 +28,10 @@ Vue.prototype.$http = axios;
 
 Vue.prototype.$http.defaults.headers.common['x-access-token'] = getCookie('JD_token') || '';
 
+let reaponseNum = 0;
 axios.interceptors.request.use(function (config) {
+  reaponseNum++;
+  store.commit('changeLoading', true);
   // Do something before request is sent
   return config;
 }, function (error) {
@@ -38,13 +41,18 @@ axios.interceptors.request.use(function (config) {
 
 // Add a response interceptor
 axios.interceptors.response.use(function (response) {
+  reaponseNum--;
+  if (reaponseNum <= 0) {
+    store.commit('changeLoading', false);
+  } else {
+    store.commit('changeLoading', true);
+  }
   if (response.data.code === '0000' || response.data.code === '9012') {
     return response.data.data;
   } else if (response.data.code === '5999') {
     delCookie('JD_token');
     router.push('/login');
   } else {
-    console.log(123);
     store.commit('changeHint', true);
     store.commit('changeHintClass', 'errorHint');
     store.commit('changeContent', response.data.message);
@@ -55,6 +63,13 @@ axios.interceptors.response.use(function (response) {
   }
   // Do something with response data
 }, function (error) {
+  store.commit('changeLoading', false);
+  store.commit('changeHint', true);
+  store.commit('changeHintClass', 'errorHint');
+  store.commit('changeContent', '请求失败');
+  setTimeout(function() {
+    store.commit('changeHint', false);
+  }, 1000);
   // Do something with response error
   return Promise.reject(error);
 });
