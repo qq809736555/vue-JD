@@ -101,7 +101,7 @@
         .login_error
           position absolute
           right 0
-          top -30px
+          top -22px
           width auto
           height 20px
           line-height 20px

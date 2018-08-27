@@ -214,7 +214,6 @@
               window.open('/api/exportMonthReport?nsrsbh=' + this.Cnsrsbh + '&kpyf=' + this.CnowTime);
             } else if (router.indexOf('oldDateQuery') !== -1) {
               // 验旧数据查询导出
-              console.log(123);
               window.open('/api/exportFpyjInfo?nsrsbh=' + this.Cnsrsbh + '&startTime=' + this.CstartTime + '&endTime=' + this.CendTime);
             } else if (router.indexOf('invoiceState') !== -1) {
               // 发票状态查询导出
