@@ -27,11 +27,11 @@
           <!-- 批量导入用户 -->
           <div class="importFile" v-if="this.$store.getters.getImportShow">
             <div class="import_name">请选择Excel文件：</div>
-            <input class="upload" id="selectFile" @change="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+            <input class="upload" id="selectFile" @change.stop.prevent="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
           </div>
           <div class="edit_btn">
-            <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click="dialogConfirm">确认</div>
-            <div class="edit_cancel red-btn" @click="dialogClose">取消</div>
+            <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click.stop.prevent="dialogConfirm">确认</div>
+            <div class="edit_cancel red-btn" @click.stop.prevent="dialogClose">取消</div>
           </div>
       </div>
     </div>
@@ -442,6 +442,7 @@
             color #e2231a
             letter-spacing 5px
             border 1px solid #e2231a
+            cursor pointer
           .edit_confirm
             margin-right 30px
             line-height 30px
