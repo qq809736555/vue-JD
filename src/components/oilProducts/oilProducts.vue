@@ -44,7 +44,7 @@
     },
     methods: {
       getList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbhs': this.nsrsbh, 'jqbhs': this.jqbh};
+        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
         this.$http.post('/api/queryOilProductStore', formDate).then((response) => {
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
