@@ -22,7 +22,7 @@
         </tr>
         </tbody>
       </table>
-      <pagination :total-count = "totalCount" :page-num="pageNum" :page-size="pageSize" @showNewPageSize="updatePageSize"></pagination>
+      <pagination :total-count = "totalCount" :page-num="pageNum" :page-size="pageSize" @showNewPageSize="updatePageSize" @currentPage="currentPage"></pagination>
     </div>
   </div>
 </template>
