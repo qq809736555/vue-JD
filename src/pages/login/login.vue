@@ -77,7 +77,7 @@
     height 100%
     min-width 1200px
     margin auto
-    background url("./login.png") center center no-repeat
+    background url("login.png") center center no-repeat
     background-size cover
     .login_content
       position absolute
@@ -108,7 +108,7 @@
           padding-left 20px
           font-size 14px
           color #f4121d
-          background url("./icon-hint.png") left center no-repeat
+          background url("icon-hint.png") left center no-repeat
         .login_item
           position relative
           width 100%

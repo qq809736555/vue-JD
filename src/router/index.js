@@ -1,14 +1,14 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Login from '@/components/login/login';
-import Home from '@/components/home/home';
-import billRepertory from '@/components/billRepertory/billRepertory';
-import oilProducts from '@/components/oilProducts/oilProducts';
-import monthlyQuery from '@/components/monthlyQuery/monthlyQuery';
-import oldDateQuery from '@/components/oldDateQuery/oldDateQuery';
-import userSetting from '@/components/userSetting/userSetting';
-import invoiceState from '@/components/invoiceState/invoiceState';
-import Index from '../components/reset/reset.vue';
+import Login from '@/pages/login/login';
+import Home from '@/pages/home/home';
+import billRepertory from '@/pages/billRepertory/billRepertory';
+import oilProducts from '@/pages/oilProducts/oilProducts';
+import monthlyQuery from '@/pages/monthlyQuery/monthlyQuery';
+import oldDateQuery from '@/pages/oldDateQuery/oldDateQuery';
+import userSetting from '@/pages/userSetting/userSetting';
+import invoiceState from '@/pages/invoiceState/invoiceState';
+import Index from '@/pages/reset/reset.vue';
 
 Vue.use(Router);
 
