@@ -36,6 +36,7 @@
   .navAddress_wrapper
     margin auto
     width 90%
+    min-width 1200px
     height 45px
     line-height 60px
     padding-left 230px

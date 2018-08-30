@@ -146,6 +146,7 @@
       bottom 0
       margin auto
       width 90%
+      min-width 1200px
       overflow hidden
       .left_bar
         flex 0 0 180px

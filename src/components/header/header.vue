@@ -82,6 +82,7 @@
     .header_content
       position relative
       width 90%
+      min-width 1200px
       height 80px
       margin auto
       .logo, .index_name
