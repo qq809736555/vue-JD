@@ -35,7 +35,7 @@
 <style lang="stylus" rel="stylesheet" scoped>
   .navAddress_wrapper
     margin auto
-    width 1200px
+    width 90%
     height 45px
     line-height 60px
     padding-left 230px

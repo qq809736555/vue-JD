@@ -132,17 +132,21 @@
 
 <style lang="stylus" rel="stylesheet" scoped>
   .home_wrapper
+    position absolute
+    top 0
+    bottom 0
     width 100%
-    height auto
-    min-width 1200px
-    min-height 100%
-    margin auto
     background #f5f5f5
     .content_wrapper
-      margin auto
-      width 1200px
-      height auto
       display flex
+      position absolute
+      left 0
+      right 0
+      top 125px
+      bottom 0
+      margin auto
+      width 90%
+      overflow hidden
       .left_bar
         flex 0 0 180px
         .menu_item

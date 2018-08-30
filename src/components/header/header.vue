@@ -81,7 +81,8 @@
     box-shadow 0 3px 5px 0 rgba(210,210,210,.5)
     .header_content
       position relative
-      width 1200px
+      width 90%
+      height 80px
       margin auto
       .logo, .index_name
         display inline-block
