@@ -1,7 +1,7 @@
 <template>
   <div class="dialog_wrapper" v-show="this.$store.getters.GS" id="dialog">
-    <div class="dialog_content" @mousedown="drag">
-      <div class="dialog_title">
+    <div class="dialog_content">
+      <div class="dialog_title" @mousedown="drag">
         {{this.$store.getters.getDialogTitle}}
         <img class="dialog_close" src="./icon_close.png" width="20" height="20" alt="" @click.stop.prevent="dialogClose()">
       </div>
