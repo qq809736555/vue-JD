@@ -76,6 +76,7 @@
 <style lang="stylus" rel="stylesheet" scoped>
   .header_wrapper
     width 100%
+    min-width 1200px
     height 80px
     background #e2231a
     box-shadow 0 3px 5px 0 rgba(210,210,210,.5)

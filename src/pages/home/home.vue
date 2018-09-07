@@ -17,6 +17,7 @@
             </div>
           </div>
         </div>
+        <div class="menu_item"></div>
       </div>
       <!-- 右侧内容 -->
       <div class="right_content">
@@ -50,7 +51,8 @@
         firstAdd: '',
         secondAdd: '',
         firstShow: false,
-        secondShow: false
+        secondShow: false,
+        list2: []
       };
     },
     mounted() {
@@ -95,6 +97,9 @@
         this.$http.get(url).then((response) => {
           this.resourceList = response.resourceList;
         });
+        // this.$http.get('/test/rest/nav-links-analytics-data/1.0/').then((response) => {
+        //   console.log(response);
+        // });
       },
       showSeconedMenu(index, event) {
         let targetClassName = '';
@@ -132,18 +137,13 @@
 
 <style lang="stylus" rel="stylesheet" scoped>
   .home_wrapper
-    position absolute
-    top 0
-    bottom 0
     width 100%
+    min-width 1200px
+    height auto
+    min-height 100%
     background #f5f5f5
     .content_wrapper
       display flex
-      position absolute
-      left 0
-      right 0
-      top 125px
-      bottom 0
       margin auto
       width 90%
       min-width 1200px
@@ -200,9 +200,10 @@
                     color #e2231a
       .right_content
         flex 1
+        min-width 1120px
         min-height 470px
         .rightCon_wrapper
-          padding 20px 0 0 20px
+          padding 20px 0 20px 20px
           width 100%
           height 100%
 </style>

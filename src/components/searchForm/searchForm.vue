@@ -211,7 +211,6 @@
               window.open('/api/exportOilProductStore?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh);
             } else if (router.indexOf('monthlyQuery') !== -1) {
               // 月度报表查询导出
-              console.log('/api/exportMonthReport?nsrsbh=' + this.Cnsrsbh + '&kpyf=' + this.CnowTime);
               window.open('/api/exportMonthReport?nsrsbh=' + this.Cnsrsbh + '&kpyf=' + this.CnowTime);
             } else if (router.indexOf('oldDateQuery') !== -1) {
               // 验旧数据查询导出
