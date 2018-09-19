@@ -15,7 +15,7 @@
           <tbody>
           <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index <= pageSize">
             <td>{{index+1}}</td>
-            <td>{{item.sendTime}}</td>
+            <td>{{item.sendTime | sendTime}}</td>
             <td>{{item.recipient}}</td>
             <td>{{item.taskType}}</td>
             <td class="seeMore email_seeMore">{{item.sendContent}}<p class="red-btn" @click="seeMore(item.sendContent)">更多</p></td>
@@ -91,6 +91,20 @@
     components: {
       pagination,
       searchForm
+    },
+    filters: {
+      sendTime(val) {
+        let newVal = '';
+        newVal = new Date(val);
+        let year = newVal.getFullYear();
+        let month = (newVal.getMonth() + 1) > 9 ? (newVal.getMonth() + 1) : '0' + (newVal.getMonth() + 1);
+        let date = newVal.getDate() > 9 ? newVal.getDate() : '0' + newVal.getDate();
+        let hours = newVal.getHours() > 9 ? newVal.getHours() : '0' + newVal.getHours();
+        let minutes = newVal.getMinutes() > 9 ? newVal.getMinutes() : '0' + newVal.getMinutes();
+        let seconds = newVal.getSeconds() > 9 ? newVal.getSeconds() : '0' + newVal.getSeconds();
+        newVal = year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
+        return newVal;
+      }
     }
   };
 </script>

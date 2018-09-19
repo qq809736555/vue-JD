@@ -84,6 +84,7 @@
           <div class="search_btn_wrapper">
             <div class="search_btn red-btn" @click="queryBtn">查询</div>
             <div class="export_btn red-btn" @click="exportBtn" v-show="exportShow">导出</div>
+            <div class="set_btn red-btn" @click="setValueBtn" v-show="setValue">设置预警值</div>
           </div>
         </div>
       </div>
@@ -120,6 +121,10 @@
         exportShow: {
           type: Boolean,
           default: true
+        },
+        setValue: {
+          type: Boolean,
+          default: false
         }
       },
       data() {
@@ -271,7 +276,9 @@
               window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
             }
           });
-        }
+        },
+        // 设置预警值
+        setValueBtn() {}
       }
     };
 </script>
