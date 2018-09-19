@@ -278,7 +278,14 @@
           });
         },
         // 设置预警值
-        setValueBtn() {}
+        setValueBtn() {
+          this.$store.commit('S');
+          this.$store.commit('changeDialogTitle', '设置预警值');
+          let editItem = [];
+          this.$store.commit('changeEditItem', editItem);
+          this.$store.commit('changeSetVal', true);
+          this.$store.commit('changeBtnFunction', 'changePSetVal');
+        }
       }
     };
 </script>

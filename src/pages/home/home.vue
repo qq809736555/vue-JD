@@ -83,7 +83,7 @@
           } else if (this.$route.path.indexOf('sent') > 0) {
             this.showIndex = 3;
             this.breadCrumbShow();
-          }  else if (this.$route.path.indexOf('control') > 0) {
+          } else if (this.$route.path.indexOf('control') > 0) {
             this.showIndex = 2;
             this.breadCrumbShow();
           } else {
@@ -103,9 +103,6 @@
         this.$http.get(url).then((response) => {
           this.resourceList = response.resourceList;
         });
-        // this.$http.get('/test/rest/nav-links-analytics-data/1.0/').then((response) => {
-        //   console.log(response);
-        // });
       },
       showSeconedMenu(index, event) {
         let targetClassName = '';

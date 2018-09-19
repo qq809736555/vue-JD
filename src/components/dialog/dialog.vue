@@ -33,6 +33,18 @@
           <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
             <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
           </div>
+          <!-- 设置预警值 -->
+          <div class="setWaring_value" v-if="this.$store.getters.getSetVal">
+            <div class="search_item">
+              <div class="search_label">税号：</div>
+              <span class="icon-dropDown"></span>
+              <select @change="SHSelect" v-model="nsrsbh" class="search_select">
+                <option value="全部">全部</option>
+                <option v-for="option1 in billControlType" :value="option1.nsrsbh" :key="option1.id">{{option1.nsrsbh}}<span>/{{option1.dwmc}}</span></option>
+              </select>
+            </div>
+          </div>
+          <!-- 按钮 -->
           <div class="edit_btn" v-if="this.$store.getters.getBtnShow">
             <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click.stop.prevent="dialogConfirm">确认</div>
             <div class="edit_cancel red-btn" @click.stop.prevent="dialogClose">取消</div>
@@ -60,10 +72,20 @@
           phone: '',
           picked: '',
           man: '',
-          woman: ''
+          woman: '',
+          billControlType: []
         };
       },
+      created() {
+        this.getType();
+      },
       methods: {
+        // 获取发票业务监控类型
+        getType() {
+          this.$http.get('/rbac/mvc/sallerInfo/getByNsrsbh?xfdm=' + JSON.parse(window.localStorage.getItem('userInfo')).xfdm).then((response) => {
+            this.billControlType = response.nsrsbhList || [];
+          });
+        },
         drag(e) {
           let dialog = document.querySelector('.dialog_content');
           let marginLeft = parseFloat(getComputedStyle(dialog).marginLeft);
@@ -122,6 +144,7 @@
           this.$store.commit('changeStateUserId', '');
           this.$store.commit('changeImportShow', false);
           this.$store.commit('changeSeeMsg', false);
+          this.$store.commit('changeSetVal', false);
           this.dialog_error = false;
           this.dialogError = '';
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');

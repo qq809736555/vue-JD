@@ -17,10 +17,10 @@
           </thead>
           <tbody>
           <tr>
-            <td>{{list.nsrsbh}}</td>
-            <td>{{list.kpdwmc}}</td>
-            <td>{{list.coreNums}}</td>
-            <td>{{list.enableCoreNums}}</td>
+            <td>{{list2.nsrsbh}}</td>
+            <td>{{list2.kpdwmc}}</td>
+            <td>{{list2.coreNums}}</td>
+            <td>{{list2.enableCoreNums}}</td>
           </tr>
           </tbody>
         </table>
@@ -37,12 +37,12 @@
           </thead>
           <tbody>
           <tr>
-            <td>{{list.dzkpxe}}</td>
-            <td>{{list.zsljxe}}</td>
-            <td>{{list.fsljxe}}</td>
-            <td>{{list.lxkpsc}}</td>
-            <td>{{list.lxzsljje}}</td>
-            <td>{{list.lxfsljje}}</td>
+            <td>{{list2.dzkpxe}}</td>
+            <td>{{list2.zsljxe}}</td>
+            <td>{{list2.fsljxe}}</td>
+            <td>{{list2.lxkpsc}}</td>
+            <td>{{list2.lxzsljje}}</td>
+            <td>{{list2.lxfsljje}}</td>
           </tr>
           </tbody>
         </table>
@@ -60,10 +60,10 @@
           </thead>
           <tbody>
           <tr>
-            <td>{{list.openNums}}</td>
-            <td>{{list.unsignedNums}}</td>
-            <td>{{list.signedNoUploadNums}}</td>
-            <td>{{list.checkSignFailNums}}</td>
+            <td>{{list3.openNums}}</td>
+            <td>{{list3.unsignedNums}}</td>
+            <td>{{list3.signedNoUploadNums}}</td>
+            <td>{{list3.checkSignFailNums}}</td>
           </tr>
           </tbody>
         </table>
@@ -78,10 +78,10 @@
           </thead>
           <tbody>
           <tr>
-            <td>{{list.blankNums}}</td>
-            <td>{{list.avgOpenNums}}</td>
-            <td>{{list.available_open}}</td>
-            <td>{{list.productStockNums}}</td>
+            <td>{{list3.blankNums}}</td>
+            <td>{{list3.avgOpenNums}}</td>
+            <td>{{list3.available_open}}</td>
+            <td>{{list3.productStockNums}}</td>
           </tr>
           </tbody>
         </table>
@@ -95,13 +95,21 @@
     export default {
       data() {
         return {
-          list: {}
+          list: {},
+          list2: {},
+          list3: {}
         };
       },
       mounted() {
         let formDate = '';
-        this.$http.post('/api/statisticalQuery', formDate).then((response) => {
+        this.$http.post('/api/chartQuery', formDate).then((response) => {
           this.list = response;
+        });
+        this.$http.post('/api/basicQuery', formDate).then((response) => {
+          this.list2 = response;
+        });
+        this.$http.post('/api/statisticalQuery', formDate).then((response) => {
+          this.list3 = response;
         });
         let myChartDay = echarts.init(document.getElementById('myChartDay'));
         let optionDay = {

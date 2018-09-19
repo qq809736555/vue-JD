@@ -22,6 +22,8 @@ const dialog = {
     importShow: false,
     // 是否显示查看邮件/短信
     seeMsgShow: false,
+    // 是否显示设置预警值
+    setValSHow: false,
     btnShow: true
   },
   getters: {
@@ -58,6 +60,9 @@ const dialog = {
     },
     getBtnShow(state) {
       return state.btnShow;
+    },
+    getSetVal(state) {
+      return state.setValSHow;
     }
   },
   mutations: {
@@ -94,6 +99,9 @@ const dialog = {
     },
     changeBtnShow(state, btnShow) {
       state.btnShow = btnShow;
+    },
+    changeSetVal(state, setValSHow) {
+      state.setValSHow = setValSHow;
     }
   }
 };
