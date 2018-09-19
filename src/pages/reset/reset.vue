@@ -105,7 +105,13 @@
             // 标题文本
             text: '日开票量统计',
             top: 'bottom',
-            left: 'center'
+            left: 'center',
+            textStyle: {
+              // 文字颜色
+              color: '#333',
+              // 字体大小
+              fontSize: 16
+            }
           },
           xAxis: {
             type: 'category',
@@ -129,7 +135,13 @@
             // 标题文本
             text: '月开票量统计',
             top: 'bottom',
-            left: 'center'
+            left: 'center',
+            textStyle: {
+              // 文字颜色
+              color: '#333',
+              // 字体大小
+              fontSize: 16
+            }
           },
           xAxis: {
             type: 'category',

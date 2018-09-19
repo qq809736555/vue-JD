@@ -73,21 +73,21 @@
         if (this.$route.path === '/') {
           this.firstShow = false;
           this.secondShow = false;
-          this.showIndex = -1;
+          this.showIndex = 0;
         } else {
           this.firstShow = true;
           this.secondShow = true;
           if (this.$route.path.indexOf('user') > 0) {
-            this.showIndex = 3;
+            this.showIndex = 4;
             this.breadCrumbShow();
           } else if (this.$route.path.indexOf('sent') > 0) {
-            this.showIndex = 2;
+            this.showIndex = 3;
             this.breadCrumbShow();
           }  else if (this.$route.path.indexOf('control') > 0) {
-            this.showIndex = 1;
+            this.showIndex = 2;
             this.breadCrumbShow();
           } else {
-            this.showIndex = 0;
+            this.showIndex = 1;
             this.breadCrumbShow();
           }
         }
