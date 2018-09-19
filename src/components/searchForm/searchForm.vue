@@ -2,6 +2,24 @@
     <div class="searchForm_wrapper">
       <div class="search_form">
         <div class="search_conditions">
+          <!-- 统计日期 -->
+          <div class="search_item" v-show="staShow">
+            <div class="search_label">统计日期：</div>
+            <el-date-picker
+              v-model="startTime"
+              :picker-options="dateBefore"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+            <span class="line">-</span>
+            <el-date-picker
+              v-model="endTime"
+              type="date"
+              :picker-options="dateAfter"
+              placeholder="选择日期">
+            </el-date-picker>
+          </div>
+          <!-- 开票日期 -->
           <div class="search_item" v-show="dataShow">
             <div class="search_label">开票日期：</div>
             <el-date-picker
@@ -10,6 +28,7 @@
               placeholder="----年--月">
             </el-date-picker>
           </div>
+          <!-- 开票日期(区域) -->
           <div class="search_item" v-show="scopShow">
             <div class="search_label">开票日期：</div>
             <el-date-picker
@@ -26,6 +45,7 @@
               placeholder="选择日期">
             </el-date-picker>
           </div>
+          <!-- 税号 -->
           <div class="search_item">
             <div class="search_label">税号：</div>
             <span class="icon-dropDown"></span>
@@ -34,6 +54,7 @@
               <option v-for="option1 in shuiHao" :value="option1.nsrsbh" :key="option1.id">{{option1.nsrsbh}}<span>/{{option1.dwmc}}</span></option>
             </select>
           </div>
+          <!-- 机器编号 -->
           <div class="search_item" v-show="jqbhShow">
             <div class="search_label">机器编号：</div>
             <span class="icon-dropDown"></span>
@@ -42,6 +63,7 @@
               <option v-for="option2 in selection" :value="option2.jqbh" :key="option2.id">{{option2.jqbh}}</option>
             </select>
           </div>
+          <!-- 发票标志 -->
           <div class="search_item" v-show="typeShow">
             <div class="search_label">发票标志：</div>
             <span class="icon-dropDown"></span>
@@ -50,17 +72,18 @@
               <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
+          <!-- 预警项目类型 -->
           <div class="search_item" v-show="waringShow">
-            <div class="search_label">预警项目类型</div>
+            <div class="search_label">预警项目类型：</div>
             <span class="icon-dropDown"></span>
             <select v-model="dictCode" class="search_select">
               <option value="">全部</option>
-              <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
+              <option :value="item.dictCode" v-for="item in taskTypeList2" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
           <div class="search_btn_wrapper">
             <div class="search_btn red-btn" @click="queryBtn">查询</div>
-            <div class="export_btn red-btn" @click="exportBtn">导出</div>
+            <div class="export_btn red-btn" @click="exportBtn" v-show="exportShow">导出</div>
           </div>
         </div>
       </div>
@@ -86,9 +109,17 @@
           type: Boolean,
           default: false
         },
+        staShow: {
+          type: Boolean,
+          default: false
+        },
         waringShow: {
           type: Boolean,
           default: false
+        },
+        exportShow: {
+          type: Boolean,
+          default: true
         }
       },
       data() {
@@ -122,6 +153,7 @@
           dictCode: '',
           CdictCode: '',
           taskTypeList: '',
+          taskTypeList2: '',
           shuiHao: [],
           selection: []
         };
@@ -129,6 +161,7 @@
       created () { // 初始化时currentPage赋值
         this.getSH();
         this.gitType();
+        this.gitType2();
       },
       methods: {
         // 税号选择，机器编码对应改变
@@ -164,6 +197,12 @@
         gitType() {
           this.$http.get('/api/getSysDictByType?dictType=预警').then((response) => {
             this.taskTypeList = response;
+          });
+        },
+        // 获取预警项目类型
+        gitType2() {
+          this.$http.get('/api/getSysDictByType?dictType=预警项目类型').then((response) => {
+            this.taskTypeList2 = response;
           });
         },
         //  日期处理函数

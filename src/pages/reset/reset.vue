@@ -70,12 +70,10 @@
         <table>
           <thead>
           <tr>
-            <th width="16.7%">空白发票数量（张)</th>
-            <th width="16.7%">日均开票量</th>
-            <th width="16.6%">预计可用天数</th>
-            <th width="16.6%">成品油库存余量（L)</th>
-            <th width="16.7%">日均使用量</th>
-            <th width="16.7%">预计可用天数</th>
+            <th width="25%">空白发票数量（张)</th>
+            <th width="25%">日均开票量</th>
+            <th width="25%">预计可用天数</th>
+            <th width="25%">成品油库存余量（L)</th>
           </tr>
           </thead>
           <tbody>
@@ -84,8 +82,6 @@
             <td>{{list.avgOpenNums}}</td>
             <td>{{list.available_open}}</td>
             <td>{{list.productStockNums}}</td>
-            <td>缺少</td>
-            <td>缺少</td>
           </tr>
           </tbody>
         </table>

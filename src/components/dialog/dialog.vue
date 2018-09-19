@@ -30,8 +30,13 @@
             <input class="upload" id="selectFile" @change.stop.prevent="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
           </div>
           <!-- 查看邮件/短信 -->
-          <div class="seeMsg" v-if="this.$store.getters.getSeeMsg"></div>
-          <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
+          <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
+            <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
+          </div>
+          <div class="edit_btn" v-if="this.$store.getters.getBtnShow">
+            <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click.stop.prevent="dialogConfirm">确认</div>
+            <div class="edit_cancel red-btn" @click.stop.prevent="dialogClose">取消</div>
+          </div>
       </div>
     </div>
   </div>
@@ -116,6 +121,7 @@
           this.$store.commit('changeStateCChange', '');
           this.$store.commit('changeStateUserId', '');
           this.$store.commit('changeImportShow', false);
+          this.$store.commit('changeSeeMsg', false);
           this.dialog_error = false;
           this.dialogError = '';
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');

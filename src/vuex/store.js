@@ -21,7 +21,8 @@ const dialog = {
     // 是否显示导入文件
     importShow: false,
     // 是否显示查看邮件/短信
-    seeMsgShow: false
+    seeMsgShow: false,
+    btnShow: true
   },
   getters: {
     // 组件数据读取/输出，不能在这里直接修改状态
@@ -54,6 +55,9 @@ const dialog = {
     },
     getSeeMsg(state) {
       return state.seeMsgShow;
+    },
+    getBtnShow(state) {
+      return state.btnShow;
     }
   },
   mutations: {
@@ -87,6 +91,9 @@ const dialog = {
     },
     changeSeeMsg(state, seeMsgShow) {
       state.seeMsgShow = seeMsgShow;
+    },
+    changeBtnShow(state, btnShow) {
+      state.btnShow = btnShow;
     }
   }
 };
