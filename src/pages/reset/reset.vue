@@ -17,10 +17,10 @@
           </thead>
           <tbody>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{list.nsrsbh}}</td>
+            <td>{{list.kpdwmc}}</td>
+            <td>{{list.coreNums}}</td>
+            <td>{{list.enableCoreNums}}</td>
           </tr>
           </tbody>
         </table>
@@ -37,12 +37,12 @@
           </thead>
           <tbody>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{list.dzkpxe}}</td>
+            <td>{{list.zsljxe}}</td>
+            <td>{{list.fsljxe}}</td>
+            <td>{{list.lxkpsc}}</td>
+            <td>{{list.lxzsljje}}</td>
+            <td>{{list.lxfsljje}}</td>
           </tr>
           </tbody>
         </table>
@@ -60,10 +60,10 @@
           </thead>
           <tbody>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{list.openNums}}</td>
+            <td>{{list.unsignedNums}}</td>
+            <td>{{list.signedNoUploadNums}}</td>
+            <td>{{list.checkSignFailNums}}</td>
           </tr>
           </tbody>
         </table>
@@ -80,12 +80,12 @@
           </thead>
           <tbody>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{list.blankNums}}</td>
+            <td>{{list.avgOpenNums}}</td>
+            <td>{{list.available_open}}</td>
+            <td>{{list.productStockNums}}</td>
+            <td>缺少</td>
+            <td>缺少</td>
           </tr>
           </tbody>
         </table>
@@ -97,7 +97,16 @@
 <script type="text/ecmascript-6">
     import echarts from 'echarts';
     export default {
+      data() {
+        return {
+          list: {}
+        };
+      },
       mounted() {
+        let formDate = '';
+        this.$http.post('/api/statisticalQuery', formDate).then((response) => {
+          this.list = response;
+        });
         let myChartDay = echarts.init(document.getElementById('myChartDay'));
         let optionDay = {
           title: {
@@ -115,7 +124,7 @@
           },
           xAxis: {
             type: 'category',
-            data: ['1', '2', '3', '4', '5', '6', '7', '8'],
+            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
             name: '/天'
           },
           yAxis: {
@@ -123,7 +132,7 @@
             name: '/W张'
           },
           series: [{
-            data: [22, 28, 26, 35, 29, 40, 20, 15],
+            data: this.list.dayKpNums,
             type: 'line'
           }]
         };
@@ -145,7 +154,7 @@
           },
           xAxis: {
             type: 'category',
-            data: ['1', '2', '3', '4', '5', '6', '7', '8'],
+            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
             name: '/月'
           },
           yAxis: {
@@ -153,7 +162,7 @@
             name: '/W张'
           },
           series: [{
-            data: [50, 80, 100, 180, 100, 30, 19, 70],
+            data: this.list.monthKpNums,
             type: 'line'
           }]
         };
