@@ -29,6 +29,17 @@
             <div class="import_name">请选择Excel文件：</div>
             <input class="upload" id="selectFile" @change.stop.prevent="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
           </div>
+        <!--下拉框-->
+        <div class="search_item"  v-if="this.$store.getters.getAcceptShow">
+          <div class="edit_item">
+            <div  class="edit_label">接受方式：</div>
+            <span class="icon-dropDown"></span>
+            <select  class="search_select edit_select">
+              <option value="">全部</option>
+              <option value="123">345678</option>
+            </select>
+          </div>
+        </div>
           <!-- 查看邮件/短信 -->
           <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
             <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
@@ -122,6 +133,7 @@
           this.$store.commit('changeStateUserId', '');
           this.$store.commit('changeImportShow', false);
           this.$store.commit('changeSeeMsg', false);
+          this.$store.commit('changeAcceptShow', false);
           this.dialog_error = false;
           this.dialogError = '';
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
@@ -414,6 +426,7 @@
             border 1px solid #e0e0e0
             border-radius 5px
             color #495362
+
           .edit_radio
             text-align left
           .edit_selectRadio
@@ -455,4 +468,20 @@
             background #e2231a
         .message_content
           padding 10px
+    .edit_select
+      width 100%
+      height 36px
+      line-height 36px
+      padding-left 5px
+      border 1px solid #e0e0e0
+      border-radius 5px
+      color #495362
+  .search-item
+    position relative
+  .icon-dropDown
+    position absolute
+    right 26px
+    bottom 80px
+    font-size 12px
+    color #666e79
 </style>
