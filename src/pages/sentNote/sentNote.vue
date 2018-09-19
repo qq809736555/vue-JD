@@ -1,6 +1,6 @@
 <template>
     <div class="sentNote_wrapper">
-      <searchForm @tableShow="judgeTabShow" :type-show="waringShow"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :sta-show="staShow" :jqbh-show="jqbhShow" :waring-show="waringShow" :export-show="exportShow"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <table>
           <thead>
@@ -15,10 +15,10 @@
           <tbody>
           <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index <= pageSize">
             <td>{{index+1}}</td>
-            <td>{{item.kpdwdm}}</td>
-            <td>{{item.jqbh}}</td>
+            <td>{{item.sendTime}}</td>
+            <td>{{item.recipient}}</td>
             <td>{{item.taskType}}</td>
-            <td class="seeMore email_seeMore">{{item.value}}<p class="red-btn" @click="seeMore(item.id)">更多</p></td>
+            <td class="seeMore email_seeMore">{{item.sendContent}}<p class="red-btn" @click="seeMore(item.sendContent)">更多</p></td>
           </tr>
           </tbody>
         </table>
@@ -34,19 +34,25 @@
   export default {
     data() {
       return {
+        exportShow: false,
         waringShow: true,
+        staShow: true,
+        jqbhShow: false,
         totalCount: 0,
         pageSize: 5,
         pageNum: 1,
         tabIsShow: false,
         nsrsbh: '',
-        jqbh: ''
+        dictCode: '',
+        startTime: new Date(),
+        endTime: new Date()
       };
     },
     methods: {
       getList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
-        this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
+        // 发送类型 1:短信，2：邮件
+        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'startTime': this.startTime, 'endTime': this.endTime, 'sendType': '1', 'taskType': this.dictCode};
+        this.$http.post('/api/querySendContent', formDate).then((response) => {
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;
@@ -72,17 +78,14 @@
         this.getList();
       },
       // 查看邮件
-      seeMore(id) {
-        // 传递id，请求邮件内容
-        this.$http.get('/rbac/mvc/user/getUserInfo?userId=' + id).then((response) => {
-          if (response instanceof Object) {
-            this.$store.commit('S');
-            this.$store.commit('changeDialogTitle', '删除用户');
-            let editItem = [];
-            this.$store.commit('changeEditItem', editItem);
-            this.$store.commit('changeSeeMsg', response);
-          }
-        });
+      seeMore(sendContent) {
+        // 短信内容
+        this.$store.commit('S');
+        this.$store.commit('changeDialogTitle', '短信内容');
+        let editItem = [];
+        this.$store.commit('changeEditItem', editItem);
+        this.$store.commit('changeSeeMsg', sendContent);
+        this.$store.commit('changeBtnShow', false);
       }
     },
     components: {

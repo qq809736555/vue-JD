@@ -18,7 +18,7 @@
             <td>{{item.sendTime}}</td>
             <td>{{item.recipient}}</td>
             <td>{{item.taskType}}</td>
-            <td class="seeMore email_seeMore">{{item.sendContent}}<p class="red-btn" @click="seeMore(item.id)">更多</p></td>
+            <td class="seeMore email_seeMore">{{item.sendContent}}<p class="red-btn" @click="seeMore(item.sendContent)">更多</p></td>
           </tr>
           </tbody>
         </table>
@@ -43,14 +43,15 @@
         pageNum: 1,
         tabIsShow: false,
         nsrsbh: '',
-        jqbh: '',
+        dictCode: '',
         startTime: new Date(),
         endTime: new Date()
       };
     },
     methods: {
       getList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'startTime': this.startTime, 'endTime': this.endTime};
+        // 发送类型 1:短信，2：邮件
+        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'startTime': this.startTime, 'endTime': this.endTime, 'sendType': '2', 'taskType': this.dictCode};
         this.$http.post('/api/querySendContent', formDate).then((response) => {
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
@@ -72,23 +73,20 @@
         this.tabIsShow = data.tableShow;
         this.pageNum = data.pageNum;
         this.nsrsbh = data.nsrsbh;
+        this.dictCode = data.dictCode;
         this.startTime = data.startTime;
         this.endTime = data.endTime;
         this.getList();
       },
       // 查看邮件
-      seeMore(id) {
-        // 传递id，请求邮件内容
-        this.$http.get('/rbac/mvc/user/getUserInfo?userId=' + id).then((response) => {
-          if (response instanceof Object) {
-            this.$store.commit('S');
-            this.$store.commit('changeDialogTitle', '邮件内容');
-            let editItem = [];
-            this.$store.commit('changeEditItem', editItem);
-            this.$store.commit('changeSeeMsg', response);
-            this.$store.commit('changeBtnShow', false);
-          }
-        });
+      seeMore(sendContent) {
+        // 邮件内容
+        this.$store.commit('S');
+        this.$store.commit('changeDialogTitle', '邮件内容');
+        let editItem = [];
+        this.$store.commit('changeEditItem', editItem);
+        this.$store.commit('changeSeeMsg', sendContent);
+        this.$store.commit('changeBtnShow', false);
       }
     },
     components: {
