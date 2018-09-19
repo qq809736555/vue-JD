@@ -19,7 +19,9 @@ const dialog = {
     confirmChange: '',
     selectUserId: '',
     // 是否显示导入文件
-    importShow: false
+    importShow: false,
+    // 是否显示查看邮件/短信
+    seeMsgShow: false
   },
   getters: {
     // 组件数据读取/输出，不能在这里直接修改状态
@@ -49,6 +51,9 @@ const dialog = {
     },
     getImportShow(state) {
       return state.importShow;
+    },
+    getSeeMsg(state) {
+      return state.seeMsgShow;
     }
   },
   mutations: {
@@ -79,6 +84,9 @@ const dialog = {
     },
     changeImportShow(state, importShow) {
       state.importShow = importShow;
+    },
+    changeSeeMsg(state, seeMsgShow) {
+      state.seeMsgShow = seeMsgShow;
     }
   }
 };

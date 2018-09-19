@@ -29,10 +29,9 @@
             <div class="import_name">请选择Excel文件：</div>
             <input class="upload" id="selectFile" @change.stop.prevent="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
           </div>
-          <div class="edit_btn">
-            <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click.stop.prevent="dialogConfirm">确认</div>
-            <div class="edit_cancel red-btn" @click.stop.prevent="dialogClose">取消</div>
-          </div>
+          <!-- 查看邮件/短信 -->
+          <div class="seeMsg" v-if="this.$store.getters.getSeeMsg"></div>
+          <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
       </div>
     </div>
   </div>
@@ -448,4 +447,6 @@
             line-height 30px
             color #fff
             background #e2231a
+        .message_content
+          padding 10px
 </style>

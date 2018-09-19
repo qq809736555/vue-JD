@@ -50,6 +50,14 @@
               <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
+          <div class="search_item" v-show="waringShow">
+            <div class="search_label">预警项目类型</div>
+            <span class="icon-dropDown"></span>
+            <select v-model="dictCode" class="search_select">
+              <option value="">全部</option>
+              <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
+            </select>
+          </div>
           <div class="search_btn_wrapper">
             <div class="search_btn red-btn" @click="queryBtn">查询</div>
             <div class="export_btn red-btn" @click="exportBtn">导出</div>
@@ -75,6 +83,10 @@
           default: true
         },
         typeShow: {
+          type: Boolean,
+          default: false
+        },
+        waringShow: {
           type: Boolean,
           default: false
         }
