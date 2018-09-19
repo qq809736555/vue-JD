@@ -24,7 +24,8 @@ const dialog = {
     seeMsgShow: false,
     // 是否显示设置预警值
     setValSHow: false,
-    btnShow: true
+    btnShow: true,
+    acceptShow: false
   },
   getters: {
     // 组件数据读取/输出，不能在这里直接修改状态
@@ -61,8 +62,11 @@ const dialog = {
     getBtnShow(state) {
       return state.btnShow;
     },
-    getSetVal(state) {
+    getSetVal(state){
       return state.setValSHow;
+    },
+    getAcceptShow(state) {
+      return state.acceptShow;
     }
   },
   mutations: {
@@ -102,6 +106,9 @@ const dialog = {
     },
     changeSetVal(state, setValSHow) {
       state.setValSHow = setValSHow;
+    },
+    changeAcceptShow(state, acceptShow) {
+      state.acceptShow = acceptShow;
     }
   }
 };
