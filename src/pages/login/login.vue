@@ -58,7 +58,7 @@
               Vue.prototype.$http.defaults.headers.common['x-access-token'] = getCookie('JD_token') || '';
               this.loginError = false;
               this.errorMessage = '';
-              this.$router.push('/billRepertory');
+              this.$router.push('/');
             }
           });
         }

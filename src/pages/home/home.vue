@@ -78,6 +78,12 @@
           this.firstShow = true;
           this.secondShow = true;
           if (this.$route.path.indexOf('user') > 0) {
+            this.showIndex = 3;
+            this.breadCrumbShow();
+          } else if (this.$route.path.indexOf('sent') > 0) {
+            this.showIndex = 2;
+            this.breadCrumbShow();
+          }  else if (this.$route.path.indexOf('control') > 0) {
             this.showIndex = 1;
             this.breadCrumbShow();
           } else {
