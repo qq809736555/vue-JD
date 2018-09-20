@@ -1,6 +1,6 @@
 <template>
   <div class="controlNewspaper_wrapper">
-    <searchForm @tableShow="judgeTabShow" :sh-show="shShow" :set-value="setValue" :set-type="setType"></searchForm>
+    <searchForm @tableShow="judgeTabShow" :set-value="setValue" :set-type="setType"></searchForm>
     <div class="search_table" v-show="tabIsShow">
       <div class="table_name">1、每月抄报提醒</div>
       <table>
@@ -32,8 +32,6 @@
   export default {
     data() {
       return {
-        // 不显示税号筛选
-        shShow: false,
         setValue: true,
         setType: 'Newspaper',
         tabIsShow: false,
