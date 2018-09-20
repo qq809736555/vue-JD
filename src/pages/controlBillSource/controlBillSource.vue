@@ -1,6 +1,6 @@
 <template>
     <div class="controlBillSource_wrapper">
-      <searchForm @tableShow="judgeTabShow" :sh-show="shShow" :set-type="setType" :set-value="setValue"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :set-type="setType" :set-value="setValue"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、发票库存监控预警</div>
         <table>
@@ -83,8 +83,6 @@
   export default {
       data() {
         return {
-          // 不显示税号筛选
-          shShow: false,
           setValue: true,
           setType: 'BillSource',
           totalCount: 0,
