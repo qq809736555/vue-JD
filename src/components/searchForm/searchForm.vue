@@ -46,7 +46,7 @@
             </el-date-picker>
           </div>
           <!-- 税号 -->
-          <div class="search_item" v-show="shShow">
+          <div class="search_item">
             <div class="search_label">税号：</div>
             <span class="icon-dropDown"></span>
             <select @change="SHSelect" v-model="nsrsbh" class="search_select">
@@ -131,11 +131,6 @@
         setType: {
           type: String,
           default: ''
-        },
-        // 税号是否显示
-        shShow: {
-          type: Boolean,
-          default: true
         }
       },
       data() {
