@@ -40,23 +40,166 @@
             </select>
           </div>
         </div>
-          <!-- 查看邮件/短信 -->
-          <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
-            <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
-          </div>
-          <!-- 设置预警值 -->
-          <div class="setWaring_value" v-if="this.$store.getters.getSetVal">
-            <div class="search_item">
-              <div class="search_label">税号：</div>
+        <!-- 查看邮件/短信 -->
+        <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
+          <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
+        </div>
+        <!-- 设置预警值 -->
+        <div class="setWaring_value" v-if="this.$store.getters.getSetVal">
+          <!--1.发票票源预警-->
+          <div class="setWaring_content" v-if="this.warningType === 'BillSource'">
+            <div class="select_item">
+              <div class="search_label">发票业务监控类型：</div>
               <span class="icon-dropDown"></span>
-              <select @change="SHSelect" v-model="nsrsbh" class="search_select">
-                <option value="全部">全部</option>
-                <option v-for="option1 in billControlType" :value="option1.nsrsbh" :key="option1.id">{{option1.nsrsbh}}<span>/{{option1.dwmc}}</span></option>
+              <select class="search_select" v-model="taskType">
+                <option value="请选择">请选择</option>
+                <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
               </select>
             </div>
+            <div class="set_title" v-if="setItemShow">预警设置：</div>
+            <div class="set_item" v-if="setItemShow">
+              <span class="setItem_desc">{{warningDesc}}≤<input class="input_edit" type="text" />张</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">邮件通知</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">短信通知</span>
+            </div>
+            <div class="red_descNone" v-if="!setItemShow">空白发票出现重复后自动进行提醒。</div>
+            <div class="set_item set_time">
+              <div class="setItem_desc">
+                允许
+                <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+                到
+                <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+                发送预警信息
+              </div>
+            </div>
           </div>
-          <!-- 按钮 -->
-          <div class="edit_btn" v-if="this.$store.getters.getBtnShow">
+          <!-- 2.离线参数监控 -->
+          <div class="setWaring_content setWaring_OffLine" v-if="this.warningType === 'OffLine'">
+            <div class="set_title">离线参数预警设置：</div>
+            <div class="set_item">
+              <span class="red_desc">（当前税控值xxx小时）</span>
+              <span class="setItem_desc">离线开票时长≤<input class="input_edit" type="text" />小时</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">邮件通知</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">短信通知</span>
+            </div>
+            <div class="set_item">
+              <span class="red_desc">（当前税控值xxx小时）</span>
+              <span class="setItem_desc">离线开票正数累计金额≤<input class="input_edit" type="text" />元</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">邮件通知</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">短信通知</span>
+            </div>
+            <div class="set_item">
+              <span class="red_desc">（当前税控值xxx小时）</span>
+              <span class="setItem_desc">离线开票负数累计金额≤<input class="input_edit" type="text" />元</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">邮件通知</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">短信通知</span>
+            </div>
+            <div class="set_item set_time">
+              <div class="setItem_desc">
+                允许
+                <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+                到
+                <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+                发送预警信息
+              </div>
+            </div>
+          </div>
+          <!-- 3.发票状态监控 -->
+          <div class="setWaring_content setWaring_BillState" v-if="this.warningType === 'BillState'">
+            <div class="select_item">
+              <div class="search_label">发票业务监控类型：</div>
+              <span class="icon-dropDown"></span>
+              <select class="search_select">
+                <option value="全部">全部</option>
+                <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
+              </select>
+            </div>
+            <div class="set_title">预警设置：</div>
+            <div class="set_item">
+              <span class="setItem_desc">核心板剩余发票数量≤<input class="input_edit" type="text" />张</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">邮件通知</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">短信通知</span>
+            </div>
+            <div class="set_item set_time">
+              <div class="setItem_desc">
+                允许
+                <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+                到
+                <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+                发送预警信息
+              </div>
+            </div>
+          </div>
+          <!-- 4.抄报提醒监控 -->
+          <div class="setWaring_content setWaring_Newspaper" v-if="this.warningType === 'Newspaper'">
+            <div class="set_title">预警设置：</div>
+            <div class="set_item">
+              <span class="red_desc">（开票截止日期≤15日，可设置值最大为15日，15日还未抄报默认为预警。）</span>
+              <span class="setItem_desc">每月<input class="input_edit" type="text" />日（可多选）进行预警</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">邮件通知</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="">短信通知</span>
+            </div>
+            <div class="set_item set_time">
+              <div class="setItem_desc">
+                允许
+                <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+                到
+                <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+                发送预警信息
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 按钮 -->
+        <div class="edit_btn" v-if="this.$store.getters.getBtnShow">
             <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click.stop.prevent="dialogConfirm">确认</div>
             <div class="edit_cancel red-btn" @click.stop.prevent="dialogClose">取消</div>
           </div>
@@ -84,17 +227,49 @@
           picked: '',
           man: '',
           woman: '',
-          billControlType: []
+          taskType: '请选择',
+          taskTypeList: [],
+          time: [],
+          warningType: '',
+          warningDesc: '核心板剩余发票数量',
+          setItemShow: true
         };
       },
       created() {
-        this.getType();
+        this.getTime();
+        Bus.$on('setType', (value) => {
+          this.warningType = value;
+          let argument = '';
+          if (this.warningType === 'BillSource') {
+            argument = '发票票源监控';
+            this.getType(argument);
+            return false;
+          } else if (this.warningType === 'OffLine') {
+            argument = '离线参数监控';
+            this.getType(argument);
+            return false;
+          } else if (this.warningType === 'BillState') {
+            argument = '发票状态监控';
+            this.getType(argument);
+            return false;
+          } else if (this.warningType === 'Newspaper') {
+            argument = '抄报提醒监控';
+            this.getType(argument);
+          }
+        });
       },
       methods: {
+        // 获取时间
+        getTime() {
+          let maxTime = 24;
+          for (let i = 0; i < maxTime; i++) {
+            this.time.push(i);
+          }
+        },
         // 获取发票业务监控类型
-        getType() {
-          this.$http.get('/rbac/mvc/sallerInfo/getByNsrsbh?xfdm=' + JSON.parse(window.localStorage.getItem('userInfo')).xfdm).then((response) => {
-            this.billControlType = response.nsrsbhList || [];
+        getType(val) {
+          this.$http.get('/api/getSysDictByType?dictType=' + val).then((response) => {
+            this.taskTypeList = response;
           });
         },
         drag(e) {
@@ -203,6 +378,10 @@
           } else if (this.$store.getters.getBtnFunction === 'confirmDelete') {
             // 删除用户
             this.confirmDelete();
+            return false;
+          } else if (this.$store.getters.getBtnFunction === 'setWaringVal') {
+            // 设置预警值
+            this.setWaringVal();
             return false;
           }
         },
@@ -380,6 +559,23 @@
               this.getUserInfoList();
             }
           });
+        },
+        // 设置预警值确认
+        setWaringVal() {
+          let formDate = {'taskType': this.taskType};
+          console.log(formDate);
+        }
+      },
+      watch: {
+        taskType(val) {
+          if (val === '12') {
+            this.setItemShow = false;
+          } else {
+            this.setItemShow = true;
+          }
+          if (val === '11') {
+            this.warningDesc = '核心板剩余成品油数量';
+          }
         }
       }
     };
@@ -506,4 +702,77 @@
             background #e2231a
         .message_content
           padding 10px
+      .setWaring_value
+        text-align left
+        .setWaring_content
+          .select_item
+            position relative
+            font-size 0
+            display flex
+            .icon-dropDown
+              position absolute
+              right 5px
+              top 11px
+              font-size 12px
+              color #666e79
+            .search_label, .search_input, .search_select
+              position relative
+              z-index 2
+              display inline-block
+              vertical-align top
+              width 180px
+              height 34px
+              line-height 34px
+              font-size 12px
+            .search_label
+              flex 0 0 110px
+              text-align left
+            .search_select
+              flex 1
+              padding: 0 22px 0 5px;
+          .set_title
+            font-weight 700
+            line-height 35px
+          .red_descNone
+            height 50px
+            line-height 50px
+            color #e2231a
+          .set_item
+            height 30px
+            line-height 30px
+            .setItem_desc
+              .input_edit, .input_checkBox
+                margin 0 5px
+              .input_edit
+                width 50px
+                height 22px
+              .input_checkBox
+                width 12px
+                height 12px
+          .set_time
+            height 50px
+            line-height 50px
+            .select_time
+              position relative
+              .icon-dropDown
+                position absolute
+                right 5px
+                top 1px
+                color #666e79
+              .search_select
+                padding 0 22px 0 5px
+                height 22px
+        .setWaring_OffLine, .setWaring_Newspaper
+          .set_item
+            position relative
+            height 40px
+            line-height 40px
+            margin-bottom 10px
+            .red_desc
+              position absolute
+              bottom -10px
+              color #e2231a
+              line-height 20px
+          .set_time
+            margin-bottom 0
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="controlBillSource_wrapper">
-      <searchForm @tableShow="judgeTabShow" :set-value="setValue"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :set-value="setValue" :set-type="setType"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、发票库存监控预警</div>
         <table>
@@ -84,6 +84,7 @@
       data() {
         return {
           setValue: true,
+          setType: 'BillSource',
           totalCount: 0,
           totalCount2: 0,
           totalCount3: 0,

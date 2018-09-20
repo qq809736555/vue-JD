@@ -78,7 +78,7 @@
             <span class="icon-dropDown"></span>
             <select v-model="dictCode" class="search_select">
               <option value="">全部</option>
-              <option :value="item.dictCode" v-for="item in taskTypeList2" :key="item.id">{{item.dictName}}</option>
+              <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
           <div class="search_btn_wrapper">
@@ -92,6 +92,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import Bus from '../../common/js/bus.js';
+
     export default {
       props: {
         dataShow: {
@@ -125,6 +127,10 @@
         setValue: {
           type: Boolean,
           default: false
+        },
+        setType: {
+          type: String,
+          default: ''
         }
       },
       data() {
@@ -158,15 +164,19 @@
           dictCode: '',
           CdictCode: '',
           taskTypeList: '',
-          taskTypeList2: '',
           shuiHao: [],
           selection: []
         };
       },
       created () { // 初始化时currentPage赋值
         this.getSH();
-        this.gitType();
-        this.gitType2();
+        if (this.$route.path.indexOf('invoiceState') > 0) {
+          // 发票状态页面
+          this.getType('预警');
+        } else if (this.$route.path.indexOf('sent') > 0) {
+          // 邮件/短信页面
+          this.getType('预警项目类型');
+        }
       },
       methods: {
         // 税号选择，机器编码对应改变
@@ -199,15 +209,9 @@
           });
         },
         // 获取发票状态
-        gitType() {
-          this.$http.get('/api/getSysDictByType?dictType=预警').then((response) => {
+        getType(val) {
+          this.$http.get('/api/getSysDictByType?dictType=' + val).then((response) => {
             this.taskTypeList = response;
-          });
-        },
-        // 获取预警项目类型
-        gitType2() {
-          this.$http.get('/api/getSysDictByType?dictType=预警项目类型').then((response) => {
-            this.taskTypeList2 = response;
           });
         },
         //  日期处理函数
@@ -284,7 +288,8 @@
           let editItem = [];
           this.$store.commit('changeEditItem', editItem);
           this.$store.commit('changeSetVal', true);
-          this.$store.commit('changeBtnFunction', 'changePSetVal');
+          this.$store.commit('changeBtnFunction', 'setWaringVal');
+          Bus.$emit('setType', this.setType);
         }
       }
     };
