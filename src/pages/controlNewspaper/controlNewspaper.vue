@@ -1,6 +1,6 @@
 <template>
   <div class="controlNewspaper_wrapper">
-    <searchForm @tableShow="judgeTabShow" :set-value="setValue" :set-type="setType"></searchForm>
+    <searchForm @tableShow="judgeTabShow" :set-value="setValue" :set-type="setType" :type-show="typeShow"></searchForm>
     <div class="search_table" v-show="tabIsShow">
       <div class="table_name">1、每月抄报提醒</div>
       <table>
@@ -35,6 +35,7 @@
         setValue: true,
         setType: 'Newspaper',
         tabIsShow: false,
+        typeShow: true,
         totalCount: 0,
         pageSize: 5,
         pageNum: 1,
