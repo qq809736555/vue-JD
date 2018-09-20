@@ -1,6 +1,6 @@
 <template>
     <div class="controlOffLine_wrapper">
-      <searchForm @tableShow="judgeTabShow" :sh-show="shShow" :set-value="setValue"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :sh-show="shShow" :set-value="setValue" :set-type="setType"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、离线开票时长预警</div>
         <table>
@@ -85,6 +85,7 @@
           // 不显示税号筛选
           shShow: false,
           setValue: true,
+          setType: 'OffLine',
           tabIsShow: false,
           totalCount: 0,
           totalCount2: 0,

@@ -176,7 +176,7 @@
       created () { // 初始化时currentPage赋值
         this.getSH();
         if (this.$route.path.indexOf('invoiceState') > 0) {
-          // 发票状态页面
+          // 发票状态查询页面
           this.getType('预警');
         } else if (this.$route.path.indexOf('sent') > 0) {
           // 邮件/短信页面
@@ -189,7 +189,7 @@
           let arr = [];
           this.taskTypeList.filter((res) => {
             arr.push(res.dictCode);
-          })
+          });
           return arr;
         }
       },

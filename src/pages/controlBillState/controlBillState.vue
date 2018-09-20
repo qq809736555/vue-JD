@@ -1,6 +1,6 @@
 <template>
     <div class="controlBillState_wrapper">
-      <searchForm @tableShow="judgeTabShow" :sh-show="shShow" :set-value="setValue"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :sh-show="shShow" :set-type="setType" :set-value="setValue"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、发票未签名张数预警</div>
         <table>
@@ -79,6 +79,7 @@
         // 不显示税号筛选
         shShow: false,
         setValue: true,
+        setType: 'BillState',
         tabIsShow: false,
         totalCount: 0,
         totalCount2: 0,
