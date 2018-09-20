@@ -68,7 +68,7 @@
             <div class="search_label">发票标志：</div>
             <span class="icon-dropDown"></span>
             <select v-model="dictCode" class="search_select">
-              <option value="">全部</option>
+              <option value="全部">全部</option>
               <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
@@ -77,7 +77,7 @@
             <div class="search_label">预警项目类型：</div>
             <span class="icon-dropDown"></span>
             <select v-model="dictCode" class="search_select">
-              <option value="">全部</option>
+              <option value="全部">全部</option>
               <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
@@ -161,7 +161,7 @@
           Cnsrsbh: '',
           jqbh: '全部',
           Cjqbh: '',
-          dictCode: '',
+          dictCode: '全部',
           CdictCode: '',
           taskTypeList: '',
           shuiHao: [],
@@ -222,6 +222,11 @@
         getType(val) {
           this.$http.get('/api/getSysDictByType?dictType=' + val).then((response) => {
             this.taskTypeList = response;
+            if (this.dictCode === '全部') {
+              for (let i = 0; i < this.taskTypeList.length; i++) {
+                this.CdictCode += this.taskTypeList[i].dictCode + ',';
+              }
+            }
           });
         },
         //  日期处理函数
@@ -241,9 +246,7 @@
           } else {
             this.Cjqbh = this.jqbh;
           }
-          if (this.dictCode === '全部') {
-            this.CdictCode = '';
-          } else {
+          if (this.dictCode !== '全部') {
             this.CdictCode = this.dictCode;
           }
           let dateA = new Date(this.startTime);
