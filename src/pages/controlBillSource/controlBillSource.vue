@@ -97,13 +97,14 @@
           tabIsShow: false,
           nsrsbh: '',
           jqbh: '',
+          dictCode: '',
           list2: {},
           list3: {}
         };
       },
       methods: {
         getList() {
-          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStore', formDate).then((response) => {
             this.totalCount = response.total;
             this.$store.commit('changeList', response.list);
@@ -159,6 +160,7 @@
           this.getList3();
           this.tabIsShow = data.tableShow;
           this.pageNum = data.pageNum;
+          this.dictCode = data.dictCode;
           this.nsrsbh = data.nsrsbh;
           this.jqbh = data.jqbh;
         }

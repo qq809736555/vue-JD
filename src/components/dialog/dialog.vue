@@ -68,7 +68,7 @@
                 允许
                 <span class="select_time">
                 <span class="icon-dropDown"></span>
-                <select class="search_select">
+                <select class="search_select" v-model="monitorStartTime">
                   <option value="">请选择</option>
                   <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
                 </select>
@@ -76,7 +76,7 @@
                 到
                 <span class="select_time">
                 <span class="icon-dropDown"></span>
-                <select class="search_select">
+                <select class="search_select" v-model="monitorEndTime">
                   <option value="">请选择</option>
                   <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
                 </select>
@@ -232,7 +232,9 @@
           time: [],
           warningType: '',
           warningDesc: '核心板剩余发票数量',
-          setItemShow: true
+          setItemShow: true,
+          monitorStartTime: '0',
+          monitorEndTime: '0'
         };
       },
       created() {
@@ -562,8 +564,10 @@
         },
         // 设置预警值确认
         setWaringVal() {
-          let formDate = {'taskType': this.taskType};
-          console.log(formDate);
+          let formDate = {'taskType': this.taskType, 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime};
+          this.$http.post('/api/setWarn', formDate).then((response) => {
+            console.log(response);
+          });
         }
       },
       watch: {
