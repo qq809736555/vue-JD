@@ -1,6 +1,6 @@
 <template>
     <div class="controlOffLine_wrapper">
-      <searchForm @tableShow="judgeTabShow" :set-value="setValue" :set-type="setType"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :set-value="setValue" :set-type="setType" :type-show="typeShow"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、离线开票时长预警</div>
         <table>
@@ -85,6 +85,7 @@
           setValue: true,
           setType: 'OffLine',
           tabIsShow: false,
+          typeShow: true,
           totalCount: 0,
           totalCount2: 0,
           totalCount3: 0,

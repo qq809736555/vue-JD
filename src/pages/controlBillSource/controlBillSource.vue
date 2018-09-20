@@ -1,6 +1,6 @@
 <template>
     <div class="controlBillSource_wrapper">
-      <searchForm @tableShow="judgeTabShow" :set-type="setType" :set-value="setValue"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :set-type="setType" :set-value="setValue" :type-show="typeShow"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、发票库存监控预警</div>
         <table>
@@ -85,6 +85,7 @@
         return {
           setValue: true,
           setType: 'BillSource',
+          typeShow: true,
           totalCount: 0,
           totalCount2: 0,
           totalCount3: 0,
@@ -99,8 +100,7 @@
           jqbh: '',
           dictCode: '',
           list2: {},
-          list3: {},
-          allTaskTypes: ''
+          list3: {}
         };
       },
       methods: {
@@ -113,7 +113,7 @@
           });
         },
         getList2() {
-          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': this.allTaskTypes, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount2 = response.total;
             this.list2 = response.list;
@@ -121,7 +121,7 @@
           });
         },
         getList3() {
-          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': this.allTaskTypes, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount3 = response.total;
             this.list3 = response.list;
@@ -157,7 +157,6 @@
         // 判断列表展示
         judgeTabShow(data) {
           // 获取全部发票标记
-          this.allTaskTypes = data.getAllTaskTypes;
           this.getList();
           this.getList2();
           this.getList3();
