@@ -156,15 +156,15 @@
         },
         // 判断列表展示
         judgeTabShow(data) {
-          // 获取全部发票标记
-          this.getList();
-          this.getList2();
-          this.getList3();
           this.tabIsShow = data.tableShow;
           this.pageNum = data.pageNum;
           this.dictCode = data.dictCode;
           this.nsrsbh = data.nsrsbh;
           this.jqbh = data.jqbh;
+          // 获取全部发票标记
+          this.getList();
+          this.getList2();
+          this.getList3();
         }
       },
       components: {
