@@ -46,7 +46,7 @@
             </el-date-picker>
           </div>
           <!-- 税号 -->
-          <div class="search_item">
+          <div class="search_item" v-show="shShow">
             <div class="search_label">税号：</div>
             <span class="icon-dropDown"></span>
             <select @change="SHSelect" v-model="nsrsbh" class="search_select">
@@ -131,6 +131,11 @@
         setType: {
           type: String,
           default: ''
+        },
+        // 税号是否显示
+        shShow: {
+          type: Boolean,
+          default: true
         }
       },
       data() {
@@ -176,6 +181,16 @@
         } else if (this.$route.path.indexOf('sent') > 0) {
           // 邮件/短信页面
           this.getType('预警项目类型');
+        }
+      },
+      computed: {
+        // 获取所有的发票类型
+        getAllTaskTypes: function () {
+          let arr = [];
+          this.taskTypeList.filter((res) => {
+            arr.push(res.dictCode);
+          })
+          return arr;
         }
       },
       methods: {
@@ -254,7 +269,8 @@
             dictCode: this.CdictCode || '',
             nowDate: this.CnowTime || new Date(),
             startTime: this.CstartTime || new Date(),
-            endTime: this.CendTime || new Date()
+            endTime: this.CendTime || new Date(),
+            getAllTaskTypes: this.getAllTaskTypes.toString()
           };
           this.$emit('tableShow', data); // 告诉父组件，子组件改变
         },

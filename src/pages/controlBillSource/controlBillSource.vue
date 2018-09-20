@@ -1,6 +1,6 @@
 <template>
     <div class="controlBillSource_wrapper">
-      <searchForm @tableShow="judgeTabShow" :set-value="setValue" :set-type="setType"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :sh-show="shShow" :set-type="setType" :set-value="setValue"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、发票库存监控预警</div>
         <table>
@@ -35,7 +35,7 @@
             <th width="7%">序号</th>
             <th width="23.25%">核心板编号</th>
             <th width="23.25%">剩余成品油数量（L)</th>
-            <th width="23.25%">预警值（张）</th>
+            <th width="23.25%">预警值（L）</th>
             <th width="23.25%">状态</th>
           </tr>
           </thead>
@@ -83,6 +83,8 @@
   export default {
       data() {
         return {
+          // 不显示税号筛选
+          shShow: false,
           setValue: true,
           setType: 'BillSource',
           totalCount: 0,
@@ -99,7 +101,8 @@
           jqbh: '',
           dictCode: '',
           list2: {},
-          list3: {}
+          list3: {},
+          allTaskTypes: ''
         };
       },
       methods: {
@@ -112,7 +115,7 @@
           });
         },
         getList2() {
-          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': this.allTaskTypes, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount2 = response.total;
             this.list2 = response.list;
@@ -120,7 +123,7 @@
           });
         },
         getList3() {
-          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': this.allTaskTypes, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount3 = response.total;
             this.list3 = response.list;
@@ -155,6 +158,8 @@
         },
         // 判断列表展示
         judgeTabShow(data) {
+          // 获取全部发票标记
+          this.allTaskTypes = data.getAllTaskTypes;
           this.getList();
           this.getList2();
           this.getList3();
