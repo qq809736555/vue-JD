@@ -15,8 +15,8 @@
           </thead>
           <tbody>
             <tr v-for="item in this.list" :key="item.id">
-              <td>{{item.kpdwdm}}</td>
               <td>{{item.jqbh}}</td>
+              <td>{{item.value}}</td>
               <td>{{item.yjz}}</td>
               <td>{{item.skserverYjz}}</td>
               <td>{{offLineStatus[item.status]}}</td>
@@ -39,8 +39,8 @@
           </thead>
           <tbody>
           <tr v-for="item in this.list2" :key="item.id">
-            <td>{{item.kpdwdm}}</td>
-            <td>{{item.nsrsbh}}</td>
+            <td>{{item.jqbh}}</td>
+            <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>
             <td>{{item.skserverYjz}}</td>
             <td>{{offLineStatus[item.status]}}</td>
@@ -63,8 +63,8 @@
           </thead>
           <tbody>
           <tr v-for="item in this.list3" :key="item.id">
-            <td>{{item.kpdwdm}}</td>
-            <td>{{item.nsrsbh}}</td>
+            <td>{{item.jqbh}}</td>
+            <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>
             <td>{{item.skserverYjz}}</td>
             <td>{{offLineStatus[item.status]}}</td>
@@ -85,7 +85,7 @@
           setValue: true,
           setType: 'OffLine',
           tabIsShow: false,
-          typeShow: true,
+          typeShow: false,
           totalCount: 0,
           totalCount2: 0,
           totalCount3: 0,
@@ -110,21 +110,21 @@
       },
       methods: {
         getList() {
-          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.allTaskTypes, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': 3, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount = response.total;
             this.list = response.list;
           });
         },
         getList2() {
-          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': this.allTaskTypes, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': 5, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount2 = response.total;
             this.list2 = response.list;
           });
         },
         getList3() {
-          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': this.allTaskTypes, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': 6, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount3 = response.total;
             this.list3 = response.list;
@@ -133,14 +133,13 @@
         // 判断列表展示
         judgeTabShow(data) {
           // 获取全部发票标记
-          this.allTaskTypes = data.getAllTaskTypes;
+          this.tabIsShow = data.tableShow;
+          this.pageNum = data.pageNum;
+          this.nsrsbh = data.nsrsbh.split(',')[0];
+          this.jqbh = data.jqbh;
           this.getList();
           this.getList2();
           this.getList3();
-          this.tabIsShow = data.tableShow;
-          this.pageNum = data.pageNum;
-          this.nsrsbh = data.nsrsbh;
-          this.jqbh = data.jqbh;
         },
         // 翻页组件修改每页显示条数
         updatePageSize(data) {
