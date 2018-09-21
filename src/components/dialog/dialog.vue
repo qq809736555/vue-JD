@@ -820,6 +820,18 @@
           padding 10px
           text-align left
           text-indent 24px
+          max-height 300px
+          overflow hidden
+          overflow-y scroll
+          &::-webkit-scrollbalr
+            width 4px
+            height 4px
+          &::-webkit-scrollbar-thumb
+            border-radius 5px
+            background #e2231a
+          &::-webkit-scrollbar-track
+            border-radius 0px
+            background #e2231a
       .setWaring_value
         text-align left
         .setWaring_content
