@@ -136,7 +136,7 @@
                     // 文字颜色
                     color: '#333',
                     // 字体大小
-                    fontSize: 16
+                    fontSize: 14
                   }
                 },
                 xAxis: {
@@ -154,7 +154,15 @@
                 },
                 series: [{
                   data: chart_dayKpNums_Y,
-                  type: 'line'
+                  type: 'line',
+                  // 显示数值
+                  itemStyle: {
+                    normal: {
+                      label: {
+                        show: true
+                      }
+                    }
+                  }
                 }]
               };
               myChartDay.setOption(optionDay);
@@ -170,7 +178,7 @@
                     // 文字颜色
                     color: '#333',
                     // 字体大小
-                    fontSize: 16
+                    fontSize: 14
                   }
                 },
                 xAxis: {
@@ -188,7 +196,15 @@
                 },
                 series: [{
                   data: chart_monthKpNums_Y,
-                  type: 'line'
+                  type: 'line',
+                  // 显示数值
+                  itemStyle: {
+                    normal: {
+                      label: {
+                        show: true
+                      }
+                    }
+                  }
                 }]
               };
               myChartMonth.setOption(optionMonth);
