@@ -27,7 +27,7 @@
           <!-- 批量导入用户 -->
           <div class="importFile" v-if="this.$store.getters.getImportShow">
             <div class="import_name">请选择Excel文件：</div>
-            <input class="upload" id="selectFile" @change.stop.prevent="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+            <input type="file" name="fileup" id="selectFile" @change.stop.prevent="selectFile(this)" />
           </div>
         <!--下拉框-->
         <div class="search_item"  v-if="this.$store.getters.getAcceptShow">
@@ -58,7 +58,7 @@
             </div>
             <div class="set_title" v-if="setItemShow">预警设置：</div>
             <div class="set_item" v-if="setItemShow">
-              <span class="setItem_desc">{{warningDesc}}≤<input v-model="value" class="input_edit" type="text" />{{unitDesc}}</span>
+              <span class="setItem_desc">{{warningDesc}}≤<input v-model="value" class="input_edit" type="number" />{{unitDesc}}</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="0" v-model="notifyType1">邮件通知</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="1" v-model="notifyType2">短信通知</span>
             </div>
@@ -69,19 +69,19 @@
             <div class="set_title">离线参数预警设置：</div>
             <div class="set_item">
               <span class="red_desc">（当前税控值xxx小时）</span>
-              <span class="setItem_desc">离线开票时长≤<input v-model="offLine_value1" class="input_edit" type="text" />小时</span>
+              <span class="setItem_desc">离线开票时长≤<input v-model="offLine_value1" class="input_edit" type="number" />小时</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType11" class="input_checkBox" type="checkbox" value="">邮件通知</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType12" class="input_checkBox" type="checkbox" value="">短信通知</span>
             </div>
             <div class="set_item">
               <span class="red_desc">（当前税控值xxx小时）</span>
-              <span class="setItem_desc">离线开票正数累计金额≤<input v-model="offLine_value2" class="input_edit" type="text" />元</span>
+              <span class="setItem_desc">离线开票正数累计金额≤<input v-model="offLine_value2" class="input_edit" type="number" />元</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType21" class="input_checkBox" type="checkbox" value="">邮件通知</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType22" class="input_checkBox" type="checkbox" value="">短信通知</span>
             </div>
             <div class="set_item">
               <span class="red_desc">（当前税控值xxx小时）</span>
-              <span class="setItem_desc">离线开票负数累计金额≤<input v-model="offLine_value3" class="input_edit" type="text" />元</span>
+              <span class="setItem_desc">离线开票负数累计金额≤<input v-model="offLine_value3" class="input_edit" type="number" />元</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType31" class="input_checkBox" type="checkbox" value="">邮件通知</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType32" class="input_checkBox" type="checkbox" value="">短信通知</span>
             </div>
@@ -98,7 +98,7 @@
             </div>
             <div class="set_title">预警设置：</div>
             <div class="set_item">
-              <span class="setItem_desc">核心板剩余发票数量≤<input v-model="value" class="input_edit" type="text" />张</span>
+              <span class="setItem_desc">核心板剩余发票数量≤<input v-model="value" class="input_edit" type="number" />张</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="0" v-model="notifyType1">邮件通知</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="1" v-model="notifyType2">短信通知</span>
             </div>
@@ -108,7 +108,7 @@
             <div class="set_title">预警设置：</div>
             <div class="set_item">
               <span class="red_desc">（开票截止日期≤15日，可设置值最大为15日，15日还未抄报默认为预警。）</span>
-              <span class="setItem_desc">每月<input v-model="value" class="input_edit" type="text" />日（可多选）进行预警</span>
+              <span class="setItem_desc">每月<input v-model="value" class="input_edit" type="number" oninput="datLimit" />日（可多选）进行预警</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="0" v-model="notifyType1">邮件通知</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="1" v-model="notifyType2">短信通知</span>
             </div>
@@ -215,6 +215,8 @@
         });
       },
       methods: {
+        // 抄报日期控制
+        datLimit() {},
         // 离线参数，设置预警值，回显参数
         showOffLineData() {
           for (let i = 0; i < this.offLineData_list.length; i++) {
@@ -476,6 +478,11 @@
         },
         // 用户批量导入
         importExcel() {
+          console.log(document.getElementById('selectFile').value);
+          let formDate = {'file': document.getElementById('selectFile').value};
+          this.$http.post('/rbac/mvc/user/importUser', formDate).then((response) => {
+            console.log(response);
+          });
         },
         // 用户添加、修改校验
         regUser() {

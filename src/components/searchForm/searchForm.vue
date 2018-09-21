@@ -46,7 +46,7 @@
             </el-date-picker>
           </div>
           <!-- 税号 -->
-          <div class="search_item">
+          <div class="search_item" v-show="nsrsbhShow">
             <div class="search_label">税号：</div>
             <span class="icon-dropDown"></span>
             <select @change="SHSelect" v-model="nsrsbh" class="search_select">
@@ -103,6 +103,10 @@
         scopShow: {
           type: Boolean,
           default: false
+        },
+        nsrsbhShow: {
+          type: Boolean,
+          default: true
         },
         jqbhShow: {
           type: Boolean,
@@ -255,9 +259,9 @@
             nsrsbh: this.Cnsrsbh,
             jqbh: this.Cjqbh || '',
             dictCode: this.CdictCode || '',
-            nowDate: this.CnowTime || new Date(),
-            startTime: this.CstartTime || new Date(),
-            endTime: this.CendTime || new Date()
+            nowDate: this.CnowTime === '19700101' ? '' : this.CnowTime,
+            startTime: this.CstartTime === '19700101' ? '' : this.CstartTime,
+            endTime: this.CendTime === '19700101' ? '' : this.CendTime
           };
           this.$emit('tableShow', data); // 告诉父组件，子组件改变
         },
