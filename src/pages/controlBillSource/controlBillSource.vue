@@ -169,10 +169,6 @@
           this.getList();
           this.getList2();
           this.getList3();
-          // 获取全部发票标记
-          this.getList();
-          this.getList2();
-          this.getList3();
         }
       },
       components: {
