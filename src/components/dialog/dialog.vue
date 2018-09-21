@@ -818,6 +818,8 @@
             background #e2231a
         .message_content
           padding 10px
+          text-align left
+          text-indent 24px
       .setWaring_value
         text-align left
         .setWaring_content
