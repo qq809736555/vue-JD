@@ -174,7 +174,7 @@
       },
       created () { // 初始化时currentPage赋值
         this.getSH();
-        if (this.$route.path.indexOf('invoiceState') > 0 || this.$route.path.indexOf('control')) {
+        if (this.$route.path.indexOf('invoiceState') > 0 || this.$route.path.indexOf('control') > 0) {
           // 发票状态查询页面
           this.getType('预警');
         } else if (this.$route.path.indexOf('sent') > 0) {
@@ -221,6 +221,7 @@
                 this.CdictCode += this.taskTypeList[i].dictCode + ',';
               }
             }
+            console.log(this.CdictCode);
           });
         },
         //  日期处理函数

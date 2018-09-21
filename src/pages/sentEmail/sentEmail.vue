@@ -74,6 +74,12 @@
         this.tabIsShow = data.tableShow;
         this.pageNum = data.pageNum;
         this.nsrsbh = data.nsrsbh;
+        // 预警选全部是传空值
+        if (data.dictCode.indexOf(',') > 0) {
+          this.dictCode = '';
+        } else {
+          this.dictCode = data.dictCode;
+        }
         this.startTime = data.startTime;
         this.endTime = data.endTime;
         this.getList();
