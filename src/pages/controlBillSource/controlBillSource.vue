@@ -7,17 +7,15 @@
           <thead>
           <tr>
             <th width="7%">序号</th>
-            <th width="15.5%">核心板编号</th>
-            <th width="15.5%">终端编号</th>
-            <th width="15.5%">剩余发票数量（张）</th>
-            <th width="15.5%">预警值（张）</th>
-            <th width="15.5%">状态</th>
+            <th width="30%">核心板编号</th>
+            <th width="30%">剩余发票数量（张）</th>
+            <th width="20%">预警值（张）</th>
+            <th width="13%">状态</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) in list" :key="item.id" v-if="index < pageSize">
             <td>{{index + 1}}</td>
-            <td>{{item.jqbh}}</td>
             <td>{{item.jqbh}}</td>
             <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>
@@ -33,10 +31,10 @@
           <thead>
           <tr>
             <th width="7%">序号</th>
-            <th width="23.25%">核心板编号</th>
-            <th width="23.25%">剩余成品油数量（L)</th>
-            <th width="23.25%">预警值（L）</th>
-            <th width="23.25%">状态</th>
+            <th width="30%">核心板编号</th>
+            <th width="30%">剩余成品油数量（L)</th>
+            <th width="20%">预警值（L）</th>
+            <th width="13%">状态</th>
           </tr>
           </thead>
           <tbody>
