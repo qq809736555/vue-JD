@@ -50,8 +50,8 @@
     },
     methods: {
       getList() {
-        // 发送类型 1:短信，2：邮件
-        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'startTime': this.startTime, 'endTime': this.endTime, 'sendType': '2', 'taskType': this.dictCode};
+        // 发送类型 1:短信，0：邮件
+        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'startTime': this.startTime, 'endTime': this.endTime, 'sendType': '0', 'taskType': this.dictCode};
         this.$http.post('/api/querySendContent', formDate).then((response) => {
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
