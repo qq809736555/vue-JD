@@ -105,7 +105,7 @@
       },
       methods: {
         getList() {
-          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh};
           this.$http.post('/api/queryInvoiceStore', formDate).then((response) => {
             this.totalCount = response.total;
             this.$store.commit('changeList', response.list);
@@ -113,7 +113,7 @@
           });
         },
         getList2() {
-          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount2 = response.total;
             this.list2 = response.list;
@@ -121,7 +121,7 @@
           });
         },
         getList3() {
-          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount3 = response.total;
             this.list3 = response.list;
@@ -158,9 +158,7 @@
         judgeTabShow(data) {
           this.tabIsShow = data.tableShow;
           this.pageNum = data.pageNum;
-          this.dictCode = data.dictCode;
           this.nsrsbh = data.nsrsbh;
-          this.jqbh = data.jqbh;
           // 获取全部发票标记
           this.getList();
           this.getList2();

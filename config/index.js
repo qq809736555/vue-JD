@@ -26,10 +26,10 @@ module.exports = {
         changeOrigin: true,
       },
       '/test': {
-        target: 'http://192.168.2.82:8090/',
+        target: 'http://192.168.4.167:8081',
         changeOrigin: true,
         pathRewrite: {
-          '^/': ''
+          '^/test': '/'
         }
       }
     },

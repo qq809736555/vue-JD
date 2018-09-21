@@ -101,76 +101,112 @@
         };
       },
       mounted() {
-        let formDate = '';
-        this.$http.post('/api/chartQuery', formDate).then((response) => {
-          this.list = response;
-        });
-        this.$http.post('/api/basicQuery', formDate).then((response) => {
-          this.list2 = response;
-        });
-        this.$http.post('/api/statisticalQuery', formDate).then((response) => {
-          this.list3 = response;
-        });
-        let myChartDay = echarts.init(document.getElementById('myChartDay'));
-        let optionDay = {
-          title: {
-            show: true,
-            // 标题文本
-            text: '日开票量统计',
-            top: 'bottom',
-            left: 'center',
-            textStyle: {
-              // 文字颜色
-              color: '#333',
-              // 字体大小
-              fontSize: 16
+        this.getList1();
+        this.getList2();
+        this.getList3();
+      },
+      methods: {
+        getList1() {
+          let formDate = '';
+          let chart_dayKpNums_X = [];
+          let chart_dayKpNums_Y = [];
+          this.$http.post('/api/chartQuery', formDate).then((response) => {
+            this.list.dayKpNums = response.dayKpNums;
+            this.list.monthKpNums = response.monthKpNums;
+            for (let i = 0; i < this.list.dayKpNums.length; i++) {
+              chart_dayKpNums_X.push(this.list.dayKpNums[i].kprq);
+              chart_dayKpNums_Y.push(this.list.dayKpNums[i].dayKpNums);
             }
-          },
-          xAxis: {
-            type: 'category',
-            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-            name: '/天'
-          },
-          yAxis: {
-            type: 'value',
-            name: '/W张'
-          },
-          series: [{
-            data: this.list.dayKpNums,
-            type: 'line'
-          }]
-        };
-        myChartDay.setOption(optionDay);
-        let myChartMonth = echarts.init(document.getElementById('myChartMonth'));
-        let optionMonth = {
-          title: {
-            show: true,
-            // 标题文本
-            text: '月开票量统计',
-            top: 'bottom',
-            left: 'center',
-            textStyle: {
-              // 文字颜色
-              color: '#333',
-              // 字体大小
-              fontSize: 16
+            let chart_monthKpNums_X = [];
+            let chart_monthKpNums_Y = [];
+            for (let i = 0; i < this.list.monthKpNums.length; i++) {
+              chart_monthKpNums_X.push(this.list.monthKpNums[i].kprq);
+              chart_monthKpNums_Y.push(this.list.monthKpNums[i].monthKpNums);
             }
-          },
-          xAxis: {
-            type: 'category',
-            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-            name: '/月'
-          },
-          yAxis: {
-            type: 'value',
-            name: '/W张'
-          },
-          series: [{
-            data: this.list.monthKpNums,
-            type: 'line'
-          }]
-        };
-        myChartMonth.setOption(optionMonth);
+            this.$nextTick(() => {
+              let myChartDay = echarts.init(document.getElementById('myChartDay'));
+              let optionDay = {
+                title: {
+                  show: true,
+                  // 标题文本
+                  text: '日开票量统计',
+                  top: 'bottom',
+                  left: 'center',
+                  textStyle: {
+                    // 文字颜色
+                    color: '#333',
+                    // 字体大小
+                    fontSize: 16
+                  }
+                },
+                xAxis: {
+                  type: 'category',
+                  data: chart_dayKpNums_X,
+                  name: '/天',
+                  axisLabel: {
+                    interval: 0, // 信息全部显示
+                    rotate: -30 // -30倾斜
+                  }
+                },
+                yAxis: {
+                  type: 'value',
+                  name: '/W张'
+                },
+                series: [{
+                  data: chart_dayKpNums_Y,
+                  type: 'line'
+                }]
+              };
+              myChartDay.setOption(optionDay);
+              let myChartMonth = echarts.init(document.getElementById('myChartMonth'));
+              let optionMonth = {
+                title: {
+                  show: true,
+                  // 标题文本
+                  text: '月开票量统计',
+                  top: 'bottom',
+                  left: 'center',
+                  textStyle: {
+                    // 文字颜色
+                    color: '#333',
+                    // 字体大小
+                    fontSize: 16
+                  }
+                },
+                xAxis: {
+                  type: 'category',
+                  data: chart_monthKpNums_X,
+                  name: '/月',
+                  axisLabel: {
+                    interval: 0, // 信息全部显示
+                    rotate: -30 // -30倾斜
+                  }
+                },
+                yAxis: {
+                  type: 'value',
+                  name: '/W张'
+                },
+                series: [{
+                  data: chart_monthKpNums_Y,
+                  type: 'line'
+                }]
+              };
+              myChartMonth.setOption(optionMonth);
+            });
+          });
+        },
+        getList2() {
+          let formDate = '';
+          this.$http.post('/api/basicQuery', formDate).then((response) => {
+            this.list2 = response;
+          });
+        },
+        getList3() {
+          let formDate = '';
+          this.$http.post('/api/statisticalQuery', formDate).then((response) => {
+            this.list3 = response;
+          });
+        }
       }
     };
 </script>
@@ -184,7 +220,7 @@
     .charts
       width 100%
       height auto
-      padding 10px 30px 20px 30px
+      padding 10px 30px 30px 30px
       background #fff
       border-radius 5px
       box-shadow 0 3px 5px 0 rgba(210,210,210,0.5)
