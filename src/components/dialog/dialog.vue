@@ -119,16 +119,16 @@
               <span class="select_time">
                 <span class="icon-dropDown"></span>
                 <select class="search_select" v-model="monitorStartTime">
-                  <option value="0">请选择</option>
-                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in startTime" :key="item.id">{{item}}点</option>
                 </select>
               </span>
               到
               <span class="select_time">
                 <span class="icon-dropDown"></span>
                 <select class="search_select" v-model="monitorEndTime">
-                  <option value="0">请选择</option>
-                  <option :value="item" v-for="item in time" :key="item.id">{{item}}点</option>
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in endTime" :key="item.id">{{item}}点</option>
                 </select>
               </span>
               发送预警信息
@@ -152,6 +152,7 @@
     import Bus from '../../common/js/bus.js';
 
     const XLSX = require('xlsx');
+    const maxTime = 24;
     export default {
       data() {
         return {
@@ -166,7 +167,8 @@
           woman: '',
           taskType: '请选择',
           taskTypeList: [],
-          time: [],
+          startTime: [],
+          endTime: [],
           warningType: '',
           setNsrsbh: '',
           warningDesc: '核心板剩余发票数量',
@@ -238,14 +240,13 @@
               this.notifyType1 = this.calShowData(this.offLineData_list[i].notifyType, this.notifyType1, this.notifyType2)[0];
               this.notifyType2 = this.calShowData(this.offLineData_list[i].notifyType, this.notifyType1, this.notifyType2)[1];
             }
-            console.log(this.monitorStartTime, this.monitorEndTime, this.notifyType1, this.notifyType2, this.value);
           }
         },
         // 获取时间
         getTime() {
-          let maxTime = 24;
           for (let i = 0; i < maxTime; i++) {
-            this.time.push(i);
+            this.startTime.push(i);
+            this.endTime.push(i);
           }
         },
         // 获取发票业务监控类型
@@ -316,8 +317,8 @@
           this.$store.commit('changeAcceptShow', false);
           this.taskType = '请选择';
           this.value = '';
-          this.monitorStartTime = '0';
-          this.monitorEndTime = '0';
+          this.monitorStartTime = '';
+          this.monitorEndTime = '';
           this.notifyType1 = false;
           this.notifyType2 = false;
           this.dialog_error = false;
@@ -670,17 +671,27 @@
           }
           this.$http.get('/api/queryWarn?' + 'nsrsbh=' + this.setNsrsbh + '&taskType=' + this.taskType).then((response) => {
             if (JSON.stringify(response) !== '[]') {
-              console.log(response[0].notifyType);
               this.monitorStartTime = response[0].monitorStartTime || '0';
               this.monitorEndTime = response[0].monitorEndTime || '0';
               if (val !== '12' && val !== '请选择') {
                 this.value = response[0].value;
-                console.log(this.calShowData(response[0].notifyType, this.notifyType1, this.notifyType2));
                 this.notifyType1 = this.calShowData(response[0].notifyType, this.notifyType1, this.notifyType2)[0];
                 this.notifyType2 = this.calShowData(response[0].notifyType, this.notifyType1, this.notifyType2)[1];
               }
             }
           });
+        },
+        monitorStartTime(val) {
+          this.endTime = [];
+          for (let i = val; i < maxTime; i++) {
+            this.endTime.push(i);
+          }
+        },
+        monitorEndTime(val) {
+          this.startTime = [];
+          for (let i = 0; i <= val; i++) {
+            this.startTime.push(i);
+          }
         }
       }
     };
