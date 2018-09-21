@@ -1,6 +1,6 @@
 <template>
     <div class="controlBillSource_wrapper">
-      <searchForm @tableShow="judgeTabShow" :set-type="setType" :set-value="setValue" :type-show="typeShow"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :set-type="setType" :set-value="setValue" :type-show="typeShow" :export-show="false"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、发票库存监控预警</div>
         <table>
@@ -66,7 +66,7 @@
           <tr v-for="(item, index) in list3" :key="item.id" v-if="index < pageSize3">
             <td>{{index + 1}}</td>
             <td>{{item.jqbh}}</td>
-            <td>{{''}}</td>
+            <td>{{item.dqfphm}}</td>
             <td>{{offLineStatus[item.status]}}</td>
           </tr>
           </tbody>
@@ -128,7 +128,7 @@
         },
         getList3() {
           let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': 12, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
-          this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
+          this.$http.post('/api/queryBlkInvocieInfo', formDate).then((response) => {
             this.totalCount3 = response.total;
             this.list3 = response.list;
             this.pageSize3 = response.pageSize;

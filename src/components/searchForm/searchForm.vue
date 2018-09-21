@@ -282,9 +282,18 @@
               // 发票状态查询导出
               window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
             } else if (router.indexOf('controlBillSource') !== -1) {
-              // 发票状态查询导出
-              console.log('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
-              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
+              // 发票票源监控
+              console.info('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=1,11,12');
+              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=1,11,12');
+            } else if (router.indexOf('controlOffLine') !== -1) {
+              // 离线参数监控
+              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=3,5,6');
+            } else if (router.indexOf('controlBillState') !== -1) {
+              // 发票状态监控
+              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=7,2,8');
+            } else if (router.indexOf('controlNewspaper') !== -1) {
+              // 抄报提醒监控
+              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=9');
             }
           });
         },

@@ -1,20 +1,22 @@
 <template>
     <div class="controlOffLine_wrapper">
-      <searchForm @tableShow="judgeTabShow" :set-value="setValue" :set-type="setType" :type-show="typeShow"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :set-value="setValue" :set-type="setType" :type-show="typeShow" :export-show="false"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、离线开票时长预警</div>
         <table>
           <thead>
             <tr>
-              <th width="30%">核心板编号</th>
-              <th width="30%">已离线开票时长（h）</th>
+              <th width="7%">序号</th>
+              <th width="26%">核心板编号</th>
+              <th width="26%">已离线开票时长（h）</th>
               <th width="15%">预警值（h）</th>
               <th width="15%">税控值（h）</th>
-              <th width="10%">状态</th>
+              <th width="11%">状态</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in this.list" :key="item.id">
+            <tr v-for="(item,index) in this.list" :key="item.id">
+              <td>{{index + 1}}</td>
               <td>{{item.jqbh}}</td>
               <td>{{item.value}}</td>
               <td>{{item.yjz}}</td>
@@ -30,15 +32,17 @@
         <table>
           <thead>
           <tr>
-            <th width="30%">核心板编号</th>
-            <th width="33%">已离线开票正数累计金额预警（元）</th>
+            <th width="7%">序号</th>
+            <th width="26%">核心板编号</th>
+            <th width="26%">已离线开票正数累计金额预警（元）</th>
             <th width="12%">预警值（h）</th>
             <th width="15%">税控值（h）</th>
-            <th width="10%">状态</th>
+            <th width="11%">状态</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="item in this.list2" :key="item.id">
+          <tr v-for="(item,index) in this.list2" :key="item.id">
+            <td>{{index+1}}</td>
             <td>{{item.jqbh}}</td>
             <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>
@@ -54,15 +58,17 @@
         <table>
           <thead>
           <tr>
-            <th width="30%">核心板编号</th>
-            <th width="33%">已离线开票负数累计金额预警（元）</th>
+            <th width="7%">序号</th>
+            <th width="26%">核心板编号</th>
+            <th width="29%">已离线开票负数累计金额预警（元）</th>
             <th width="12%">预警值（h）</th>
             <th width="15%">税控值（h）</th>
-            <th width="10%">状态</th>
+            <th width="11%">状态</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="item in this.list3" :key="item.id">
+          <tr v-for="(item,index) in this.list3" :key="item.id">
+            <td>{{index+1}}</td>
             <td>{{item.jqbh}}</td>
             <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>

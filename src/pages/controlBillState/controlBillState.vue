@@ -1,19 +1,21 @@
 <template>
     <div class="controlBillState_wrapper">
-      <searchForm @tableShow="judgeTabShow" :set-type="setType" :set-value="setValue" :type-show="typeShow"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :set-type="setType" :set-value="setValue" :type-show="typeShow" :export-show="false"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、发票未签名张数预警</div>
         <table>
           <thead>
           <tr>
+            <th width="7%">序号</th>
             <th width="30%">核心板编号</th>
             <th width="30%">已产生的发票未签名张数（张）</th>
-            <th width="20%">预警值（张）</th>
-            <th width="20%">状态</th>
+            <th width="17%">预警值（张）</th>
+            <th width="16%">状态</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="item in this.list" :key="item.id">
+          <tr v-for="(item,index) in this.list" :key="item.id">
+            <td>{{index+1}}</td>
             <td>{{item.jqbh}}</td>
             <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>
@@ -28,14 +30,16 @@
         <table>
           <thead>
           <tr>
+            <th width="7%">序号</th>
             <th width="30%">核心板编号</th>
             <th width="30%">已产生的发票未上传张数（张）</th>
-            <th width="20%">预警值（张）</th>
-            <th width="20%">状态</th>
+            <th width="17%">预警值（张）</th>
+            <th width="16%">状态</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="item in this.list2" :key="item.id">
+          <tr v-for="(item,index) in this.list2" :key="item.id">
+            <td>{{index+1}}</td>
             <td>{{item.jqbh}}</td>
             <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>
@@ -50,14 +54,16 @@
         <table>
           <thead>
           <tr>
+            <th width="7%">序号</th>
             <th width="30%">核心板编号</th>
             <th width="30%">已产生验签失败发票张数（张）</th>
-            <th width="20%">预警值（张）</th>
-            <th width="20%">状态</th>
+            <th width="17%">预警值（张）</th>
+            <th width="16%">状态</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="item in this.list3" :key="item.id">
+          <tr v-for="(item,index) in this.list3" :key="item.id">
+            <td>{{index+1}}</td>
             <td>{{item.jqbh}}</td>
             <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>
