@@ -299,13 +299,44 @@
         },
         // 设置预警值
         setValueBtn() {
+          // 发票票源和发票状态，点击不查询
+          if (this.setType === 'BillSource' || this.setType === 'BillState') {
+            this.openDialog();
+          } else if (this.setType === 'OffLine') {
+            let nsrsbh = this.Cnsrsbh.split(',')[0];
+            this.$http.get('/api/queryWarn?' + 'kpdwdm=' + nsrsbh + '&taskType=' + '3,5,6').then((response) => {
+              if (JSON.stringify(response) !== '[]') {
+                Bus.$emit('winData', response);
+              }
+              this.openDialog();
+            });
+          } else if (this.setType === 'Newspaper') {
+            let nsrsbh = this.Cnsrsbh.split(',')[0];
+            this.$http.get('/api/queryWarn?' + 'kpdwdm=' + nsrsbh + '&taskType=' + '9').then((response) => {
+              if (JSON.stringify(response) !== '[]') {
+                Bus.$emit('winData', response);
+              }
+              this.openDialog();
+            });
+          }
+        },
+        // 设置预警值，打开弹窗
+        openDialog() {
+          let nsrsbh = this.Cnsrsbh.split(',')[0];
           this.$store.commit('S');
           this.$store.commit('changeDialogTitle', '设置预警值');
           let editItem = [];
           this.$store.commit('changeEditItem', editItem);
           this.$store.commit('changeSetVal', true);
-          this.$store.commit('changeBtnFunction', 'setWaringVal');
+          if (this.setType === 'OffLine') {
+            this.$store.commit('changeBtnFunction', 'setWaringValOffLine');
+          } else if (this.setType === 'Newspaper') {
+            this.$store.commit('changeBtnFunction', 'setWaringValNewspaper');
+          } else {
+            this.$store.commit('changeBtnFunction', 'setWaringVal');
+          }
           Bus.$emit('setType', this.setType);
+          Bus.$emit('setNsrsbh', nsrsbh);
         }
       }
     };
