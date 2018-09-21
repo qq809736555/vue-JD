@@ -15,13 +15,13 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index < pageSize">
+          <tr v-for="(item, index) in list" :key="item.id" v-if="index < pageSize">
             <td>{{index + 1}}</td>
-            <td>{{item.nsrsbh}}</td>
             <td>{{item.jqbh}}</td>
-            <td>{{item.zdbs}}</td>
-            <td>{{item.fpfs}}</td>
-            <td>{{item.fpfs}}</td>
+            <td>{{item.jqbh}}</td>
+            <td>{{item.value}}</td>
+            <td>{{item.yjz}}</td>
+            <td>{{offLineStatus[item.status]}}</td>
           </tr>
           </tbody>
         </table>
@@ -42,10 +42,10 @@
           <tbody>
           <tr v-for="(item, index) in list2" :key="item.id" v-if="index < pageSize2">
             <td>{{index + 1}}</td>
-            <td>{{item.kpdwdm}}</td>
             <td>{{item.jqbh}}</td>
-            <td>{{item.taskType}}</td>
             <td>{{item.value}}</td>
+            <td>{{item.yjz}}</td>
+            <td>{{offLineStatus[item.status]}}</td>
           </tr>
           </tbody>
         </table>
@@ -66,8 +66,8 @@
           <tr v-for="(item, index) in list3" :key="item.id" v-if="index < pageSize3">
             <td>{{index + 1}}</td>
             <td>{{item.jqbh}}</td>
-            <td>{{item.taskType}}</td>
-            <td>{{item.value}}</td>
+            <td>{{''}}</td>
+            <td>{{offLineStatus[item.status]}}</td>
           </tr>
           </tbody>
         </table>
@@ -85,7 +85,7 @@
         return {
           setValue: true,
           setType: 'BillSource',
-          typeShow: true,
+          typeShow: false,
           totalCount: 0,
           totalCount2: 0,
           totalCount3: 0,
@@ -99,21 +99,27 @@
           nsrsbh: '',
           jqbh: '',
           dictCode: '',
-          list2: {},
-          list3: {}
+          list: [],
+          list2: [],
+          list3: [],
+          // 离线参数状态
+          offLineStatus: {
+            1: '正常',
+            0: '预警'
+          }
         };
       },
       methods: {
         getList() {
-          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
-          this.$http.post('/api/queryInvoiceStore', formDate).then((response) => {
+          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': 1, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount = response.total;
-            this.$store.commit('changeList', response.list);
+            this.list = response.list;
             this.pageSize = response.pageSize;
           });
         },
         getList2() {
-          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum2, 'pageSize': '' + this.pageSize2, 'taskType': 11, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount2 = response.total;
             this.list2 = response.list;
@@ -121,7 +127,7 @@
           });
         },
         getList3() {
-          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': 12, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
             this.totalCount3 = response.total;
             this.list3 = response.list;
@@ -156,15 +162,13 @@
         },
         // 判断列表展示
         judgeTabShow(data) {
-          // 获取全部发票标记
+          this.tabIsShow = data.tableShow;
+          this.pageNum = data.pageNum;
+          this.nsrsbh = data.nsrsbh.split(',')[0];
+          this.jqbh = data.jqbh;
           this.getList();
           this.getList2();
           this.getList3();
-          this.tabIsShow = data.tableShow;
-          this.pageNum = data.pageNum;
-          this.dictCode = data.dictCode;
-          this.nsrsbh = data.nsrsbh;
-          this.jqbh = data.jqbh;
         }
       },
       components: {

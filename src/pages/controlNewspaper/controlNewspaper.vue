@@ -14,10 +14,10 @@
         </thead>
         <tbody>
         <tr v-for="item in this.list" :key="item.id">
-          <td>{{item.kpdwdm}}</td>
           <td>{{item.jqbh}}</td>
+          <td>{{item.value}}</td>
           <td>{{item.yjz}}</td>
-          <td>{{item.skserverYjz}}</td>
+          <td>{{offLineStatus[item.status]}}</td>
         </tr>
         </tbody>
       </table>
@@ -35,19 +35,24 @@
         setValue: true,
         setType: 'Newspaper',
         tabIsShow: false,
-        typeShow: true,
+        typeShow: false,
         totalCount: 0,
         pageSize: 5,
         pageNum: 1,
         nsrsbh: '',
         jqbh: '',
         list: [],
-        allTaskTypes: ''
+        allTaskTypes: '',
+        // 离线参数状态
+        offLineStatus: {
+          1: '正常',
+          0: '预警'
+        }
       };
     },
     methods: {
       getList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.allTaskTypes,  'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': 9, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
         this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
           this.totalCount = response.total;
           this.list = response.list;
@@ -55,12 +60,11 @@
       },
       // 判断列表展示
       judgeTabShow(data) {
-        this.allTaskTypes = data.getAllTaskTypes;
-        this.getList();
         this.tabIsShow = data.tableShow;
         this.pageNum = data.pageNum;
-        this.nsrsbh = data.nsrsbh;
+        this.nsrsbh = data.nsrsbh.split(',')[0];
         this.jqbh = data.jqbh;
+        this.getList();
       },
       // 翻页组件修改每页显示条数
       updatePageSize(data) {
