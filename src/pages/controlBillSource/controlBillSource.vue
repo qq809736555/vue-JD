@@ -1,23 +1,21 @@
 <template>
     <div class="controlBillSource_wrapper">
-      <searchForm @tableShow="judgeTabShow" :set-type="setType" :set-value="setValue" :type-show="typeShow"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :set-type="setType" :set-value="setValue" :type-show="typeShow" :export-show="false"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <div class="table_name">1、发票库存监控预警</div>
         <table>
           <thead>
           <tr>
             <th width="7%">序号</th>
-            <th width="15.5%">核心板编号</th>
-            <th width="15.5%">终端编号</th>
-            <th width="15.5%">剩余发票数量（张）</th>
-            <th width="15.5%">预警值（张）</th>
-            <th width="15.5%">状态</th>
+            <th width="30%">核心板编号</th>
+            <th width="30%">剩余发票数量（张）</th>
+            <th width="20%">预警值（张）</th>
+            <th width="13%">状态</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) in list" :key="item.id" v-if="index < pageSize">
             <td>{{index + 1}}</td>
-            <td>{{item.jqbh}}</td>
             <td>{{item.jqbh}}</td>
             <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>
@@ -33,10 +31,10 @@
           <thead>
           <tr>
             <th width="7%">序号</th>
-            <th width="23.25%">核心板编号</th>
-            <th width="23.25%">剩余成品油数量（L)</th>
-            <th width="23.25%">预警值（L）</th>
-            <th width="23.25%">状态</th>
+            <th width="30%">核心板编号</th>
+            <th width="30%">剩余成品油数量（L)</th>
+            <th width="20%">预警值（L）</th>
+            <th width="13%">状态</th>
           </tr>
           </thead>
           <tbody>
@@ -66,7 +64,7 @@
           <tr v-for="(item, index) in list3" :key="item.id" v-if="index < pageSize3">
             <td>{{index + 1}}</td>
             <td>{{item.jqbh}}</td>
-            <td>{{''}}</td>
+            <td>{{item.dqfphm}}</td>
             <td>{{offLineStatus[item.status]}}</td>
           </tr>
           </tbody>
@@ -104,8 +102,8 @@
           list3: [],
           // 离线参数状态
           offLineStatus: {
-            1: '正常',
-            0: '预警'
+            0: '正常',
+            1: '预警'
           }
         };
       },
@@ -128,7 +126,7 @@
         },
         getList3() {
           let formDate = {'pageNum': this.pageNum3, 'pageSize': '' + this.pageSize3, 'taskType': 12, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
-          this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
+          this.$http.post('/api/queryBlkInvocieInfo', formDate).then((response) => {
             this.totalCount3 = response.total;
             this.list3 = response.list;
             this.pageSize3 = response.pageSize;
