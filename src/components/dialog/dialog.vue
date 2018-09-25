@@ -108,7 +108,7 @@
             <div class="set_title">预警设置：</div>
             <div class="set_item">
               <span class="red_desc">（开票截止日期≤15日，可设置值最大为15日，15日还未抄报默认为预警。）</span>
-              <span class="setItem_desc">每月<input v-model="value" class="input_edit" type="number" oninput="datLimit" />日（可多选）进行预警</span>
+              <span class="setItem_desc">每月<input v-model="value" class="input_edit" type="number" @keyup="datLimit(value)" />日（可多选）进行预警</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="0" v-model="notifyType1">邮件通知</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="1" v-model="notifyType2">短信通知</span>
             </div>
@@ -226,7 +226,11 @@
       },
       methods: {
         // 抄报日期控制
-        datLimit() {},
+        datLimit(val) {
+          if (val > 15) {
+            this.value = 15;
+          }
+        },
         // 离线参数，设置预警值，回显参数
         showOffLineData() {
           for (let i = 0; i < this.offLineData_list.length; i++) {
