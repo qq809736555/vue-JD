@@ -11,7 +11,7 @@
             <div class="edit_label">{{item.editLabel}}：</div>
             <input :type="item.type" value="" class="edit_input" :ref="item.vModel" :oninput="item.onInput">
           </div>
-        <!--状态-->
+          <!--状态-->
           <div class="edit_item" v-if="this.$store.getters.getReStateShow">
             <div class="edit_label">状态：</div>
             <div class="edit_radio">
@@ -32,7 +32,7 @@
             <input class="upload" id="selectFile" name="file" @change.stop.prevent="importExcel(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
             </form>
           </div>
-        <!--下拉框-->
+          <!--下拉框-->
           <div class="edit_item" v-if="this.$store.getters.getAcceptShow">
             <div  class="edit_label">接受方式：</div>
             <span class="icon-dropDown"></span>
@@ -140,9 +140,9 @@
         </div>
         <!-- 按钮 -->
         <div class="edit_btn" v-if="this.$store.getters.getBtnShow">
-            <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click.stop.prevent="dialogConfirm">确认</div>
-            <div class="edit_cancel red-btn" @click.stop.prevent="dialogClose">取消</div>
-          </div>
+          <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click.stop.prevent="dialogConfirm">确认</div>
+          <div class="edit_cancel red-btn" @click.stop.prevent="dialogClose">取消</div>
+        </div>
       </div>
     </div>
   </div>
@@ -669,7 +669,7 @@
             console.log(response);
             if (response === 0) {
               this.dialogClose();
-              this.hintShow();
+              this.hintShow('successHint');
               store.commit('changeContent', '接收人修改成功');
               this.getUserInfoList();
             }
@@ -681,7 +681,7 @@
           this.$http.post('/rbac/mvc/user/resetPassword', formDate).then((response) => {
             if (response === 'success') {
               this.dialogClose();
-              this.hintShow('hintShow');
+              this.hintShow('successHint');
               store.commit('changeContent', '密码重置成功');
               this.getUserInfoList();
             }
@@ -693,7 +693,7 @@
           this.$http.post('/rbac/mvc/user/delete', formDate).then((response) => {
             if (response === 'success') {
               this.dialogClose();
-              this.hintShow('hintShow');
+              this.hintShow('successHint');
               store.commit('changeContent', '用户删除成功');
               this.getUserInfoList();
             }
@@ -707,7 +707,7 @@
             console.log(response);
             if (response === 0) {
               this.dialogClose();
-              this.hintShow();
+              this.hintShow('successHint');
               store.commit('changeContent', '接收人删除成功');
               this.getUserInfoList();
             }

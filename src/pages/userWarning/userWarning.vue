@@ -2,15 +2,6 @@
   <div class="userRecipient_wrapper">
     <div class="search_form">
       <div class="search_conditions">
-        <!-- 税号 -->
-        <div class="search_item">
-          <div class="search_label">税号：</div>
-          <span class="icon-dropDown"></span>
-          <select @change="SHSelect" v-model="nsrsbh" class="search_select">
-            <option value="全部">全部</option>
-            <option v-for="option1 in shuiHao" :value="option1.nsrsbh" :key="option1.id">{{option1.nsrsbh}}<span>/{{option1.dwmc}}</span></option>
-          </select>
-        </div>
         <div class="search_item">
           <div class="search_label">预警接收人：</div>
           <input type="text" v-model="userName" class="search_input">
@@ -71,10 +62,6 @@
         tableShow: false,
         value: '',
         btnFunction: '',
-        nsrsbh: '全部',
-        Cnsrsbh: '',
-        jqbh: '全部',
-        Cjqbh: '',
         taskType: '',
         shuiHao: [],
         selection: []
@@ -91,42 +78,12 @@
     methods: {
       // 接收人操作之后，重新获取新的列表
       getUserInfoList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'nsrsbh': '', 'taskType': 0};
+        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': 0};
         this.$http.post('/api/queryUserManager', formDate).then((response) => {
-          console.log(response);
           this.tableShow = true;
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;
-        });
-      },
-      // 税号选择，机器编码对应改变
-      SHSelect() {
-        if (this.nsrsbh === '全部') {
-          this.Cnsrsbh = '';
-          this.jqbh = '全部';
-          this.selection = [];
-          return;
-        } else {
-          this.Cnsrsbh = this.nsrsbh;
-        }
-        this.$http.get('/api/getMachNumByNsrsbh?nsrsbh=' + this.Cnsrsbh).then((response) => {
-          this.jqbh = '全部';
-          this.selection.length = 0;
-          for (var i = 0; i < response.length; i++) {
-            this.selection.push(response[i]);
-          }
-        });
-      },
-      // 获取税号
-      getSH() {
-        this.$http.get('/rbac/mvc/sallerInfo/getByNsrsbh?xfdm=' + JSON.parse(window.localStorage.getItem('userInfo')).xfdm).then((response) => {
-          this.shuiHao = response.nsrsbhList || [];
-          if (this.nsrsbh === '全部') {
-            for (let i = 0; i < this.shuiHao.length; i++) {
-              this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
-            }
-          }
         });
       },
       // 查询列表
@@ -141,62 +98,11 @@
         this.$store.commit('changeStateShow', true);
         this.$store.commit('changeImportShow', true);
       },
-      //  日期处理函数
-      dateDeal(el) {
-        if (el < 10) {
-          return '0' + el;
-        } else {
-          return el;
-        }
-      },
-      lastData() {
-        if (this.nsrsbh !== '全部') {
-          this.Cnsrsbh = this.nsrsbh;
-        }
-        if (this.jqbh === '全部') {
-          this.Cjqbh = '';
-        } else {
-          this.Cjqbh = this.jqbh;
-        }
-        if (this.dictCode === '全部') {
-          this.CdictCode = '';
-        } else {
-          this.CdictCode = this.dictCode;
-        }
-        let dateA = new Date(this.startTime);
-        let dateB = new Date(this.endTime);
-        this.CstartTime = dateA.getFullYear() + this.dateDeal(dateA.getMonth() + 1) + this.dateDeal(dateA.getDate());
-        this.CendTime = dateB.getFullYear() + this.dateDeal(dateB.getMonth() + 1) + this.dateDeal(dateB.getDate());
-        let dateC = new Date(this.nowDate);
-        this.CnowTime = dateC.getFullYear() + this.dateDeal(dateC.getMonth() + 1);
-      },
       // 导出
       exportBtn() {
-        let router = this.$route.path;
-        this.lastData();
         this.$nextTick(function () {
-          if (router.indexOf('billRepertory') !== -1) {
-            // 库存查询导出
-            window.open('/api/exportInvoiceStore?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh);
-          } else if (router.indexOf('oilProducts') !== -1) {
-            // 成品油查询导出
-            window.open('/api/exportOilProductStore?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh);
-          } else if (router.indexOf('monthlyQuery') !== -1) {
-            // 月度报表查询导出
-            window.open('/api/exportMonthReport?nsrsbh=' + this.Cnsrsbh + '&kpyf=' + this.CnowTime);
-          } else if (router.indexOf('oldDateQuery') !== -1) {
-            // 验旧数据查询导出
-            window.open('/api/exportFpyjInfo?nsrsbh=' + this.Cnsrsbh + '&startTime=' + this.CstartTime + '&endTime=' + this.CendTime);
-          } else if (router.indexOf('invoiceState') !== -1) {
-            // 发票状态查询导出
-            window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
-          } else if (router.indexOf('userStatistical') !== -1) {
-            // 统计接收人设置导出
-            window.open('/ceshi/exportJSRExcel?task_type=' + '0');
-          } else if (router.indexOf('userWarning') !== -1) {
-            // 预警接收人设置导出
-            window.open('/api/exportJSRExcel?task_type=' + '1');
-          }
+          // 预警接收人设置导出
+          window.open('/api/exportJSRExcel?task_type=' + '1');
         });
       },
       // 翻页组件修改每页显示条数
