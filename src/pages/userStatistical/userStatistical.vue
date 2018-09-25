@@ -104,7 +104,6 @@
       exportBtn() {
         this.$nextTick(function () {
           // 统计接收人设置导出
-          console.log('/api/exportExcel?taskType=' + '0');
           window.open('/api/exportJSRExcel?taskType=' + '0');
         });
       },
@@ -224,7 +223,6 @@
     },
     filters: {
       sendPost(val) {
-        console.log(val);
         if (val === '0') {
           return '手机';
         } else if (val === '1') {

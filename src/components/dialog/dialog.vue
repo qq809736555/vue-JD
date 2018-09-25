@@ -520,8 +520,6 @@
           }
           let form = document.getElementById('upload');
           let formData = new FormData(form);
-          let name = formData.get('file');
-          console.log(name);
           formData.append('taskType', this.receiveType);
           formData.append('file', file);
           this.$http.post('/ceshi/importJSRExcel', formData).then((response) => {
@@ -610,7 +608,6 @@
             let selectedVal = document.getElementById('select_receiveType').value;
             let formDate = {'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
             this.$http.post('/api/insertUserManager', formDate).then((response) => {
-              console.log(response);
               if (response === 0) {
                 this.dialogClose();
                 this.hintShow('successHint');
@@ -670,7 +667,6 @@
           let selectedVal = document.getElementById('select_receiveType').value;
           let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
           this.$http.post('/api/updateUserManager', formDate).then((response) => {
-            console.log(response);
             if (response === 0) {
               this.dialogClose();
               this.hintShow('successHint');
@@ -706,9 +702,7 @@
         // 删除接收人
         confirmReceiveDelete() {
           let formDate = {'userId': '' + this.$store.getters.getStateUserId};
-          console.log(formDate);
           this.$http.post('/api/deleteUserManager', formDate).then((response) => {
-            console.log(response);
             if (response === 0) {
               this.dialogClose();
               this.hintShow('successHint');
