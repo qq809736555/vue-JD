@@ -616,12 +616,10 @@
         // 设置预警值确认按钮
         setWaringVal() {
           // 判断是否选择类型
-          if (this.setType === 'BillSource' || this.setType === 'BillState') {
-            if (this.taskType === '请选择') {
-              this.hintShow('errorHint');
-              store.commit('changeContent', '请选择业务类型');
-              return;
-            }
+          if (this.taskType === '请选择') {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择业务类型');
+            return;
           }
           let formDate = [];
           if (this.taskType === '12') {
