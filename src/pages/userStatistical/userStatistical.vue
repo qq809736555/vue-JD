@@ -42,11 +42,8 @@
           <td>{{item.name}}</td>
           <td>{{item.phone}}</td>
           <td>{{item.email}}</td>
-          <td v-if="item.sendType === '0'">手机</td>
-          <td v-if="item.sendType === '1'">邮箱</td>
-          <td v-if="item.sendType === '2'">手机+邮箱</td>
-          <td v-if="item.status === '0'">启用</td>
-          <td v-if="item.status === '1'">禁用</td>
+          <td>{{item.sendType | sendPost}}</td>
+          <td>{{item.status | sendStatus}}</td>
           <td class="operation">
             <div class="modify red-btn" @click="modifyBtn(item.id,item.name,item.phone,item.email,item.sendType,item.kpdwdm)">修改</div>
             <div class="delete red-btn" @click="deleteBtn(item.id, item.name)">删除</div>
@@ -313,6 +310,25 @@
     components: {
       pagination,
       'v-dialog': dialog
+    },
+    filters: {
+      sendPost(val) {
+        console.log(val);
+        if (val === '0') {
+          return '手机';
+        } else if (val === '1') {
+          return '邮箱';
+        } else if (val === '2') {
+          return '手机+邮箱';
+        }
+      },
+      sendStatus(val) {
+        if (val === '0') {
+          return '启用';
+        } else if (val === '1') {
+          return '禁用';
+        }
+      }
     }
   };
 </script>
