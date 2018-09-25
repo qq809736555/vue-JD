@@ -314,6 +314,9 @@
               }
               this.openDialog();
             });
+            this.$http.get('/api/getTaxValue?' + 'kpdwdm=' + nsrsbh).then((response) => {
+              Bus.$emit('winDataVal', response);
+            });
           } else if (this.setType === 'Newspaper') {
             let nsrsbh = this.Cnsrsbh.split(',')[0];
             this.$http.get('/api/queryWarn?' + 'kpdwdm=' + nsrsbh + '&taskType=' + '9').then((response) => {

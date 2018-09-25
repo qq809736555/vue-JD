@@ -68,19 +68,19 @@
           <div class="setWaring_content setWaring_OffLine" v-if="this.warningType === 'OffLine'">
             <div class="set_title">离线参数预警设置：</div>
             <div class="set_item">
-              <span class="red_desc">（当前税控值xxx小时）</span>
+              <span class="red_desc">（当前税控值{{lxscValue}}小时）</span>
               <span class="setItem_desc">离线开票时长≤<input v-model="offLine_value1" class="input_edit" type="number" />小时</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType11" class="input_checkBox" type="checkbox" value="">邮件通知</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType12" class="input_checkBox" type="checkbox" value="">短信通知</span>
             </div>
             <div class="set_item">
-              <span class="red_desc">（当前税控值xxx小时）</span>
+              <span class="red_desc">（当前税控值{{zsljValue}}小时）</span>
               <span class="setItem_desc">离线开票正数累计金额≤<input v-model="offLine_value2" class="input_edit" type="number" />元</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType21" class="input_checkBox" type="checkbox" value="">邮件通知</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType22" class="input_checkBox" type="checkbox" value="">短信通知</span>
             </div>
             <div class="set_item">
-              <span class="red_desc">（当前税控值xxx小时）</span>
+              <span class="red_desc">（当前税控值{{fsljValue}}小时）</span>
               <span class="setItem_desc">离线开票负数累计金额≤<input v-model="offLine_value3" class="input_edit" type="number" />元</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType31" class="input_checkBox" type="checkbox" value="">邮件通知</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType32" class="input_checkBox" type="checkbox" value="">短信通知</span>
@@ -188,7 +188,10 @@
           offLine_value3: '',
           offLine_notifyType31: false,
           offLine_notifyType32: false,
-          offLineData_list: []
+          offLineData_list: [],
+          lxscValue: 0,
+          zsljValue: 0,
+          fsljValue: 0
         };
       },
       created() {
@@ -209,9 +212,16 @@
         Bus.$on('setNsrsbh', (value) => {
           this.setNsrsbh = value;
         });
+        // 弹框中的input值
         Bus.$on('winData', (value) => {
           this.offLineData_list = value;
           this.showOffLineData();
+        });
+        // 离线特殊
+        Bus.$on('winDataVal', (value) => {
+          this.lxscValue = value.lxscValue || 0;
+          this.zsljValue = value.zsljValue || 0;
+          this.fsljValue = value.fsljValue || 0;
         });
       },
       methods: {
