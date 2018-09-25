@@ -221,7 +221,6 @@
                 this.CdictCode += this.taskTypeList[i].dictCode + ',';
               }
             }
-            console.log(this.CdictCode);
           });
         },
         //  日期处理函数

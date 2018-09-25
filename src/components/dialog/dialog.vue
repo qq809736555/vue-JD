@@ -27,7 +27,7 @@
           <!-- 批量导入用户 -->
           <div class="importFile" v-if="this.$store.getters.getImportShow">
             <div class="import_name">请选择Excel文件：</div>
-            <input type="file" name="fileup" id="selectFile" @change.stop.prevent="selectFile(this)" />
+            <input class="upload" id="selectFile" @change.stop.prevent="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
           </div>
         <!--下拉框-->
         <div class="search_item"  v-if="this.$store.getters.getAcceptShow">
@@ -478,11 +478,6 @@
         },
         // 用户批量导入
         importExcel() {
-          console.log(document.getElementById('selectFile').value);
-          let formDate = {'file': document.getElementById('selectFile').value};
-          this.$http.post('/rbac/mvc/user/importUser', formDate).then((response) => {
-            console.log(response);
-          });
         },
         // 用户添加、修改校验
         regUser() {
