@@ -20,6 +20,8 @@ const dialog = {
     selectUserId: '',
     // 是否显示导入文件
     importShow: false,
+    // 状态是否显示
+    reStatus: false,
     // 是否显示查看邮件/短信
     seeMsgShow: false,
     btnShow: true,
@@ -42,9 +44,6 @@ const dialog = {
     getBtnFunction(state) {
       return state.btnFunction;
     },
-    getStateShow(state) {
-      return state.stateShow;
-    },
     getStateCChange(state) {
       return state.confirmChange;
     },
@@ -53,6 +52,12 @@ const dialog = {
     },
     getImportShow(state) {
       return state.importShow;
+    },
+    getReStateShow(state) {
+      return state.ReStatus;
+    },
+    getStateShow(state) {
+      return state.stateShow;
     },
     getSeeMsg(state) {
       return state.seeMsgShow;
@@ -92,6 +97,9 @@ const dialog = {
     },
     changeImportShow(state, importShow) {
       state.importShow = importShow;
+    },
+    changeReStateShow(state, reStatus) {
+      state.reStatus = reStatus;
     },
     changeSeeMsg(state, seeMsgShow) {
       state.seeMsgShow = seeMsgShow;

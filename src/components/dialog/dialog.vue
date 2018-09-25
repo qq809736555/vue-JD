@@ -11,7 +11,8 @@
             <div class="edit_label">{{item.editLabel}}：</div>
             <input :type="item.type" value="" class="edit_input" :ref="item.vModel" :oninput="item.onInput">
           </div>
-          <div class="edit_item" style="display: none;">
+        <!--状态-->
+          <div class="edit_item" v-if="this.$store.getters.getReStateShow">
             <div class="edit_label">状态：</div>
             <div class="edit_radio">
               <div class="edit_selectRadio">
@@ -26,20 +27,22 @@
           <div class="confirmChange" v-if="this.$store.getters.getStateCChange !== ''">{{this.$store.getters.getStateCChange}}</div>
           <!-- 批量导入用户 -->
           <div class="importFile" v-if="this.$store.getters.getImportShow">
+            <form id="upload" enctype="multipart/form-data" method="post">
             <div class="import_name">请选择Excel文件：</div>
-            <input class="upload" id="selectFile" @change.stop.prevent="selectFile(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+            <input class="upload" id="selectFile" name="file" @change.stop.prevent="importExcel(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+            </form>
           </div>
         <!--下拉框-->
-        <div class="search_item"  v-if="this.$store.getters.getAcceptShow">
-          <div class="edit_item">
+          <div class="edit_item" v-if="this.$store.getters.getAcceptShow">
             <div  class="edit_label">接受方式：</div>
             <span class="icon-dropDown"></span>
-            <select  class="search_select edit_select">
-              <option value="">全部</option>
-              <option value="123">345678</option>
+            <select v-model="selectType"  class="search_select edit_select" id="select_receiveType">
+              <option value="">请选择</option>
+              <option value="0">手机</option>
+              <option value="1">邮箱</option>
+              <option value="2">手机+邮箱</option>
             </select>
           </div>
-        </div>
           <!-- 查看邮件/短信 -->
           <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
             <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
@@ -71,8 +74,17 @@
           phone: '',
           picked: '',
           man: '',
-          woman: ''
+          woman: '',
+          files: '',
+          file: '',
+          selectType: ''
         };
+      },
+      created() {
+        Bus.$on('selectType', (value) => {
+          console.log(value);
+         this.selectType = value;
+        });
       },
       methods: {
         drag(e) {
@@ -134,6 +146,7 @@
           this.$store.commit('changeImportShow', false);
           this.$store.commit('changeSeeMsg', false);
           this.$store.commit('changeAcceptShow', false);
+          this.$store.commit('changeReStateShow', false);
           this.dialog_error = false;
           this.dialogError = '';
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
@@ -173,6 +186,10 @@
             // 修改用户信息
             this.changeUserInfo();
             return false;
+          } else if (this.$store.getters.getBtnFunction === 'changeReceiveInfo') {
+            // 修改接收人信息
+            this.changeReceiveInfo();
+            return false;
           } else if (this.$store.getters.getBtnFunction === 'confirmChange') {
             // 重置密码
             this.confirmChange();
@@ -180,6 +197,14 @@
           } else if (this.$store.getters.getBtnFunction === 'confirmDelete') {
             // 删除用户
             this.confirmDelete();
+            return false;
+          } else if (this.$store.getters.getBtnFunction === 'newReceivesBtn') {
+            // 新建接收人
+            this.newReceivesBtn();
+            return false;
+          } else if (this.$store.getters.getBtnFunction === 'confirmReceiveDelete') {
+            // 删除接收人
+            this.confirmReceiveDelete();
             return false;
           }
         },
@@ -233,13 +258,11 @@
         },
         selectFile() {
           let file = event.currentTarget.files[0];
-
           if (file === undefined) {
             return;
           }
-
+          console.log(file);
           let rABS = false; // 是否将文件读取为二进制字符串
-
           let reader = new FileReader();
           FileReader.prototype.readAsBinaryString = function(f) {
             let binary = '';
@@ -263,7 +286,8 @@
                 });
               }
               outData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]); // outdata就是你想要的东西
-              console.log(outData);
+              // console.log(outData);
+              // excel装换后的
             };
             reader.readAsArrayBuffer(file);
           };
@@ -273,8 +297,26 @@
             reader.readAsBinaryString(file);
           }
         },
-        // 用户批量导入
+        // 接收人批量导入
         importExcel() {
+          let file = event.currentTarget.files[0];
+          if (file === undefined) {
+            return;
+          }
+          let form = document.getElementById('upload');
+          let formData = new FormData(form);
+          let name = formData.get('file');
+          console.log(name);
+          formData.append('taskType', '0');
+          formData.append('file', file);
+          this.$http.post('/ceshi/importJSRExcel', formData).then((response) => {
+            if (response === 0) {
+              this.dialogClose();
+              this.hintShow();
+              store.commit('changeContent', '导入Excel成功');
+              this.getUserInfoList();
+            }
+          });
         },
         // 用户添加、修改校验
         regUser() {
@@ -318,6 +360,50 @@
               });
             }
         },
+        // 新增接收人
+        newReceivesBtn() {
+          let _this = this;
+          if (!global.name.test(_this.$refs.name[0].value)) {
+            this.dialog_error = true;
+            this.dialogError = '请输入2-10位汉字或字母的接收人名称';
+            return false;
+          }
+          if (!global.phone.test(_this.$refs.phone[0].value)) {
+            this.dialog_error = true;
+            this.dialogError = '请输入正确的11位手机号码';
+            return false;
+          }
+          if (!global.email.test(_this.$refs.email[0].value)) {
+            this.dialog_error = true;
+            this.dialogError = '请输入正确的邮箱';
+            return false;
+          }
+          if (document.getElementById('select_receiveType').value === '') {
+            this.dialog_error = true;
+            this.dialogError = '请选择接收方式';
+            return false;
+          }
+            this.dialog_error = false;
+            this.dialogError = '';
+            let name = this.$refs.name[0].value;
+            // 邮箱
+            let email = this.$refs.email[0].value;
+            // 号码
+            let phone = this.$refs.phone[0].value;
+            // 税号
+            let xfdm = this.$refs.xfdm[0].value;
+            let selectedVal = document.getElementById('select_receiveType').value;
+            let formDate = {'email': email, 'taskType': 0, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
+            this.$http.post('/api/insertUserManager', formDate).then((response) => {
+              console.log(response);
+              if (response === 0) {
+                this.dialogClose();
+                this.hintShow();
+                store.commit('changeContent', '接收人新增成功');
+                this.getUserInfoList();
+              }
+            });
+        },
         // 修改用户信息
         changeUserInfo() {
           this.regUser();
@@ -330,6 +416,50 @@
               this.dialogClose();
               this.hintShow();
               store.commit('changeContent', '用户信息修改成功');
+              this.getUserInfoList();
+            }
+          });
+        },
+        // 修改接收人信息
+        changeReceiveInfo() {
+          let _this = this;
+          if (!global.name.test(_this.$refs.name[0].value)) {
+            this.dialog_error = true;
+            this.dialogError = '请输入2-10位汉字或字母的接收人名称';
+            return false;
+          }
+          if (!global.phone.test(_this.$refs.phone[0].value)) {
+            this.dialog_error = true;
+            this.dialogError = '请输入正确的11位手机号码';
+            return false;
+          }
+          if (!global.email.test(_this.$refs.email[0].value)) {
+            this.dialog_error = true;
+            this.dialogError = '请输入正确的邮箱';
+            return false;
+          }
+          if (document.getElementById('select_receiveType').value === '') {
+            this.dialog_error = true;
+            this.dialogError = '请选择接收方式';
+            return false;
+          }
+          this.dialog_error = false;
+          this.dialogError = '';
+          let name = this.$refs.name[0].value;
+          // 邮箱
+          let email = this.$refs.email[0].value;
+          // 号码
+          let phone = this.$refs.phone[0].value;
+          // 税号
+          let xfdm = this.$refs.xfdm[0].value;
+          let selectedVal = document.getElementById('select_receiveType').value;
+          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': 0, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
+          this.$http.post('/api/updateUserManager', formDate).then((response) => {
+            console.log(response);
+            if (response === 0) {
+              this.dialogClose();
+              this.hintShow();
+              store.commit('changeContent', '接收人修改成功');
               this.getUserInfoList();
             }
           });
@@ -354,6 +484,20 @@
               this.dialogClose();
               this.hintShow();
               store.commit('changeContent', '用户删除成功');
+              this.getUserInfoList();
+            }
+          });
+        },
+        // 删除接收人
+        confirmReceiveDelete() {
+          let formDate = {'userId': '' + this.$store.getters.getStateUserId};
+          console.log(formDate);
+          this.$http.post('/api/deleteUserManager', formDate).then((response) => {
+            console.log(response);
+            if (response === 0) {
+              this.dialogClose();
+              this.hintShow();
+              store.commit('changeContent', '接收人删除成功');
               this.getUserInfoList();
             }
           });

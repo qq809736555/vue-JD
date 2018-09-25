@@ -31,6 +31,13 @@ module.exports = {
         pathRewrite: {
           '^/': ''
         }
+      },
+      '/ceshi':{
+        target: 'http://192.168.4.167:8081', //测试环境
+        changeOrigin: true,
+        pathRewrite: {
+          '^/ceshi': '/'
+        }
       }
     },
 
