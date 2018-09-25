@@ -46,7 +46,7 @@
             </el-date-picker>
           </div>
           <!-- 税号 -->
-          <div class="search_item">
+          <div class="search_item" v-show="nsrsbhShow">
             <div class="search_label">税号：</div>
             <span class="icon-dropDown"></span>
             <select @change="SHSelect" v-model="nsrsbh" class="search_select">
@@ -68,7 +68,7 @@
             <div class="search_label">发票标志：</div>
             <span class="icon-dropDown"></span>
             <select v-model="dictCode" class="search_select">
-              <option value="">全部</option>
+              <option value="全部">全部</option>
               <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
@@ -77,8 +77,8 @@
             <div class="search_label">预警项目类型：</div>
             <span class="icon-dropDown"></span>
             <select v-model="dictCode" class="search_select">
-              <option value="">全部</option>
-              <option :value="item.dictCode" v-for="item in taskTypeList2" :key="item.id">{{item.dictName}}</option>
+              <option value="全部">全部</option>
+              <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
             </select>
           </div>
           <div class="search_btn_wrapper">
@@ -92,6 +92,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import Bus from '../../common/js/bus.js';
+
     export default {
       props: {
         dataShow: {
@@ -101,6 +103,10 @@
         scopShow: {
           type: Boolean,
           default: false
+        },
+        nsrsbhShow: {
+          type: Boolean,
+          default: true
         },
         jqbhShow: {
           type: Boolean,
@@ -125,6 +131,10 @@
         setValue: {
           type: Boolean,
           default: false
+        },
+        setType: {
+          type: String,
+          default: ''
         }
       },
       data() {
@@ -155,18 +165,22 @@
           Cnsrsbh: '',
           jqbh: '全部',
           Cjqbh: '',
-          dictCode: '',
+          dictCode: '全部',
           CdictCode: '',
           taskTypeList: '',
-          taskTypeList2: '',
           shuiHao: [],
           selection: []
         };
       },
       created () { // 初始化时currentPage赋值
         this.getSH();
-        this.gitType();
-        this.gitType2();
+        if (this.$route.path.indexOf('invoiceState') > 0 || this.$route.path.indexOf('control') > 0) {
+          // 发票状态查询页面
+          this.getType('预警');
+        } else if (this.$route.path.indexOf('sent') > 0) {
+          // 邮件/短信页面
+          this.getType('预警项目类型');
+        }
       },
       methods: {
         // 税号选择，机器编码对应改变
@@ -199,15 +213,14 @@
           });
         },
         // 获取发票状态
-        gitType() {
-          this.$http.get('/api/getSysDictByType?dictType=预警').then((response) => {
+        getType(val) {
+          this.$http.get('/api/getSysDictByType?dictType=' + val).then((response) => {
             this.taskTypeList = response;
-          });
-        },
-        // 获取预警项目类型
-        gitType2() {
-          this.$http.get('/api/getSysDictByType?dictType=预警项目类型').then((response) => {
-            this.taskTypeList2 = response;
+            if (this.dictCode === '全部') {
+              for (let i = 0; i < this.taskTypeList.length; i++) {
+                this.CdictCode += this.taskTypeList[i].dictCode + ',';
+              }
+            }
           });
         },
         //  日期处理函数
@@ -227,9 +240,7 @@
           } else {
             this.Cjqbh = this.jqbh;
           }
-          if (this.dictCode === '全部') {
-            this.CdictCode = '';
-          } else {
+          if (this.dictCode !== '全部') {
             this.CdictCode = this.dictCode;
           }
           let dateA = new Date(this.startTime);
@@ -248,9 +259,9 @@
             nsrsbh: this.Cnsrsbh,
             jqbh: this.Cjqbh || '',
             dictCode: this.CdictCode || '',
-            nowDate: this.CnowTime || new Date(),
-            startTime: this.CstartTime || new Date(),
-            endTime: this.CendTime || new Date()
+            nowDate: this.CnowTime === '19700101' ? '' : this.CnowTime,
+            startTime: this.CstartTime === '19700101' ? '' : this.CstartTime,
+            endTime: this.CendTime === '19700101' ? '' : this.CendTime
           };
           this.$emit('tableShow', data); // 告诉父组件，子组件改变
         },
@@ -274,11 +285,66 @@
             } else if (router.indexOf('invoiceState') !== -1) {
               // 发票状态查询导出
               window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
+            } else if (router.indexOf('controlBillSource') !== -1) {
+              // 发票票源监控
+              console.info('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=1,11,12');
+              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=1,11,12');
+            } else if (router.indexOf('controlOffLine') !== -1) {
+              // 离线参数监控
+              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=3,5,6');
+            } else if (router.indexOf('controlBillState') !== -1) {
+              // 发票状态监控
+              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=7,2,8');
+            } else if (router.indexOf('controlNewspaper') !== -1) {
+              // 抄报提醒监控
+              window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=9');
             }
           });
         },
         // 设置预警值
-        setValueBtn() {}
+        setValueBtn() {
+          // 发票票源和发票状态，点击不查询
+          if (this.setType === 'BillSource' || this.setType === 'BillState') {
+            this.openDialog();
+          } else if (this.setType === 'OffLine') {
+            let nsrsbh = this.Cnsrsbh.split(',')[0];
+            this.$http.get('/api/queryWarn?' + 'kpdwdm=' + nsrsbh + '&taskType=' + '3,5,6').then((response) => {
+              if (JSON.stringify(response) !== '[]') {
+                Bus.$emit('winData', response);
+              }
+              this.openDialog();
+            });
+            this.$http.get('/api/getTaxValue?' + 'kpdwdm=' + nsrsbh).then((response) => {
+              Bus.$emit('winDataVal', response);
+            });
+          } else if (this.setType === 'Newspaper') {
+            let nsrsbh = this.Cnsrsbh.split(',')[0];
+            this.$http.get('/api/queryWarn?' + 'kpdwdm=' + nsrsbh + '&taskType=' + '9').then((response) => {
+              if (JSON.stringify(response) !== '[]') {
+                Bus.$emit('winData', response);
+              }
+              this.openDialog();
+            });
+          }
+        },
+        // 设置预警值，打开弹窗
+        openDialog() {
+          let nsrsbh = this.Cnsrsbh.split(',')[0];
+          this.$store.commit('S');
+          this.$store.commit('changeDialogTitle', '设置预警值');
+          let editItem = [];
+          this.$store.commit('changeEditItem', editItem);
+          this.$store.commit('changeSetVal', true);
+          if (this.setType === 'OffLine') {
+            this.$store.commit('changeBtnFunction', 'setWaringValOffLine');
+          } else if (this.setType === 'Newspaper') {
+            this.$store.commit('changeBtnFunction', 'setWaringValNewspaper');
+          } else {
+            this.$store.commit('changeBtnFunction', 'setWaringVal');
+          }
+          Bus.$emit('setType', this.setType);
+          Bus.$emit('setNsrsbh', nsrsbh);
+        }
       }
     };
 </script>

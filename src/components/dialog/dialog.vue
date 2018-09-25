@@ -43,11 +43,103 @@
               <option value="2">手机+邮箱</option>
             </select>
           </div>
-          <!-- 查看邮件/短信 -->
-          <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
-            <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
+        <!-- 查看邮件/短信 -->
+        <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
+          <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
+        </div>
+        <!-- 设置预警值 -->
+        <div class="setWaring_value" v-if="this.$store.getters.getSetVal">
+          <!--1.发票票源预警-->
+          <div class="setWaring_content" v-if="this.warningType === 'BillSource'">
+            <div class="select_item">
+              <div class="search_label">发票业务监控类型：</div>
+              <span class="icon-dropDown"></span>
+              <select class="search_select" v-model="taskType">
+                <option value="请选择">请选择</option>
+                <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
+              </select>
+            </div>
+            <div class="set_title" v-if="setItemShow">预警设置：</div>
+            <div class="set_item" v-if="setItemShow">
+              <span class="setItem_desc">{{warningDesc}}≤<input v-model="value" class="input_edit" type="number" />{{unitDesc}}</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="0" v-model="notifyType1">邮件通知</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="1" v-model="notifyType2">短信通知</span>
+            </div>
+            <div class="red_descNone" v-if="!setItemShow">空白发票出现重复后自动进行提醒。</div>
           </div>
-          <div class="edit_btn" v-if="this.$store.getters.getBtnShow">
+          <!-- 2.离线参数监控 -->
+          <div class="setWaring_content setWaring_OffLine" v-if="this.warningType === 'OffLine'">
+            <div class="set_title">离线参数预警设置：</div>
+            <div class="set_item">
+              <span class="red_desc">（当前税控值{{lxscValue}}小时）</span>
+              <span class="setItem_desc">离线开票时长≤<input v-model="offLine_value1" class="input_edit" type="number" />小时</span>
+              <span class="setItem_desc"><input v-model="offLine_notifyType11" class="input_checkBox" type="checkbox" value="">邮件通知</span>
+              <span class="setItem_desc"><input v-model="offLine_notifyType12" class="input_checkBox" type="checkbox" value="">短信通知</span>
+            </div>
+            <div class="set_item">
+              <span class="red_desc">（当前税控值{{zsljValue}}小时）</span>
+              <span class="setItem_desc">离线开票正数累计金额≤<input v-model="offLine_value2" class="input_edit" type="number" />元</span>
+              <span class="setItem_desc"><input v-model="offLine_notifyType21" class="input_checkBox" type="checkbox" value="">邮件通知</span>
+              <span class="setItem_desc"><input v-model="offLine_notifyType22" class="input_checkBox" type="checkbox" value="">短信通知</span>
+            </div>
+            <div class="set_item">
+              <span class="red_desc">（当前税控值{{fsljValue}}小时）</span>
+              <span class="setItem_desc">离线开票负数累计金额≤<input v-model="offLine_value3" class="input_edit" type="number" />元</span>
+              <span class="setItem_desc"><input v-model="offLine_notifyType31" class="input_checkBox" type="checkbox" value="">邮件通知</span>
+              <span class="setItem_desc"><input v-model="offLine_notifyType32" class="input_checkBox" type="checkbox" value="">短信通知</span>
+            </div>
+          </div>
+          <!-- 3.发票状态监控 -->
+          <div class="setWaring_content setWaring_BillState" v-if="this.warningType === 'BillState'">
+            <div class="select_item">
+              <div class="search_label">发票业务监控类型：</div>
+              <span class="icon-dropDown"></span>
+              <select class="search_select" v-model="taskType">
+                <option value="请选择">请选择</option>
+                <option :value="item.dictCode" v-for="item in taskTypeList" :key="item.id">{{item.dictName}}</option>
+              </select>
+            </div>
+            <div class="set_title">预警设置：</div>
+            <div class="set_item">
+              <span class="setItem_desc">核心板剩余发票数量≤<input v-model="value" class="input_edit" type="number" />张</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="0" v-model="notifyType1">邮件通知</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="1" v-model="notifyType2">短信通知</span>
+            </div>
+          </div>
+          <!-- 4.抄报提醒监控 -->
+          <div class="setWaring_content setWaring_Newspaper" v-if="this.warningType === 'Newspaper'">
+            <div class="set_title">预警设置：</div>
+            <div class="set_item">
+              <span class="red_desc">（开票截止日期≤15日，可设置值最大为15日，15日还未抄报默认为预警。）</span>
+              <span class="setItem_desc">每月<input v-model="value" class="input_edit" type="number" @keyup="datLimit(value)" />日（可多选）进行预警</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="0" v-model="notifyType1">邮件通知</span>
+              <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="1" v-model="notifyType2">短信通知</span>
+            </div>
+          </div>
+          <div class="set_item set_time">
+            <div class="setItem_desc">
+              允许
+              <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select" v-model="monitorStartTime">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in startTime" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+              到
+              <span class="select_time">
+                <span class="icon-dropDown"></span>
+                <select class="search_select" v-model="monitorEndTime">
+                  <option value="">请选择</option>
+                  <option :value="item" v-for="item in endTime" :key="item.id">{{item}}点</option>
+                </select>
+              </span>
+              发送预警信息
+            </div>
+          </div>
+        </div>
+        <!-- 按钮 -->
+        <div class="edit_btn" v-if="this.$store.getters.getBtnShow">
             <div class="edit_confirm red-btn" :name="this.$store.getters.getBtnFunction" @click.stop.prevent="dialogConfirm">确认</div>
             <div class="edit_cancel red-btn" @click.stop.prevent="dialogClose">取消</div>
           </div>
@@ -63,6 +155,7 @@
     import Bus from '../../common/js/bus.js';
 
     const XLSX = require('xlsx');
+    const maxTime = 24;
     export default {
       data() {
         return {
@@ -75,18 +168,116 @@
           picked: '',
           man: '',
           woman: '',
-          files: '',
-          file: '',
+          taskType: '请选择',
+          taskTypeList: [],
+          startTime: [],
+          endTime: [],
+          warningType: '',
+          setNsrsbh: '',
+          warningDesc: '核心板剩余发票数量',
+          unitDesc: '张',
+          setItemShow: true,
+          monitorStartTime: '0',
+          monitorEndTime: '0',
+          value: '',
+          notifyType1: false,
+          notifyType2: false,
+          offLine_value1: '', // 离线三个值
+          offLine_notifyType11: false,
+          offLine_notifyType12: false,
+          offLine_value2: '',
+          offLine_notifyType21: false,
+          offLine_notifyType22: false,
+          offLine_value3: '',
+          offLine_notifyType31: false,
+          offLine_notifyType32: false,
+          offLineData_list: [],
+          lxscValue: 0,
+          zsljValue: 0,
+          fsljValue: 0,
           selectType: ''
         };
       },
       created() {
         Bus.$on('selectType', (value) => {
-          console.log(value);
-         this.selectType = value;
+          this.selectType = value;
+        });
+        this.getTime();
+        Bus.$on('setType', (value) => {
+          this.warningType = value;
+          let argument = '';
+          if (this.warningType === 'BillSource') {
+            argument = '发票票源监控';
+            this.getType(argument);
+            return false;
+          } else if (this.warningType === 'BillState') {
+            argument = '发票状态监控';
+            this.getType(argument);
+            return false;
+          }
+        });
+        Bus.$on('setNsrsbh', (value) => {
+          this.setNsrsbh = value;
+        });
+        // 弹框中的input值
+        Bus.$on('winData', (value) => {
+          this.offLineData_list = value;
+          this.showOffLineData();
+        });
+        // 离线特殊
+        Bus.$on('winDataVal', (value) => {
+          this.lxscValue = value.lxscValue || 0;
+          this.zsljValue = value.zsljValue || 0;
+          this.fsljValue = value.fsljValue || 0;
         });
       },
       methods: {
+        // 抄报日期控制
+        datLimit(val) {
+          if (val > 15) {
+            this.value = 15;
+          }
+        },
+        // 离线参数，设置预警值，回显参数
+        showOffLineData() {
+          for (let i = 0; i < this.offLineData_list.length; i++) {
+            this.monitorStartTime = this.offLineData_list[i].monitorStartTime || '0';
+            this.monitorEndTime = this.offLineData_list[i].monitorEndTime || '0';
+            if (this.offLineData_list[i].taskType === '3') {
+              this.offLine_value1 = this.offLineData_list[i].value;
+              this.offLine_notifyType11 = this.calShowData(this.offLineData_list[i].notifyType, this.offLine_notifyType11, this.offLine_notifyType12)[0];
+              this.offLine_notifyType12 = this.calShowData(this.offLineData_list[i].notifyType, this.offLine_notifyType11, this.offLine_notifyType12)[1];
+            }
+            if (this.offLineData_list[i].taskType === '5') {
+              this.offLine_value2 = this.offLineData_list[i].value;
+              this.offLine_notifyType21 = this.calShowData(this.offLineData_list[i].notifyType, this.offLine_notifyType21, this.offLine_notifyType22)[0];
+              this.offLine_notifyType22 = this.calShowData(this.offLineData_list[i].notifyType, this.offLine_notifyType21, this.offLine_notifyType22)[1];
+            }
+            if (this.offLineData_list[i].taskType === '6') {
+              this.offLine_value3 = this.offLineData_list[i].value;
+              this.offLine_notifyType31 = this.calShowData(this.offLineData_list[i].notifyType, this.offLine_notifyType31, this.offLine_notifyType32)[0];
+              this.offLine_notifyType32 = this.calShowData(this.offLineData_list[i].notifyType, this.offLine_notifyType31, this.offLine_notifyType32)[1];
+            }
+            if (this.offLineData_list[i].taskType === '9') {
+              this.value = this.offLineData_list[i].value;
+              this.notifyType1 = this.calShowData(this.offLineData_list[i].notifyType, this.notifyType1, this.notifyType2)[0];
+              this.notifyType2 = this.calShowData(this.offLineData_list[i].notifyType, this.notifyType1, this.notifyType2)[1];
+            }
+          }
+        },
+        // 获取时间
+        getTime() {
+          for (let i = 0; i < maxTime; i++) {
+            this.startTime.push(i);
+            this.endTime.push(i);
+          }
+        },
+        // 获取发票业务监控类型
+        getType(val) {
+          this.$http.get('/api/getSysDictByType?dictType=' + val).then((response) => {
+            this.taskTypeList = response;
+          });
+        },
         drag(e) {
           let dialog = document.querySelector('.dialog_content');
           let marginLeft = parseFloat(getComputedStyle(dialog).marginLeft);
@@ -145,10 +336,19 @@
           this.$store.commit('changeStateUserId', '');
           this.$store.commit('changeImportShow', false);
           this.$store.commit('changeSeeMsg', false);
+          this.$store.commit('changeSetVal', false);
           this.$store.commit('changeAcceptShow', false);
           this.$store.commit('changeReStateShow', false);
+          this.taskType = '请选择';
+          this.value = '';
+          this.monitorStartTime = '';
+          this.monitorEndTime = '';
+          this.notifyType1 = false;
+          this.notifyType2 = false;
           this.dialog_error = false;
           this.dialogError = '';
+          this.warningDesc = '核心板剩余发票数量';
+          this.unitDesc = '张';
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
           for (let i = 0; i < dialogInput.length; i++) {
             dialogInput[i].value = '';
@@ -161,9 +361,9 @@
           dialog.style.top = 0 + 'px';
         },
         // 请求成功提示hint
-        hintShow() {
+        hintShow(val) {
           store.commit('changeHint', true);
-          store.commit('changeHintClass', 'successHint');
+          store.commit('changeHintClass', val);
           setTimeout(function() {
             store.commit('changeHint', false);
           }, 1000);
@@ -205,6 +405,17 @@
           } else if (this.$store.getters.getBtnFunction === 'confirmReceiveDelete') {
             // 删除接收人
             this.confirmReceiveDelete();
+          } else if (this.$store.getters.getBtnFunction === 'setWaringVal') {
+            // 设置预警值
+            this.setWaringVal();
+            return false;
+          } else if (this.$store.getters.getBtnFunction === 'setWaringValOffLine') {
+            // 设置预警值（离线参数特殊）
+            this.setWaringValOffLine();
+            return false;
+          } else if (this.$store.getters.getBtnFunction === 'setWaringValNewspaper') {
+            // 设置预警值（抄报特殊）
+            this.setWaringValNewspaper();
             return false;
           }
         },
@@ -236,7 +447,7 @@
             this.$http.post('/rbac/mvc/user/updatePassword.do', responseData).then((response) => {
               if (response === 'success') {
                 this.dialogClose();
-                this.hintShow();
+                this.hintShow('hintShow');
                 store.commit('changeContent', '密码修改成功');
                 this.getUserInfoList();
               }
@@ -353,7 +564,7 @@
               this.$http.post('/rbac/mvc/user/add', formDate).then((response) => {
                 if (response === 'success') {
                   this.dialogClose();
-                  this.hintShow();
+                  this.hintShow('hintShow');
                   store.commit('changeContent', '用户新增成功');
                   this.getUserInfoList();
                 }
@@ -414,7 +625,7 @@
           this.$http.post('/rbac/mvc/user/update', formDate).then((response) => {
             if (response === 'success') {
               this.dialogClose();
-              this.hintShow();
+              this.hintShow('hintShow');
               store.commit('changeContent', '用户信息修改成功');
               this.getUserInfoList();
             }
@@ -470,7 +681,7 @@
           this.$http.post('/rbac/mvc/user/resetPassword', formDate).then((response) => {
             if (response === 'success') {
               this.dialogClose();
-              this.hintShow();
+              this.hintShow('hintShow');
               store.commit('changeContent', '密码重置成功');
               this.getUserInfoList();
             }
@@ -482,7 +693,7 @@
           this.$http.post('/rbac/mvc/user/delete', formDate).then((response) => {
             if (response === 'success') {
               this.dialogClose();
-              this.hintShow();
+              this.hintShow('hintShow');
               store.commit('changeContent', '用户删除成功');
               this.getUserInfoList();
             }
@@ -501,6 +712,138 @@
               this.getUserInfoList();
             }
           });
+        },
+        // 计算选择邮箱和短信情况
+        calNotifyType(val1, val2) {
+          let notifyType = '';
+          if (val1 === true && val2 === false) {
+            notifyType = 0;
+            return notifyType;
+          } else if (val1 === false && val2 === true) {
+            notifyType = 1;
+            return notifyType;
+          } else if (val1 === true && val2 === true) {
+            notifyType = 3;
+            return notifyType;
+          } else if (val1 === false && val2 === false) {
+            notifyType = 4;
+            return notifyType;
+          }
+        },
+        // 回显数据时，计算选择邮箱和短信情况
+        calShowData(val, argument1, argument2) {
+          let argumentsList;
+          if (val === '0') {
+            argument1 = true;
+            argument2 = false;
+            argumentsList = [argument1, argument2];
+            return argumentsList;
+          } else if (val === '1') {
+            argument1 = false;
+            argument2 = true;
+            argumentsList = [argument1, argument2];
+            return argumentsList;
+          } else if (val === '3') {
+            argument1 = true;
+            argument2 = true;
+            argumentsList = [argument1, argument2];
+            return argumentsList;
+          } else if (val === '4' || val === null) {
+            argument1 = false;
+            argument2 = false;
+            argumentsList = [argument1, argument2];
+            return argumentsList;
+          }
+        },
+        // 设置预警值确认按钮
+        setWaringVal() {
+          // 判断是否选择类型
+          if (this.taskType === '请选择') {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择业务类型');
+            return;
+          }
+          let formDate = [];
+          if (this.taskType === '12') {
+            formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': this.taskType, 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime}];
+          } else {
+            formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': this.taskType, 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.notifyType1, this.notifyType2), value: this.value}];
+          }
+          this.$http.post('/api/setWarn', formDate).then((response) => {
+            this.dialogClose();
+            this.hintShow();
+            store.commit('changeContent', '设置成功');
+          });
+        },
+        // 设置预警值确认(抄报特殊)
+        setWaringValNewspaper() {
+          let formDate = [];
+          formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': '9', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.notifyType1, this.notifyType2), value: this.value}];
+          this.$http.post('/api/setWarn', formDate).then((response) => {
+            this.dialogClose();
+            this.hintShow();
+            store.commit('changeContent', '设置成功');
+          });
+        },
+        // 设置预警值确认(离线参数特殊)
+        setWaringValOffLine() {
+          // 执行确认操作
+          let formDate = [];
+          formDate = [
+            {'kpdwdm': this.setNsrsbh, 'taskType': '3', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType11, this.offLine_notifyType12), value: this.offLine_value1},
+            {'kpdwdm': this.setNsrsbh, 'taskType': '5', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType21, this.offLine_notifyType22), value: this.offLine_value2},
+            {'kpdwdm': this.setNsrsbh, 'taskType': '6', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType31, this.offLine_notifyType32), value: this.offLine_value2}
+          ];
+          this.$http.post('/api/setWarn', formDate).then((response) => {
+            this.dialogClose();
+            this.hintShow();
+            store.commit('changeContent', '设置成功');
+          });
+        }
+      },
+      watch: {
+        taskType(val) {
+          if (val === '12') {
+            this.setItemShow = false;
+          } else {
+            this.setItemShow = true;
+          }
+          if (val === '11') {
+            this.warningDesc = '核心板剩余成品油数量';
+            this.unitDesc = 'L';
+          }
+          if (val === '2') {
+            this.warningDesc = '核心板未上传发票数量';
+          }
+          if (val === '7') {
+            this.warningDesc = '核心板未签名发票数量';
+          }
+          if (val === '8') {
+            this.warningDesc = '核心板验签失败发票数量';
+          }
+          this.$http.get('/api/queryWarn?' + 'nsrsbh=' + this.setNsrsbh + '&taskType=' + this.taskType).then((response) => {
+            if (JSON.stringify(response) !== '[]') {
+              this.monitorStartTime = response[0].monitorStartTime || '0';
+              this.monitorEndTime = response[0].monitorEndTime || '0';
+              if (val !== '12' && val !== '请选择') {
+                this.value = response[0].value;
+                this.notifyType1 = this.calShowData(response[0].notifyType, this.notifyType1, this.notifyType2)[0];
+                this.notifyType2 = this.calShowData(response[0].notifyType, this.notifyType1, this.notifyType2)[1];
+              }
+            }
+          });
+        },
+        monitorStartTime(val) {
+          this.endTime = [];
+          for (let i = val; i < maxTime; i++) {
+            this.endTime.push(i);
+          }
+        },
+        monitorEndTime(val) {
+          this.startTime = [];
+          for (let i = 0; i <= val; i++) {
+            this.startTime.push(i);
+          }
         }
       }
     };
@@ -521,7 +864,7 @@
       left 0
       right 0
       z-index 99
-      width 400px
+      width 450px
       margin 100px auto
       background #fff
       box-shadow 0 0 5px rgba(226, 35, 26, 0.5)
@@ -579,6 +922,21 @@
             margin-right 15px
             label
               margin-left 8px
+          .edit_select
+            position relative
+            width 100%
+            height 36px
+            line-height 36px
+            padding-left 5px
+            border 1px solid #e0e0e0
+            border-radius 5px
+            color #495362
+          .icon-dropDown
+            position absolute
+            right 26px
+            bottom 80px
+            font-size 12px
+            color #666e79
         .confirmChange
           padding 20px 0
         .importFile
@@ -612,20 +970,89 @@
             background #e2231a
         .message_content
           padding 10px
-    .edit_select
-      width 100%
-      height 36px
-      line-height 36px
-      padding-left 5px
-      border 1px solid #e0e0e0
-      border-radius 5px
-      color #495362
-  .search-item
-    position relative
-  .icon-dropDown
-    position absolute
-    right 26px
-    bottom 80px
-    font-size 12px
-    color #666e79
+          text-align left
+          text-indent 24px
+          max-height 300px
+          overflow hidden
+          overflow-y scroll
+          &::-webkit-scrollbalr
+            width 4px
+            height 4px
+          &::-webkit-scrollbar-thumb
+            border-radius 5px
+            background #e2231a
+          &::-webkit-scrollbar-track
+            border-radius 0px
+            background #e2231a
+      .setWaring_value
+        text-align left
+        .setWaring_content
+          .select_item
+            position relative
+            font-size 0
+            display flex
+            .icon-dropDown
+              position absolute
+              right 5px
+              top 11px
+              font-size 12px
+              color #666e79
+            .search_label, .search_input, .search_select
+              position relative
+              z-index 2
+              display inline-block
+              vertical-align top
+              width 180px
+              height 34px
+              line-height 34px
+              font-size 12px
+            .search_label
+              flex 0 0 110px
+              text-align left
+            .search_select
+              flex 1
+              padding: 0 22px 0 5px;
+          .set_title
+            font-weight 700
+            line-height 35px
+          .red_descNone
+            height 50px
+            line-height 50px
+            color #e2231a
+          .set_item
+            height 30px
+            line-height 30px
+            .setItem_desc
+              .input_edit, .input_checkBox
+                margin 0 5px
+              .input_edit
+                width 50px
+                height 22px
+              .input_checkBox
+                width 12px
+                height 12px
+        .setWaring_OffLine, .setWaring_Newspaper
+          .set_item
+            position relative
+            height 40px
+            line-height 40px
+            margin-bottom 10px
+            .red_desc
+              position absolute
+              bottom -10px
+              color #e2231a
+              line-height 20px
+        .set_time
+            height 40px
+            line-height 40px
+            .select_time
+              position relative
+              .icon-dropDown
+                position absolute
+                right 5px
+                top 1px
+                color #666e79
+              .search_select
+                padding 0 22px 0 5px
+                height 22px
 </style>

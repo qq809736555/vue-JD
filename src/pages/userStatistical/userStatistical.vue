@@ -196,7 +196,7 @@
           } else if (router.indexOf('userStatistical') !== -1) {
             // 统计接收人设置导出
             console.log('/api/exportExcel?taskType=' + '0');
-            window.open('/ceshi/exportJSRExcel?taskType=' + '0');
+            window.open('/api/exportJSRExcel?taskType=' + '0');
           }
         });
       },

@@ -1,6 +1,6 @@
 <template>
     <div class="sentNote_wrapper">
-      <searchForm @tableShow="judgeTabShow" :sta-show="staShow" :jqbh-show="jqbhShow" :waring-show="waringShow" :export-show="exportShow"></searchForm>
+      <searchForm @tableShow="judgeTabShow" :sta-show="staShow" :jqbh-show="jqbhShow" :waring-show="waringShow" :export-show="exportShow" :nsrsbh-show="nsrsbhShow"></searchForm>
       <div class="search_table" v-show="tabIsShow">
         <table>
           <thead>
@@ -37,6 +37,7 @@
         exportShow: false,
         waringShow: true,
         staShow: true,
+        nsrsbhShow: false,
         jqbhShow: false,
         totalCount: 0,
         pageSize: 5,
@@ -50,8 +51,8 @@
     },
     methods: {
       getList() {
-        // 发送类型 1:短信，2：邮件
-        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'startTime': this.startTime, 'endTime': this.endTime, 'sendType': '1', 'taskType': this.dictCode};
+        // 发送类型 1:短信，0：邮件
+        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'startTime': this.startTime, 'endTime': this.endTime, 'sendType': '1', 'taskType': this.dictCode};
         this.$http.post('/api/querySendContent', formDate).then((response) => {
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
@@ -73,8 +74,14 @@
         this.tabIsShow = data.tableShow;
         this.pageNum = data.pageNum;
         this.nsrsbh = data.nsrsbh;
-        this.jqbh = data.jqbh;
-        this.dictCode = data.dictCode;
+        // 预警选全部是传空值
+        if (data.dictCode.indexOf(',') > 0) {
+          this.dictCode = '';
+        } else {
+          this.dictCode = data.dictCode;
+        }
+        this.startTime = data.startTime;
+        this.endTime = data.endTime;
         this.getList();
       },
       // 查看邮件
