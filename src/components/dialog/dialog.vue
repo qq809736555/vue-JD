@@ -527,7 +527,7 @@
           this.$http.post('/ceshi/importJSRExcel', formData).then((response) => {
             if (response === 0) {
               this.dialogClose();
-              this.hintShow();
+              this.hintShow('hintShow');
               store.commit('changeContent', '导入Excel成功');
               this.getUserInfoList();
             }
@@ -613,7 +613,7 @@
               console.log(response);
               if (response === 0) {
                 this.dialogClose();
-                this.hintShow();
+                this.hintShow('successHint');
                 store.commit('changeContent', '接收人新增成功');
                 this.getUserInfoList();
               }
@@ -674,7 +674,7 @@
             if (response === 0) {
               this.dialogClose();
               this.hintShow('successHint');
-              store.commit('changeContent', '接收人修改成功');
+              store.commit('changeContent', '接收人修改信息成功');
               this.getUserInfoList();
             }
           });
