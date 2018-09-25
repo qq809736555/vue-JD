@@ -78,12 +78,14 @@
     methods: {
       // 接收人操作之后，重新获取新的列表
       getUserInfoList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': 0};
+        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': 1};
         this.$http.post('/api/queryUserManager', formDate).then((response) => {
           this.tableShow = true;
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;
+          this.taskType = response.list[0].taskType;
+          Bus.$emit('receiveType', this.taskType);
         });
       },
       // 查询列表
@@ -219,7 +221,6 @@
     },
     filters: {
       sendPost(val) {
-        console.log(val);
         if (val === '0') {
           return '手机';
         } else if (val === '1') {

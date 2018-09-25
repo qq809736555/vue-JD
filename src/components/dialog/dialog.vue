@@ -195,12 +195,16 @@
           lxscValue: 0,
           zsljValue: 0,
           fsljValue: 0,
-          selectType: ''
+          selectType: '',
+          receiveType: ''
         };
       },
       created() {
         Bus.$on('selectType', (value) => {
           this.selectType = value;
+        });
+        Bus.$on('receiveType', (value) => {
+          this.receiveType = value;
         });
         this.getTime();
         Bus.$on('setType', (value) => {
@@ -518,7 +522,7 @@
           let formData = new FormData(form);
           let name = formData.get('file');
           console.log(name);
-          formData.append('taskType', '0');
+          formData.append('taskType', this.receiveType);
           formData.append('file', file);
           this.$http.post('/ceshi/importJSRExcel', formData).then((response) => {
             if (response === 0) {
@@ -604,7 +608,7 @@
             // 税号
             let xfdm = this.$refs.xfdm[0].value;
             let selectedVal = document.getElementById('select_receiveType').value;
-            let formDate = {'email': email, 'taskType': 0, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
+            let formDate = {'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
             this.$http.post('/api/insertUserManager', formDate).then((response) => {
               console.log(response);
               if (response === 0) {
@@ -664,7 +668,7 @@
           // 税号
           let xfdm = this.$refs.xfdm[0].value;
           let selectedVal = document.getElementById('select_receiveType').value;
-          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': 0, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
+          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
           this.$http.post('/api/updateUserManager', formDate).then((response) => {
             console.log(response);
             if (response === 0) {

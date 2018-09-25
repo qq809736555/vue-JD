@@ -84,6 +84,8 @@
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;
+          this.taskType = response.list[0].taskType;
+          Bus.$emit('receiveType', this.taskType);
         });
       },
       // 查询列表
