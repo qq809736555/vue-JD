@@ -206,9 +206,10 @@
           this.$http.get('/rbac/mvc/sallerInfo/getByNsrsbh?xfdm=' + JSON.parse(window.localStorage.getItem('userInfo')).xfdm).then((response) => {
             this.shuiHao = response.nsrsbhList || [];
             if (this.nsrsbh === '全部') {
-              for (let i = 0; i < this.shuiHao.length; i++) {
-                this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
-              }
+              // for (let i = 0; i < this.shuiHao.length; i++) {
+              //   this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
+              // }
+              this.Cnsrsbh = '';
             }
           });
         },

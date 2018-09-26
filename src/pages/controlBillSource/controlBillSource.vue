@@ -56,7 +56,7 @@
           <tr>
             <th width="7%">序号</th>
             <th width="31%">核心板编号</th>
-            <th width="31%">发票重复号段</th>
+            <th width="31%">发票重复号码</th>
             <th width="31%">状态</th>
           </tr>
           </thead>
