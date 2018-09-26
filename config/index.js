@@ -25,11 +25,11 @@ module.exports = {
         },
         changeOrigin: true,
       },
-      '/test': {
-        target: 'http://192.168.4.167:8081',
+      '/job': {
+        target: 'http://192.168.2.83:8082/vat-cronjob-1.0',
         changeOrigin: true,
         pathRewrite: {
-          '^/test': '/'
+          '^/job': '/job'
         }
       },
       '/ceshi':{
