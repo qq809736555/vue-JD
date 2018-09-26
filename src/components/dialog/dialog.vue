@@ -566,7 +566,7 @@
               this.$http.post('/rbac/mvc/user/add', formDate).then((response) => {
                 if (response === 'success') {
                   this.dialogClose();
-                  this.hintShow('hintShow');
+                  this.hintShow('successHint');
                   store.commit('changeContent', '用户新增成功');
                   this.getUserInfoList();
                 }
@@ -575,6 +575,7 @@
         },
         // 新增接收人
         newReceivesBtn() {
+          console.log(this.taskType);
           let _this = this;
           if (!global.name.test(_this.$refs.name[0].value)) {
             this.dialog_error = true;
@@ -589,6 +590,11 @@
           if (!global.email.test(_this.$refs.email[0].value)) {
             this.dialog_error = true;
             this.dialogError = '请输入正确的邮箱';
+            return false;
+          }
+          if (this.$refs.xfdm[0].value === '') {
+            this.dialog_error = true;
+            this.dialogError = '请输入税号';
             return false;
           }
           if (document.getElementById('select_receiveType').value === '') {
@@ -606,7 +612,7 @@
             // 税号
             let xfdm = this.$refs.xfdm[0].value;
             let selectedVal = document.getElementById('select_receiveType').value;
-            let formDate = {'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
+          let formDate = {'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': xfdm};
             this.$http.post('/api/insertUserManager', formDate).then((response) => {
               if (response === 0) {
                 this.dialogClose();
@@ -626,7 +632,7 @@
           this.$http.post('/rbac/mvc/user/update', formDate).then((response) => {
             if (response === 'success') {
               this.dialogClose();
-              this.hintShow('hintShow');
+              this.hintShow('successHint');
               store.commit('changeContent', '用户信息修改成功');
               this.getUserInfoList();
             }
@@ -662,10 +668,8 @@
           let email = this.$refs.email[0].value;
           // 号码
           let phone = this.$refs.phone[0].value;
-          // 税号
-          let xfdm = this.$refs.xfdm[0].value;
           let selectedVal = document.getElementById('select_receiveType').value;
-          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
+          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
           this.$http.post('/api/updateUserManager', formDate).then((response) => {
             if (response === 0) {
               this.dialogClose();

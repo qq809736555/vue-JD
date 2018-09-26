@@ -22,9 +22,9 @@
           <th width="10%">接收人</th>
           <th width="15%">手机号码</th>
           <th width="15%">邮箱</th>
-          <th width="13%">接收方式</th>
+          <th width="15%">接收方式</th>
           <th width="15%">状态</th>
-          <th width="25%">操作</th>
+          <th width="23%">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -62,13 +62,14 @@
         tableShow: false,
         value: '',
         btnFunction: '',
-        taskType: '',
+        taskType: '0',
         shuiHao: [],
         selection: []
       };
     },
     created () { // 初始化时currentPage赋值
       // this.getUserInfoList();
+      Bus.$emit('receiveType', this.taskType);
     },
     mounted() {
       Bus.$on('changePagination', (e) => {
@@ -84,8 +85,6 @@
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;
-          this.taskType = response.list[0].taskType;
-          Bus.$emit('receiveType', this.taskType);
         });
       },
       // 查询列表
@@ -123,13 +122,6 @@
         this.$store.commit('changeDialogTitle', '新增发票数据统计接收人');
         let editItem = [
           {
-            editLabel: '税号',
-            vModel: 'xfdm',
-            placeholder: '请输入税号',
-            type: 'text',
-            value: ''
-          },
-          {
             editLabel: '接收人名称',
             vModel: 'name',
             placeholder: '请输入接收人名称',
@@ -148,6 +140,13 @@
             editLabel: '邮箱',
             vModel: 'email',
             placeholder: '请输入邮箱',
+            type: 'text',
+            value: ''
+          },
+          {
+            editLabel: '税号',
+            vModel: 'xfdm',
+            placeholder: '请输入税号',
             type: 'text',
             value: ''
           }
@@ -185,13 +184,6 @@
               placeholder: '请输入邮箱',
               type: 'text',
               value: email
-            },
-            {
-              editLabel: '税号',
-              vModel: 'xfdm',
-              placeholder: '请输入税号',
-              type: 'text',
-              value: kpdwdm
             }
           ];
           this.$store.commit('changeEditItem', editItem);
@@ -199,7 +191,7 @@
         this.$store.commit('changeBtnFunction', 'changeReceiveInfo');
           // 修改接收人信息，填入input内容
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
             this.$nextTick(function () {
               dialogInput[i].value = editItem[i].value || '';
             });
