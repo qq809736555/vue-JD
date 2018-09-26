@@ -67,7 +67,7 @@ const dialog = {
     getBtnShow(state) {
       return state.btnShow;
     },
-    getSetVal(state){
+    getSetVal(state) {
       return state.setValSHow;
     },
     getAcceptShow(state) {

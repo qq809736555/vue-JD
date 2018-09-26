@@ -205,6 +205,8 @@
         });
         Bus.$on('receiveType', (value) => {
           this.receiveType = value;
+          console.log(value);
+          // console.log(this.receiveType);
         });
         this.getTime();
         Bus.$on('setType', (value) => {
@@ -358,6 +360,7 @@
             dialogInput[i].value = '';
             dialogInput[i].disabled = false;
           }
+          this.selectType = '';
           // 关闭弹窗，恢复弹框默认位置
           let dialog = document.getElementById('dialog').getElementsByClassName('dialog_content')[0];
           dialog.style.margin = '100px auto';
@@ -522,10 +525,10 @@
           let formData = new FormData(form);
           formData.append('taskType', this.receiveType);
           formData.append('file', file);
-          this.$http.post('/ceshi/importJSRExcel', formData).then((response) => {
-            if (response === 0) {
+          this.$http.post('/api/importJSRExcel', formData).then((response) => {
+            if (response === '0000') {
               this.dialogClose();
-              this.hintShow('hintShow');
+              this.hintShow('successHint');
               store.commit('changeContent', '导入Excel成功');
               this.getUserInfoList();
             }
@@ -614,7 +617,8 @@
             let selectedVal = document.getElementById('select_receiveType').value;
           let formDate = {'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': xfdm};
             this.$http.post('/api/insertUserManager', formDate).then((response) => {
-              if (response === 0) {
+              console.log(response);
+              if (response === '0000') {
                 this.dialogClose();
                 this.hintShow('successHint');
                 store.commit('changeContent', '接收人新增成功');
@@ -671,7 +675,7 @@
           let selectedVal = document.getElementById('select_receiveType').value;
           let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
           this.$http.post('/api/updateUserManager', formDate).then((response) => {
-            if (response === 0) {
+            if (response === '0000') {
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '接收人修改信息成功');
@@ -707,7 +711,7 @@
         confirmReceiveDelete() {
           let formDate = {'userId': '' + this.$store.getters.getStateUserId};
           this.$http.post('/api/deleteUserManager', formDate).then((response) => {
-            if (response === 0) {
+            if (response === '0000') {
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '接收人删除成功');

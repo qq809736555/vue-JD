@@ -69,7 +69,6 @@
     },
     created () { // 初始化时currentPage赋值
       // this.getUserInfoList();
-      Bus.$emit('receiveType', this.taskType);
     },
     mounted() {
       Bus.$on('changePagination', (e) => {
@@ -93,6 +92,7 @@
       },
       // 导入excel
       importExcel() {
+        Bus.$emit('receiveType', '0');
         this.$store.commit('S');
         this.$store.commit('changeDialogTitle', '批量导入发票数据统计接收人');
         this.$store.commit('changeBtnFunction', 'importExcel');
@@ -118,6 +118,7 @@
       },
       // 新增接收人
       newReceivers() {
+        Bus.$emit('receiveType', '0');
         this.$store.commit('S');
         this.$store.commit('changeDialogTitle', '新增发票数据统计接收人');
         let editItem = [
@@ -159,6 +160,7 @@
       },
       // 修改
       modifyBtn(id, name, phone, email, sendType, kpdwdm) {
+          Bus.$emit('receiveType', '0');
           this.$store.commit('changeStateUserId', id);
           this.$store.commit('S');
           this.$store.commit('changeDialogTitle', '修改发票数据统计接收人');
