@@ -769,7 +769,7 @@
           }
           this.$http.post('/api/setWarn', formDate).then((response) => {
             this.dialogClose();
-            this.hintShow();
+            this.hintShow('successHint');
             store.commit('changeContent', '设置成功');
           });
         },
@@ -779,7 +779,7 @@
           formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': '9', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.notifyType1, this.notifyType2), value: this.value}];
           this.$http.post('/api/setWarn', formDate).then((response) => {
             this.dialogClose();
-            this.hintShow();
+            this.hintShow('successHint');
             store.commit('changeContent', '设置成功');
           });
         },
@@ -794,7 +794,7 @@
           ];
           this.$http.post('/api/setWarn', formDate).then((response) => {
             this.dialogClose();
-            this.hintShow();
+            this.hintShow('successHint');
             store.commit('changeContent', '设置成功');
           });
         }
