@@ -18,6 +18,7 @@ import controlBillSource from '@/pages/controlBillSource/controlBillSource';
 import controlOffLine from '@/pages/controlOffLine/controlOffLine';
 import controlBillState from '@/pages/controlBillState/controlBillState';
 import controlNewspaper from '@/pages/controlNewspaper/controlNewspaper';
+import timTask from '@/pages/timTask/timTask';
 
 Vue.use(Router);
 
@@ -109,6 +110,11 @@ export default new Router({
           path: '/userWarning',
           name: '接收人设置',
           component: userWarning
+        },
+        {
+          path: '/timTask',
+          name: '定时任务',
+          component: timTask
         }
       ]
     }
