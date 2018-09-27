@@ -65,7 +65,7 @@
             <td>{{index + 1}}</td>
             <td>{{item.jqbh}}</td>
             <td>{{item.dqfphm}}</td>
-            <td>{{offLineStatus[item.status]}}</td>
+            <td>重复</td>
           </tr>
           </tbody>
         </table>
@@ -162,9 +162,8 @@
         judgeTabShow(data) {
           this.tabIsShow = data.tableShow;
           this.pageNum = data.pageNum;
-          this.nsrsbh = data.nsrsbh;
           // 获取全部发票标记
-          this.nsrsbh = data.nsrsbh.split(',')[0];
+          this.nsrsbh = data.nsrsbh;
           this.jqbh = data.jqbh;
           this.getList();
           this.getList2();

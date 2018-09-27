@@ -24,7 +24,7 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index <= pageSize" @mouseover="hover" @mouseout="out">
-              <td class="hover_seeMore">最后在查看结果中</td>
+                <td class="hover_seeMore">最后在查看结果中</td>
               <td class="hover_seeMore">com.guopiao.inpu</td>
               <td class="hover_seeMore">通过界面样式和交互动效让用户可以清晰的感知自己的操作</td>
               <td class="hover_seeMore">操作后，通过页面元素的变化清晰地展现当前状态</td>
@@ -120,7 +120,7 @@
             for (var i = 0; i < str.length; i++) {
               var c = str.charCodeAt(i);
               // 单字节加1
-              if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+              if ((c >= 0x0001 && c <= 0x007e) || (c >= 0xff60 && c <= 0xff9f)) {
                 len++;
               } else {
                 len += 2;
@@ -128,13 +128,17 @@
             }
             return len;
         },
-        // 鼠标事件
+        // 鼠标移入显示tooltip
         hover(event) {
           if (event.target.className === 'hover_seeMore' && this.strlen(event.target.innerHTML) > 16) {
             Bus.$emit('tooltip', event);
           }
         },
+        // 鼠标移除隐藏tooltip
         out(event) {
+          if (event.target.className === 'hover_seeMore' && this.strlen(event.target.innerHTML) > 16) {
+            Bus.$emit('removeTooltip', event);
+          }
         }
       },
       components: {
@@ -153,4 +157,5 @@
       overflow hidden
       white-space nowrap
       text-overflow ellipsis
+      cursor: pointer
 </style>
