@@ -465,6 +465,13 @@
         getUserInfoList() {
           Bus.$emit('changePagination', true);
         },
+        // 接收人操作
+        getReceiveList() {
+          Bus.$emit('receiveList', true);
+        },
+        getWarningList() {
+          Bus.$emit('WarningList', true);
+        },
         //  选择Excel文件
         fixData(data) {
           var o = '';
@@ -530,7 +537,11 @@
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '导入Excel成功');
-              this.getUserInfoList();
+              if (this.$route.path.indexOf('userStatistical') !== -1) {
+                this.getReceiveList();
+              } else if (this.$route.path.indexOf('userWarning') !== -1) {
+                this.getWarningList();
+              }
             }
           });
         },
@@ -622,7 +633,11 @@
                 this.dialogClose();
                 this.hintShow('successHint');
                 store.commit('changeContent', '接收人新增成功');
-                this.getUserInfoList();
+                if (this.$route.path.indexOf('userStatistical') !== -1) {
+                  this.getReceiveList();
+                } else if (this.$route.path.indexOf('userWarning') !== -1) {
+                  this.getWarningList();
+                }
               }
             });
         },
@@ -679,7 +694,11 @@
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '接收人修改信息成功');
-              this.getUserInfoList();
+              if (this.$route.path.indexOf('userStatistical') !== -1) {
+                this.getReceiveList();
+              } else if (this.$route.path.indexOf('userWarning') !== -1) {
+                this.getWarningList();
+              }
             }
           });
         },
@@ -715,7 +734,11 @@
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '接收人删除成功');
-              this.getUserInfoList();
+              if (this.$route.path.indexOf('userStatistical') !== -1) {
+                this.getReceiveList();
+              } else if (this.$route.path.indexOf('userWarning') !== -1) {
+                this.getWarningList();
+              }
             }
           });
         },

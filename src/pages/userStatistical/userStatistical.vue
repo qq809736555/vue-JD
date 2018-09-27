@@ -71,16 +71,15 @@
       // this.getUserInfoList();
     },
     mounted() {
-      Bus.$on('changePagination', (e) => {
+      Bus.$on('receiveList', (e) => {
         this.getUserInfoList();
       });
     },
     methods: {
       // 接收人操作之后，重新获取新的列表
       getUserInfoList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': 0};
+        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': '0'};
         this.$http.post('/api/queryUserManager', formDate).then((response) => {
-          console.log(response);
           this.tableShow = true;
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
