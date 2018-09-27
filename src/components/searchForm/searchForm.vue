@@ -206,10 +206,9 @@
           this.$http.get('/rbac/mvc/sallerInfo/getByNsrsbh?xfdm=' + JSON.parse(window.localStorage.getItem('userInfo')).xfdm).then((response) => {
             this.shuiHao = response.nsrsbhList || [];
             if (this.nsrsbh === '全部') {
-              // for (let i = 0; i < this.shuiHao.length; i++) {
-              //   this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
-              // }
-              this.Cnsrsbh = '';
+              for (let i = 0; i < this.shuiHao.length; i++) {
+                this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
+              }
             }
           });
         },
@@ -253,7 +252,6 @@
         },
         // 查询
         queryBtn() {
-          this.lastData();
           let data = {
             tableShow: true,
             pageNum: 1,
@@ -304,6 +302,8 @@
         },
         // 设置预警值
         setValueBtn() {
+          this.lastData();
+          console.log(this.Cnsrsbh);
           // 发票票源和发票状态，点击不查询
           if (this.setType === 'BillSource' || this.setType === 'BillState') {
             this.openDialog();
