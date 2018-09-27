@@ -63,11 +63,11 @@
         },
         // 判断列表展示
         judgeTabShow(data) {
-          this.getList();
           this.tabIsShow = data.tableShow;
           this.pageNum = data.pageNum;
           this.nsrsbh = data.nsrsbh;
           this.jqbh = data.jqbh;
+          this.getList();
         }
       },
       components: {
