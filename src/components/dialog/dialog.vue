@@ -1045,11 +1045,12 @@
             margin-bottom 10px
             .red_desc
               position absolute
-              bottom -10px
+              top 30px
               color #e2231a
-              line-height 20px
+              line-height 18px
         .set_time
-            height 40px
+            padding-top 10px
+            height 50px
             line-height 40px
             .select_time
               position relative
