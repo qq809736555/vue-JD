@@ -23,7 +23,7 @@
           </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in this.$store.getters.getList" :key="item.id" v-if="index <= pageSize" @mouseover="hover" @mouseout="out">
+            <tr v-for="(item, index) in tableData" :key="item.id" v-if="index <= pageSize" @mouseover="hover" @mouseout="out">
                 <td class="hover_seeMore">最后在查看结果中</td>
               <td class="hover_seeMore">com.guopiao.inpu</td>
               <td class="hover_seeMore">通过界面样式和交互动效让用户可以清晰的感知自己的操作</td>
@@ -55,23 +55,13 @@
     export default {
       data() {
         return {
+          // 表格数据
+          tableData: [],
           totalCount: 0,
           pageSize: 5,
           pageNum: 1,
-          accountNo: '',
-          name: '',
-          tableShow: true,
-          value: '',
-          btnFunction: ''
+          tableShow: true
         };
-      },
-      created () { // 初始化时currentPage赋值
-        this.getInfoList();
-      },
-      mounted() {
-        Bus.$on('changePagination', (e) => {
-          this.getInfoList();
-        });
       },
       methods: {
         // 获取定时任务列表
@@ -82,13 +72,14 @@
           //   this.$store.commit('changeList', response.list);
           //   this.pageSize = response.pageSize;
           // });
-          let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'accountNo': this.accountNo, 'name': this.name};
-          this.$http.post('/rbac/mvc/user/getUserList?', formDate).then((response) => {
-            this.tableShow = true;
-            this.totalCount = response.total;
-            this.$store.commit('changeList', response.list);
-            this.pageSize = response.pageSize;
+          this.$http.get('job/queryjob?' + 'pageNum=' + this.pageNum + '&pageSize=' + this.pageSize).then((response) => {
+            console.log(response);
           });
+          // this.$http.get('job/queryjob?' + 'pageNum=' + this.pageNum + '&pageSize=' + this.pageSize).then((res) => {
+          //   console.log(res);
+          //   this.tableData = res.body.JobAndTrigger.list;
+          //   this.totalCount = res.body.number;
+          // });
         },
         // 翻页组件修改每页显示条数
         updatePageSize(data) {
@@ -140,6 +131,11 @@
             Bus.$emit('removeTooltip', event);
           }
         }
+      },
+      // created () { // 初始化时currentPage赋值
+      // },
+      mounted() {
+        this.getInfoList();
       },
       components: {
         pagination,
