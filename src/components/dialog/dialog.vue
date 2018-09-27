@@ -788,6 +788,11 @@
         },
         // 设置预警值确认(抄报特殊)
         setWaringValNewspaper() {
+          if (this.notifyType1 === false && this.notifyType2 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择预警发送方式');
+            return;
+          }
           let formDate = [];
           formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': '9', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.notifyType1, this.notifyType2), value: this.value}];
           this.$http.post('/api/setWarn', formDate).then((response) => {
