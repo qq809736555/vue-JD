@@ -183,16 +183,22 @@
         }
       },
       methods: {
-        // 税号选择，机器编码对应改变
-        SHSelect() {
+        lastSH() {
           if (this.nsrsbh === '全部') {
             this.Cnsrsbh = '';
+            for (let i = 0; i < this.shuiHao.length; i++) {
+              this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
+            }
             this.jqbh = '全部';
             this.selection = [];
-            return;
+            return false;
           } else {
             this.Cnsrsbh = this.nsrsbh;
           }
+        },
+        // 税号选择，机器编码对应改变
+        SHSelect() {
+          this.lastSH();
           this.$http.get('/api/getMachNumByNsrsbh?nsrsbh=' + this.Cnsrsbh).then((response) => {
             this.jqbh = '全部';
             this.selection.length = 0;

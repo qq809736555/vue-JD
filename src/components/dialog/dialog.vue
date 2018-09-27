@@ -816,7 +816,7 @@
           formDate = [
             {'kpdwdm': this.setNsrsbh, 'taskType': '3', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType11, this.offLine_notifyType12), value: this.offLine_value1},
             {'kpdwdm': this.setNsrsbh, 'taskType': '5', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType21, this.offLine_notifyType22), value: this.offLine_value2},
-            {'kpdwdm': this.setNsrsbh, 'taskType': '6', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType31, this.offLine_notifyType32), value: this.offLine_value2}
+            {'kpdwdm': this.setNsrsbh, 'taskType': '6', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType31, this.offLine_notifyType32), value: this.offLine_value3}
           ];
           this.$http.post('/api/setWarn', formDate).then((response) => {
             this.dialogClose();
@@ -826,6 +826,7 @@
         }
       },
       watch: {
+        // 状态
         taskType(val) {
           if (val === '12') {
             this.setItemShow = false;
@@ -835,6 +836,9 @@
           if (val === '11') {
             this.warningDesc = '核心板剩余成品油数量';
             this.unitDesc = 'L';
+          } else {
+            this.warningDesc = '核心板剩余发票数量';
+            this.unitDesc = '张';
           }
           if (val === '2') {
             this.warningDesc = '核心板未上传发票数量';
@@ -857,16 +861,26 @@
             }
           });
         },
+        // 开始时间
         monitorStartTime(val) {
           this.endTime = [];
           for (let i = val; i < maxTime; i++) {
             this.endTime.push(i);
           }
         },
+        // 结束时间
         monitorEndTime(val) {
           this.startTime = [];
           for (let i = 0; i <= val; i++) {
             this.startTime.push(i);
+          }
+        },
+        // 负数预警值
+        offLine_value3(val) {
+          if (val <= 0) {
+            this.offLine_value3 = val;
+          } else {
+            this.offLine_value3 = '-' + val;
           }
         }
       }
