@@ -302,8 +302,6 @@
         },
         // 设置预警值
         setValueBtn() {
-          this.lastData();
-          console.log(this.Cnsrsbh);
           // 发票票源和发票状态，点击不查询
           if (this.setType === 'BillSource' || this.setType === 'BillState') {
             this.openDialog();
