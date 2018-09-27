@@ -64,7 +64,7 @@
       judgeTabShow(data) {
         this.tabIsShow = data.tableShow;
         this.pageNum = data.pageNum;
-        this.nsrsbh = data.nsrsbh.split(',')[0];
+        this.nsrsbh = data.nsrsbh;
         this.jqbh = data.jqbh;
         this.getList();
       },

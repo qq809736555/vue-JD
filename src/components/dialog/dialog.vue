@@ -769,6 +769,11 @@
             store.commit('changeContent', '请选择业务类型');
             return;
           }
+          if (this.taskType !== '12' && this.notifyType1 === false && this.notifyType2 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择预警发送方式');
+            return;
+          }
           let formDate = [];
           if (this.taskType === '12') {
             formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': this.taskType, 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime}];
@@ -783,6 +788,11 @@
         },
         // 设置预警值确认(抄报特殊)
         setWaringValNewspaper() {
+          if (this.notifyType1 === false && this.notifyType2 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择预警发送方式');
+            return;
+          }
           let formDate = [];
           formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': '9', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.notifyType1, this.notifyType2), value: this.value}];
           this.$http.post('/api/setWarn', formDate).then((response) => {
@@ -793,12 +803,25 @@
         },
         // 设置预警值确认(离线参数特殊)
         setWaringValOffLine() {
+          if (this.offLine_notifyType11 === false && this.offLine_notifyType12 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择离线开票时长预警发送方式');
+            return;
+          } else if (this.offLine_notifyType21 === false && this.offLine_notifyType22 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择离线开票正数累计金额预警发送方式');
+            return;
+          } else if (this.offLine_notifyType31 === false && this.offLine_notifyType32 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择离线开票负数累计金额预警发送方式');
+            return;
+          }
           // 执行确认操作
           let formDate = [];
           formDate = [
             {'kpdwdm': this.setNsrsbh, 'taskType': '3', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType11, this.offLine_notifyType12), value: this.offLine_value1},
             {'kpdwdm': this.setNsrsbh, 'taskType': '5', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType21, this.offLine_notifyType22), value: this.offLine_value2},
-            {'kpdwdm': this.setNsrsbh, 'taskType': '6', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType31, this.offLine_notifyType32), value: this.offLine_value2}
+            {'kpdwdm': this.setNsrsbh, 'taskType': '6', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.offLine_notifyType31, this.offLine_notifyType32), value: this.offLine_value3}
           ];
           this.$http.post('/api/setWarn', formDate).then((response) => {
             this.dialogClose();
@@ -808,6 +831,7 @@
         }
       },
       watch: {
+        // 状态
         taskType(val) {
           if (val === '12') {
             this.setItemShow = false;
@@ -817,6 +841,9 @@
           if (val === '11') {
             this.warningDesc = '核心板剩余成品油数量';
             this.unitDesc = 'L';
+          } else {
+            this.warningDesc = '核心板剩余发票数量';
+            this.unitDesc = '张';
           }
           if (val === '2') {
             this.warningDesc = '核心板未上传发票数量';
@@ -839,16 +866,26 @@
             }
           });
         },
+        // 开始时间
         monitorStartTime(val) {
           this.endTime = [];
           for (let i = val; i < maxTime; i++) {
             this.endTime.push(i);
           }
         },
+        // 结束时间
         monitorEndTime(val) {
           this.startTime = [];
           for (let i = 0; i <= val; i++) {
             this.startTime.push(i);
+          }
+        },
+        // 负数预警值
+        offLine_value3(val) {
+          if (val <= 0) {
+            this.offLine_value3 = val;
+          } else {
+            this.offLine_value3 = '-' + val;
           }
         }
       }
@@ -1045,11 +1082,12 @@
             margin-bottom 10px
             .red_desc
               position absolute
-              bottom -10px
+              top 30px
               color #e2231a
-              line-height 20px
+              line-height 18px
         .set_time
-            height 40px
+            padding-top 10px
+            height 50px
             line-height 40px
             .select_time
               position relative

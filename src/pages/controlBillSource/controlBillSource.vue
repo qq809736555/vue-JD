@@ -7,8 +7,9 @@
           <thead>
           <tr>
             <th width="7%">序号</th>
-            <th width="30%">核心板编号</th>
-            <th width="30%">剩余发票数量（张）</th>
+            <th width="20%">核心板编号</th>
+            <th width="20%">开票终端</th>
+            <th width="20%">剩余发票数量（张）</th>
             <th width="20%">预警值（张）</th>
             <th width="13%">状态</th>
           </tr>
@@ -17,6 +18,7 @@
           <tr v-for="(item, index) in list" :key="item.id" v-if="index < pageSize">
             <td>{{index + 1}}</td>
             <td>{{item.jqbh}}</td>
+            <td>{{item.kpddm}}</td>
             <td>{{item.value}}</td>
             <td>{{item.yjz}}</td>
             <td>{{offLineStatus[item.status]}}</td>
@@ -65,7 +67,7 @@
             <td>{{index + 1}}</td>
             <td>{{item.jqbh}}</td>
             <td>{{item.dqfphm}}</td>
-            <td>{{offLineStatus[item.status]}}</td>
+            <td>重复</td>
           </tr>
           </tbody>
         </table>
@@ -162,9 +164,8 @@
         judgeTabShow(data) {
           this.tabIsShow = data.tableShow;
           this.pageNum = data.pageNum;
-          this.nsrsbh = data.nsrsbh;
           // 获取全部发票标记
-          this.nsrsbh = data.nsrsbh.split(',')[0];
+          this.nsrsbh = data.nsrsbh;
           this.jqbh = data.jqbh;
           this.getList();
           this.getList2();

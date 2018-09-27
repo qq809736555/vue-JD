@@ -183,16 +183,22 @@
         }
       },
       methods: {
-        // 税号选择，机器编码对应改变
-        SHSelect() {
+        lastSH() {
           if (this.nsrsbh === '全部') {
             this.Cnsrsbh = '';
+            for (let i = 0; i < this.shuiHao.length; i++) {
+              this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
+            }
             this.jqbh = '全部';
             this.selection = [];
-            return;
+            return false;
           } else {
             this.Cnsrsbh = this.nsrsbh;
           }
+        },
+        // 税号选择，机器编码对应改变
+        SHSelect() {
+          this.lastSH();
           this.$http.get('/api/getMachNumByNsrsbh?nsrsbh=' + this.Cnsrsbh).then((response) => {
             this.jqbh = '全部';
             this.selection.length = 0;
@@ -206,10 +212,9 @@
           this.$http.get('/rbac/mvc/sallerInfo/getByNsrsbh?xfdm=' + JSON.parse(window.localStorage.getItem('userInfo')).xfdm).then((response) => {
             this.shuiHao = response.nsrsbhList || [];
             if (this.nsrsbh === '全部') {
-              // for (let i = 0; i < this.shuiHao.length; i++) {
-              //   this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
-              // }
-              this.Cnsrsbh = '';
+              for (let i = 0; i < this.shuiHao.length; i++) {
+                this.Cnsrsbh += this.shuiHao[i].nsrsbh + ',';
+              }
             }
           });
         },
@@ -253,7 +258,6 @@
         },
         // 查询
         queryBtn() {
-          this.lastData();
           let data = {
             tableShow: true,
             pageNum: 1,

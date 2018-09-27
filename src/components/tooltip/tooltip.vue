@@ -6,7 +6,6 @@
 
 <script type="text/ecmascript-6">
   import Bus from '../../common/js/bus.js';
-
   export default {
     data() {
       return {
@@ -16,14 +15,22 @@
       };
     },
     created() {
+      // 监听timTask tooltip
       Bus.$on('tooltip', (event) => {
         this.tooltipShow = true;
         this.content = event.target.innerHTML;
-        console.log(document.getElementById('tooltip').style.width);
-        this.tooltipStyle = {
-          'left': event.clientX + 'px',
-          'top': event.clientY + 'px'
-        };
+        this.$nextTick(() => {
+          let tooltipWidth = document.getElementById('tooltip').offsetWidth;
+          this.tooltipStyle = {
+            'left': (event.target.getBoundingClientRect().left + event.target.clientWidth / 2 - tooltipWidth / 2) + 'px',
+            'top': (event.target.getBoundingClientRect().top - event.target.clientHeight - 10) + 'px'
+          };
+        });
+      });
+      // 监听timTask removeTooltip
+      Bus.$on('removeTooltip', () => {
+        this.tooltipShow = false;
+        this.content = '';
       });
     }
   };
@@ -47,4 +54,7 @@
       margin-left -3px
       border 6px solid transparent
       border-top 6px solid #2d2f33
+  #tooltip
+    transition visibility 1s;
+    -webkit-transition visibility 1s;
 </style>
