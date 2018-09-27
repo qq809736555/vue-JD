@@ -836,6 +836,9 @@
           if (val === '11') {
             this.warningDesc = '核心板剩余成品油数量';
             this.unitDesc = 'L';
+          } else {
+            this.warningDesc = '核心板剩余发票数量';
+            this.unitDesc = '张';
           }
           if (val === '2') {
             this.warningDesc = '核心板未上传发票数量';
