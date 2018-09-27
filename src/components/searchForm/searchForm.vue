@@ -252,7 +252,6 @@
         },
         // 查询
         queryBtn() {
-          this.lastData();
           let data = {
             tableShow: true,
             pageNum: 1,

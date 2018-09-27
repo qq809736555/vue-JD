@@ -69,7 +69,6 @@
     },
     created () { // 初始化时currentPage赋值
       // this.getUserInfoList();
-      Bus.$emit('receiveType', this.taskType);
     },
     mounted() {
       Bus.$on('changePagination', (e) => {
@@ -93,6 +92,7 @@
       },
       // 导入excel
       importExcel() {
+        Bus.$emit('receiveType', '1');
         this.$store.commit('S');
         this.$store.commit('changeDialogTitle', '批量导入发票数据预警接收人');
         this.$store.commit('changeBtnFunction', 'importExcel');
@@ -103,7 +103,7 @@
       exportBtn() {
         this.$nextTick(function () {
           // 预警接收人设置导出
-          window.open('/api/exportJSRExcel?task_type=' + '1');
+          window.open('/ceshi/exportJSRExcel?taskType=' + '1');
         });
       },
       // 翻页组件修改每页显示条数
@@ -118,6 +118,7 @@
       },
       // 新增接收人
       newReceivers() {
+        Bus.$emit('receiveType', '1');
         this.$store.commit('S');
         this.$store.commit('changeDialogTitle', '新增发票数据预警接收人');
         let editItem = [
@@ -157,6 +158,7 @@
       },
       // 修改
       modifyBtn(id, name, phone, email, sendType, kpdwdm) {
+        Bus.$emit('receiveType', '1');
         this.$store.commit('changeStateUserId', id);
         this.$store.commit('S');
         this.$store.commit('changeDialogTitle', '修改发票数据预警接收人');

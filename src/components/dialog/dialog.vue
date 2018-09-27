@@ -77,13 +77,13 @@
               <span class="setItem_desc"><input v-model="offLine_notifyType12" class="input_checkBox" type="checkbox" value="">短信通知</span>
             </div>
             <div class="set_item">
-              <span class="red_desc">（当前税控值{{zsljValue}}小时）</span>
+              <span class="red_desc">（当前税控值{{zsljValue}}元）</span>
               <span class="setItem_desc">离线开票正数累计金额≤<input v-model="offLine_value2" class="input_edit" type="number" />元</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType21" class="input_checkBox" type="checkbox" value="">邮件通知</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType22" class="input_checkBox" type="checkbox" value="">短信通知</span>
             </div>
             <div class="set_item">
-              <span class="red_desc">（当前税控值{{fsljValue}}小时）</span>
+              <span class="red_desc">（当前税控值{{fsljValue}}元）</span>
               <span class="setItem_desc">离线开票负数累计金额≤<input v-model="offLine_value3" class="input_edit" type="number" />元</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType31" class="input_checkBox" type="checkbox" value="">邮件通知</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType32" class="input_checkBox" type="checkbox" value="">短信通知</span>
@@ -205,6 +205,8 @@
         });
         Bus.$on('receiveType', (value) => {
           this.receiveType = value;
+          console.log(value);
+          // console.log(this.receiveType);
         });
         this.getTime();
         Bus.$on('setType', (value) => {
@@ -358,6 +360,7 @@
             dialogInput[i].value = '';
             dialogInput[i].disabled = false;
           }
+          this.selectType = '';
           // 关闭弹窗，恢复弹框默认位置
           let dialog = document.getElementById('dialog').getElementsByClassName('dialog_content')[0];
           dialog.style.margin = '100px auto';
@@ -522,10 +525,10 @@
           let formData = new FormData(form);
           formData.append('taskType', this.receiveType);
           formData.append('file', file);
-          this.$http.post('/ceshi/importJSRExcel', formData).then((response) => {
-            if (response === 0) {
+          this.$http.post('/api/importJSRExcel', formData).then((response) => {
+            if (response === '0000') {
               this.dialogClose();
-              this.hintShow('hintShow');
+              this.hintShow('successHint');
               store.commit('changeContent', '导入Excel成功');
               this.getUserInfoList();
             }
@@ -614,7 +617,8 @@
             let selectedVal = document.getElementById('select_receiveType').value;
           let formDate = {'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': xfdm};
             this.$http.post('/api/insertUserManager', formDate).then((response) => {
-              if (response === 0) {
+              console.log(response);
+              if (response === '0000') {
                 this.dialogClose();
                 this.hintShow('successHint');
                 store.commit('changeContent', '接收人新增成功');
@@ -671,7 +675,7 @@
           let selectedVal = document.getElementById('select_receiveType').value;
           let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
           this.$http.post('/api/updateUserManager', formDate).then((response) => {
-            if (response === 0) {
+            if (response === '0000') {
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '接收人修改信息成功');
@@ -707,7 +711,7 @@
         confirmReceiveDelete() {
           let formDate = {'userId': '' + this.$store.getters.getStateUserId};
           this.$http.post('/api/deleteUserManager', formDate).then((response) => {
-            if (response === 0) {
+            if (response === '0000') {
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '接收人删除成功');
@@ -765,6 +769,11 @@
             store.commit('changeContent', '请选择业务类型');
             return;
           }
+          if (this.taskType !== '12' && this.notifyType1 === false && this.notifyType2 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择预警发送方式');
+            return;
+          }
           let formDate = [];
           if (this.taskType === '12') {
             formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': this.taskType, 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime}];
@@ -789,6 +798,19 @@
         },
         // 设置预警值确认(离线参数特殊)
         setWaringValOffLine() {
+          if (this.offLine_notifyType11 === false && this.offLine_notifyType12 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择离线开票时长预警发送方式');
+            return;
+          } else if (this.offLine_notifyType21 === false && this.offLine_notifyType22 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择离线开票正数累计金额预警发送方式');
+            return;
+          } else if (this.offLine_notifyType31 === false && this.offLine_notifyType32 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择离线开票负数累计金额预警发送方式');
+            return;
+          }
           // 执行确认操作
           let formDate = [];
           formDate = [
@@ -1041,11 +1063,12 @@
             margin-bottom 10px
             .red_desc
               position absolute
-              bottom -10px
+              top 30px
               color #e2231a
-              line-height 20px
+              line-height 18px
         .set_time
-            height 40px
+            padding-top 10px
+            height 50px
             line-height 40px
             .select_time
               position relative
