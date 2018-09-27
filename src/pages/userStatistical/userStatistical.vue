@@ -3,7 +3,7 @@
     <div class="search_form">
       <div class="search_conditions">
         <div class="search_item">
-          <div class="search_label">预警接收人：</div>
+          <div class="search_label">统计接收人：</div>
           <input type="text" v-model="userName" class="search_input">
         </div>
         <div class="search_btn_wrapper">
@@ -80,6 +80,7 @@
       getUserInfoList() {
         let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': 0};
         this.$http.post('/api/queryUserManager', formDate).then((response) => {
+          console.log(response);
           this.tableShow = true;
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
