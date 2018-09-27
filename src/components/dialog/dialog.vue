@@ -769,6 +769,11 @@
             store.commit('changeContent', '请选择业务类型');
             return;
           }
+          if (this.taskType !== '12' && this.notifyType1 === false && this.notifyType2 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择预警发送方式');
+            return;
+          }
           let formDate = [];
           if (this.taskType === '12') {
             formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': this.taskType, 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime}];
@@ -793,6 +798,19 @@
         },
         // 设置预警值确认(离线参数特殊)
         setWaringValOffLine() {
+          if (this.offLine_notifyType11 === false && this.offLine_notifyType12 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择离线开票时长预警发送方式');
+            return;
+          } else if (this.offLine_notifyType21 === false && this.offLine_notifyType22 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择离线开票正数累计金额预警发送方式');
+            return;
+          } else if (this.offLine_notifyType31 === false && this.offLine_notifyType32 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择离线开票负数累计金额预警发送方式');
+            return;
+          }
           // 执行确认操作
           let formDate = [];
           formDate = [
