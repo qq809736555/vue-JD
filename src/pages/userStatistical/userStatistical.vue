@@ -218,11 +218,11 @@
     filters: {
       sendPost(val) {
         if (val === '0') {
-          return '手机';
+          return '邮件';
         } else if (val === '1') {
-          return '邮箱';
-        } else if (val === '2') {
-          return '手机+邮箱';
+          return '短信';
+        } else if (val === '3') {
+          return '邮箱+短信';
         }
       },
       sendStatus(val) {

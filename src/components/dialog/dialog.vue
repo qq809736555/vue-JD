@@ -38,9 +38,9 @@
             <span class="icon-dropDown"></span>
             <select v-model="selectType"  class="search_select edit_select" id="select_receiveType">
               <option value="">请选择</option>
-              <option value="0">手机</option>
-              <option value="1">邮箱</option>
-              <option value="2">手机+邮箱</option>
+              <option value="0">邮件</option>
+              <option value="1">短信</option>
+              <option value="3">邮箱+短信</option>
             </select>
           </div>
         <!-- 查看邮件/短信 -->
@@ -202,10 +202,11 @@
       created() {
         Bus.$on('selectType', (value) => {
           this.selectType = value;
+          console.log('-----');
+          console.log(value);
         });
         Bus.$on('receiveType', (value) => {
           this.receiveType = value;
-          console.log(value);
           // console.log(this.receiveType);
         });
         this.getTime();
@@ -611,6 +612,11 @@
             this.dialogError = '请输入税号';
             return false;
           }
+          if (this.$refs.xfdm[0].value.length < 15 || this.$refs.xfdm[0].value.length > 20) {
+            this.dialog_error = true;
+            this.dialogError = '请输入15-20位税号';
+            return false;
+          }
           if (document.getElementById('select_receiveType').value === '') {
             this.dialog_error = true;
             this.dialogError = '请选择接收方式';
@@ -688,7 +694,7 @@
           // 号码
           let phone = this.$refs.phone[0].value;
           let selectedVal = document.getElementById('select_receiveType').value;
-          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
+          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'name': name, 'sendType': selectedVal, 'status': 0};
           this.$http.post('/api/updateUserManager', formDate).then((response) => {
             if (response === '0000') {
               this.dialogClose();
