@@ -202,8 +202,6 @@
       created() {
         Bus.$on('selectType', (value) => {
           this.selectType = value;
-          console.log('-----');
-          console.log(value);
         });
         Bus.$on('receiveType', (value) => {
           this.receiveType = value;
@@ -590,7 +588,6 @@
         },
         // 新增接收人
         newReceivesBtn() {
-          console.log(this.taskType);
           let _this = this;
           if (!global.name.test(_this.$refs.name[0].value)) {
             this.dialog_error = true;
@@ -634,7 +631,6 @@
             let selectedVal = document.getElementById('select_receiveType').value;
           let formDate = {'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': xfdm};
             this.$http.post('/api/insertUserManager', formDate).then((response) => {
-              console.log(response);
               if (response === '0000') {
                 this.dialogClose();
                 this.hintShow('successHint');
