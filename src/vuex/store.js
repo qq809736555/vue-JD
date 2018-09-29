@@ -27,7 +27,9 @@ const dialog = {
     // 是否显示设置预警值
     setValSHow: false,
     btnShow: true,
-    acceptShow: false
+    acceptShow: false,
+    // 是否添加定时任务
+    isAddJob: false
   },
   getters: {
     // 组件数据读取/输出，不能在这里直接修改状态
@@ -72,6 +74,9 @@ const dialog = {
     },
     getAcceptShow(state) {
       return state.acceptShow;
+    },
+    getIsAddJob(state) {
+      return state.isAddJob;
     }
   },
   mutations: {
@@ -117,6 +122,9 @@ const dialog = {
     },
     changeAcceptShow(state, acceptShow) {
       state.acceptShow = acceptShow;
+    },
+    changeIsAddJob(state, isAddJob) {
+      state.isAddJob = isAddJob;
     }
   }
 };

@@ -15,6 +15,7 @@ import store from './vuex/store';
 // 日期插件
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import qs from 'qs';
 
 Vue.use(ElementUI);
 
@@ -25,7 +26,7 @@ if (!getCookie('JD_token') || getCookie('JD_token') === 'undefined') {
 }
 
 Vue.prototype.$http = axios;
-
+Vue.prototype.$qs = qs;
 Vue.prototype.$http.defaults.headers.common['x-access-token'] = getCookie('JD_token') || '';
 
 let reaponseNum = 0;
@@ -46,6 +47,10 @@ axios.interceptors.response.use(function (response) {
     store.commit('changeLoading', false);
   } else {
     store.commit('changeLoading', true);
+  }
+  if (!response.data.code) {
+    response.data.code = '0000';
+    response.data.data = response.data;
   }
   if (response.data.code === '0000' || response.data.code === '9012') {
     return response.data.data;
