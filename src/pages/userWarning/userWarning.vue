@@ -149,7 +149,8 @@
             vModel: 'xfdm',
             placeholder: '请输入税号',
             type: 'text',
-            value: ''
+            value: '',
+            onInput: 'if(value.length > 20) value = value.slice(0,20)'
           }
         ];
         this.$store.commit('changeEditItem', editItem);
