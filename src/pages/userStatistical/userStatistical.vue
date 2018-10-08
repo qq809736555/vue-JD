@@ -3,7 +3,7 @@
     <div class="search_form">
       <div class="search_conditions">
         <div class="search_item">
-          <div class="search_label">预警接收人：</div>
+          <div class="search_label">统计接收人：</div>
           <input type="text" v-model="userName" class="search_input">
         </div>
         <div class="search_btn_wrapper">
@@ -71,14 +71,14 @@
       // this.getUserInfoList();
     },
     mounted() {
-      Bus.$on('changePagination', (e) => {
+      Bus.$on('receiveList', (e) => {
         this.getUserInfoList();
       });
     },
     methods: {
       // 接收人操作之后，重新获取新的列表
       getUserInfoList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': 0};
+        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': '0'};
         this.$http.post('/api/queryUserManager', formDate).then((response) => {
           this.tableShow = true;
           this.totalCount = response.total;
@@ -149,7 +149,8 @@
             vModel: 'xfdm',
             placeholder: '请输入税号',
             type: 'text',
-            value: ''
+            value: '',
+            onInput: 'if(value.length > 20) value = value.slice(0,20)'
           }
         ];
         this.$store.commit('changeEditItem', editItem);
@@ -218,11 +219,11 @@
     filters: {
       sendPost(val) {
         if (val === '0') {
-          return '手机';
+          return '邮件';
         } else if (val === '1') {
-          return '邮箱';
-        } else if (val === '2') {
-          return '手机+邮箱';
+          return '短信';
+        } else if (val === '3') {
+          return '邮箱+短信';
         }
       },
       sendStatus(val) {

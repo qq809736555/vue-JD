@@ -43,6 +43,42 @@
             <option value="2">手机+邮箱</option>
           </select>
         </div>
+          <div class="edit_item" v-for="item in this.$store.getters.getEditItem" :key="item.id" :style="item.style">
+            <div class="edit_label">{{item.editLabel}}：</div>
+            <input :type="item.type" value="" class="edit_input" :ref="item.vModel" :oninput="item.onInput">
+          </div>
+          <!--状态-->
+          <div class="edit_item" v-if="this.$store.getters.getReStateShow">
+            <div class="edit_label">状态：</div>
+            <div class="edit_radio">
+              <div class="edit_selectRadio">
+                <input type="radio" name="gender" v-model="picked" value="open" id="open"/><label for="open">启用</label>
+              </div>
+              <div class="edit_selectRadio">
+                <input type="radio" name="gender" v-model="picked" value="ban" id="ban"/><label for="ban">禁用</label>
+              </div>
+            </div>
+          </div>
+          <!-- 重置密码等情况显示 -->
+          <div class="confirmChange" v-if="this.$store.getters.getStateCChange !== ''">{{this.$store.getters.getStateCChange}}</div>
+          <!-- 批量导入用户 -->
+          <div class="importFile" v-if="this.$store.getters.getImportShow">
+            <form id="upload" enctype="multipart/form-data" method="post">
+            <div class="import_name">请选择Excel文件：</div>
+            <input class="upload" id="selectFile" name="file" @change.stop.prevent="importExcel(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+            </form>
+          </div>
+          <!--下拉框-->
+          <div class="edit_item" v-if="this.$store.getters.getAcceptShow">
+            <div  class="edit_label">接受方式：</div>
+            <span class="icon-dropDown"></span>
+            <select v-model="selectType"  class="search_select edit_select" id="select_receiveType">
+              <option value="">请选择</option>
+              <option value="0">邮件</option>
+              <option value="1">短信</option>
+              <option value="3">邮箱+短信</option>
+            </select>
+          </div>
         <!-- 查看邮件/短信 -->
         <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
           <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
@@ -206,7 +242,6 @@
         });
         Bus.$on('receiveType', (value) => {
           this.receiveType = value;
-          console.log(value);
           // console.log(this.receiveType);
         });
         this.getTime();
@@ -476,6 +511,13 @@
         getUserInfoList() {
           Bus.$emit('changePagination', true);
         },
+        // 接收人操作
+        getReceiveList() {
+          Bus.$emit('receiveList', true);
+        },
+        getWarningList() {
+          Bus.$emit('WarningList', true);
+        },
         //  选择Excel文件
         fixData(data) {
           var o = '';
@@ -541,7 +583,11 @@
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '导入Excel成功');
-              this.getUserInfoList();
+              if (this.$route.path.indexOf('userStatistical') !== -1) {
+                this.getReceiveList();
+              } else if (this.$route.path.indexOf('userWarning') !== -1) {
+                this.getWarningList();
+              }
             }
           });
         },
@@ -589,7 +635,6 @@
         },
         // 新增接收人
         newReceivesBtn() {
-          console.log(this.taskType);
           let _this = this;
           if (!global.name.test(_this.$refs.name[0].value)) {
             this.dialog_error = true;
@@ -611,6 +656,11 @@
             this.dialogError = '请输入税号';
             return false;
           }
+          if (this.$refs.xfdm[0].value.length < 15 || this.$refs.xfdm[0].value.length > 20) {
+            this.dialog_error = true;
+            this.dialogError = '请输入15-20位税号';
+            return false;
+          }
           if (document.getElementById('select_receiveType').value === '') {
             this.dialog_error = true;
             this.dialogError = '请选择接收方式';
@@ -628,12 +678,15 @@
             let selectedVal = document.getElementById('select_receiveType').value;
           let formDate = {'email': email, 'taskType': this.receiveType, 'phone': phone, 'xfdm': xfdm, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': xfdm};
             this.$http.post('/api/insertUserManager', formDate).then((response) => {
-              console.log(response);
               if (response === '0000') {
                 this.dialogClose();
                 this.hintShow('successHint');
                 store.commit('changeContent', '接收人新增成功');
-                this.getUserInfoList();
+                if (this.$route.path.indexOf('userStatistical') !== -1) {
+                  this.getReceiveList();
+                } else if (this.$route.path.indexOf('userWarning') !== -1) {
+                  this.getWarningList();
+                }
               }
             });
         },
@@ -684,13 +737,17 @@
           // 号码
           let phone = this.$refs.phone[0].value;
           let selectedVal = document.getElementById('select_receiveType').value;
-          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'name': name, 'sendType': selectedVal, 'status': 0, 'kpdwdm': ''};
+          let formDate = {'id': '' + this.$store.getters.getStateUserId, 'email': email, 'taskType': this.receiveType, 'phone': phone, 'name': name, 'sendType': selectedVal, 'status': 0};
           this.$http.post('/api/updateUserManager', formDate).then((response) => {
             if (response === '0000') {
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '接收人修改信息成功');
-              this.getUserInfoList();
+              if (this.$route.path.indexOf('userStatistical') !== -1) {
+                this.getReceiveList();
+              } else if (this.$route.path.indexOf('userWarning') !== -1) {
+                this.getWarningList();
+              }
             }
           });
         },
@@ -726,7 +783,11 @@
               this.dialogClose();
               this.hintShow('successHint');
               store.commit('changeContent', '接收人删除成功');
-              this.getUserInfoList();
+              if (this.$route.path.indexOf('userStatistical') !== -1) {
+                this.getReceiveList();
+              } else if (this.$route.path.indexOf('userWarning') !== -1) {
+                this.getWarningList();
+              }
             }
           });
         },
@@ -799,6 +860,11 @@
         },
         // 设置预警值确认(抄报特殊)
         setWaringValNewspaper() {
+          if (this.notifyType1 === false && this.notifyType2 === false) {
+            this.hintShow('errorHint');
+            store.commit('changeContent', '请选择预警发送方式');
+            return;
+          }
           let formDate = [];
           formDate = [{'kpdwdm': this.setNsrsbh, 'taskType': '9', 'monitorStartTime': this.monitorStartTime, 'monitorEndTime': this.monitorEndTime, 'notifyType': this.calNotifyType(this.notifyType1, this.notifyType2), value: this.value}];
           this.$http.post('/api/setWarn', formDate).then((response) => {

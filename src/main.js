@@ -63,7 +63,7 @@ axios.interceptors.response.use(function (response) {
     store.commit('changeContent', response.data.message);
     setTimeout(function() {
       store.commit('changeHint', false);
-    }, 1000);
+    }, 2000);
     return response.data.message;
   }
   // Do something with response data

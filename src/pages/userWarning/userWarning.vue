@@ -71,14 +71,14 @@
       // this.getUserInfoList();
     },
     mounted() {
-      Bus.$on('changePagination', (e) => {
+      Bus.$on('WarningList', (e) => {
         this.getUserInfoList();
       });
     },
     methods: {
       // 接收人操作之后，重新获取新的列表
       getUserInfoList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': 1};
+        let formDate = {'pageNum': this.pageNum, 'pageSize': this.pageSize, 'userName': this.userName, 'taskType': '1'};
         this.$http.post('/api/queryUserManager', formDate).then((response) => {
           this.tableShow = true;
           this.totalCount = response.total;
@@ -103,7 +103,7 @@
       exportBtn() {
         this.$nextTick(function () {
           // 预警接收人设置导出
-          window.open('/ceshi/exportJSRExcel?taskType=' + '1');
+          window.open('/api/exportJSRExcel?taskType=' + '1');
         });
       },
       // 翻页组件修改每页显示条数
@@ -149,7 +149,8 @@
             vModel: 'xfdm',
             placeholder: '请输入税号',
             type: 'text',
-            value: ''
+            value: '',
+            onInput: 'if(value.length > 20) value = value.slice(0,20)'
           }
         ];
         this.$store.commit('changeEditItem', editItem);
@@ -216,11 +217,11 @@
     filters: {
       sendPost(val) {
         if (val === '0') {
-          return '手机';
+          return '邮件';
         } else if (val === '1') {
-          return '邮箱';
-        } else if (val === '2') {
-          return '手机+邮箱';
+          return '短信';
+        } else if (val === '3') {
+          return '邮箱+短信';
         }
       },
       sendStatus(val) {
