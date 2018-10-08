@@ -224,4 +224,7 @@
       white-space nowrap
       text-overflow ellipsis
       cursor: pointer
+  .search_table table tbody tr td.operation .delete {
+    margin-right: 10px;
+  }
 </style>

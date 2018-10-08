@@ -43,42 +43,6 @@
             <option value="2">手机+邮箱</option>
           </select>
         </div>
-          <div class="edit_item" v-for="item in this.$store.getters.getEditItem" :key="item.id" :style="item.style">
-            <div class="edit_label">{{item.editLabel}}：</div>
-            <input :type="item.type" value="" class="edit_input" :ref="item.vModel" :oninput="item.onInput">
-          </div>
-          <!--状态-->
-          <div class="edit_item" v-if="this.$store.getters.getReStateShow">
-            <div class="edit_label">状态：</div>
-            <div class="edit_radio">
-              <div class="edit_selectRadio">
-                <input type="radio" name="gender" v-model="picked" value="open" id="open"/><label for="open">启用</label>
-              </div>
-              <div class="edit_selectRadio">
-                <input type="radio" name="gender" v-model="picked" value="ban" id="ban"/><label for="ban">禁用</label>
-              </div>
-            </div>
-          </div>
-          <!-- 重置密码等情况显示 -->
-          <div class="confirmChange" v-if="this.$store.getters.getStateCChange !== ''">{{this.$store.getters.getStateCChange}}</div>
-          <!-- 批量导入用户 -->
-          <div class="importFile" v-if="this.$store.getters.getImportShow">
-            <form id="upload" enctype="multipart/form-data" method="post">
-            <div class="import_name">请选择Excel文件：</div>
-            <input class="upload" id="selectFile" name="file" @change.stop.prevent="importExcel(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-            </form>
-          </div>
-          <!--下拉框-->
-          <div class="edit_item" v-if="this.$store.getters.getAcceptShow">
-            <div  class="edit_label">接受方式：</div>
-            <span class="icon-dropDown"></span>
-            <select v-model="selectType"  class="search_select edit_select" id="select_receiveType">
-              <option value="">请选择</option>
-              <option value="0">邮件</option>
-              <option value="1">短信</option>
-              <option value="3">邮箱+短信</option>
-            </select>
-          </div>
         <!-- 查看邮件/短信 -->
         <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
           <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
