@@ -51,6 +51,7 @@
     },
     methods: {
       getList() {
+        console.log(this.startTime);
         // 发送类型 1:短信，0：邮件
         let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'startTime': this.startTime, 'endTime': this.endTime, 'sendType': '0', 'taskType': this.dictCode};
         this.$http.post('/api/querySendContent', formDate).then((response) => {
