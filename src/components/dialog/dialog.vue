@@ -870,7 +870,7 @@
           let jobGroupName = this.$refs.jobGroup[0].value;
           let cronExpression = this.$refs.cronExpression[0].value;
           let formDate = {'jobClassName': jobClassName, 'jobGroupName': jobGroupName, 'cronExpression': cronExpression};
-          this.$http.post('job/addjob', this.$qs.stringify(formDate), {emulateJSON: true}).then((response) => {
+          this.$http.post('/job/addjob', this.$qs.stringify(formDate), {emulateJSON: true}).then((response) => {
             this.dialogClose();
             this.hintShow('successHint');
             store.commit('changeContent', '任务新增成功');
@@ -880,7 +880,7 @@
         modifyJob() {
           console.log(this.modifyJobData);
           let args = {'jobClassName': this.modifyJobData.job_CLASS_NAME, 'jobGroupName': this.modifyJobData.job_GROUP, 'cronExpression': this.$refs.cronExpression[0].value}
-          this.$http.post('job/reschedulejob', this.$qs.stringify(args), {emulateJSON: true}).then((response) => {
+          this.$http.post('/job/reschedulejob', this.$qs.stringify(args), {emulateJSON: true}).then((response) => {
             this.dialogClose();
             this.hintShow('successHint');
             store.commit('changeContent', '任务编辑成功');

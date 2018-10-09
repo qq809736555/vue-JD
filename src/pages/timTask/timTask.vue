@@ -64,7 +64,7 @@
       methods: {
         // 获取定时任务列表
         getInfoList() {
-          this.$http.get('job/queryjob?' + 'pageNum=' + this.pageNum + '&pageSize=' + this.pageSize).then((response) => {
+          this.$http.get('/job/queryjob?' + 'pageNum=' + this.pageNum + '&pageSize=' + this.pageSize).then((response) => {
             console.log(response);
             this.tableData = response.data.JobAndTrigger.list;
             this.totalCount = response.data.number;
@@ -124,7 +124,7 @@
             cancelButtonText: '取消'
           }).then(() => {
             console.log(row)
-            this.$http.post('job/pausejob', this.$qs.stringify({'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}), {emulateJSON: true}).then((response) => {
+            this.$http.post('/job/pausejob', this.$qs.stringify({'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}), {emulateJSON: true}).then((response) => {
               this.getInfoList();
               this.hintShow('successHint');
               this.$store.commit('changeContent', '定时任务暂停成功');
@@ -141,7 +141,7 @@
             cancelButtonText: '取消'
           }).then(() => {
             console.log(row)
-            this.$http.post('job/resumejob', this.$qs.stringify({'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}), {emulateJSON: true}).then((response) => {
+            this.$http.post('/job/resumejob', this.$qs.stringify({'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}), {emulateJSON: true}).then((response) => {
               this.getInfoList();
               this.hintShow('successHint');
               this.$store.commit('changeContent', '定时任务恢复成功');
@@ -158,7 +158,7 @@
             cancelButtonText: '取消'
           }).then(() => {
             console.log(row)
-            this.$http.post('job/deletejob', this.$qs.stringify({'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}), {emulateJSON: true}).then((response) => {
+            this.$http.post('/job/deletejob', this.$qs.stringify({'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}), {emulateJSON: true}).then((response) => {
               this.getInfoList();
               this.hintShow('successHint');
               this.$store.commit('changeContent', '定时任务删除成功');
