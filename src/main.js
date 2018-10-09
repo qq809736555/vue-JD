@@ -49,8 +49,13 @@ axios.interceptors.response.use(function (response) {
     store.commit('changeLoading', true);
   }
   if (!response.data.code) {
-    response.data.code = '0000';
-    response.data.data = response.data;
+    if (response.data instanceof Object) {
+      response.data.code = '0000';
+      response.data.data = response.data;
+    } else {
+      response.data = {};
+      response.data.code = '0000';
+    }
   }
   if (response.data.code === '0000' || response.data.code === '9012') {
     return response.data.data;

@@ -124,9 +124,13 @@
             cancelButtonText: '取消'
           }).then(() => {
             console.log(row)
-            return false
-            this.$http.post('job/pausejob', {'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}, {emulateJSON: true}).then((response) => {
+            this.$http.post('job/pausejob', this.$qs.stringify({'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}), {emulateJSON: true}).then((response) => {
               this.getInfoList();
+              this.hintShow('successHint');
+              this.$store.commit('changeContent', '定时任务暂停成功');
+            }).catch(() => {
+              this.hintShow('errorHint');
+              this.$store.commit('changeContent', '定时任务暂停失败');
             });
           });
         },
@@ -137,9 +141,13 @@
             cancelButtonText: '取消'
           }).then(() => {
             console.log(row)
-            return false
-            this.$http.post('job/resumejob', {'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}, {emulateJSON: true}).then((response) => {
+            this.$http.post('job/resumejob', this.$qs.stringify({'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}), {emulateJSON: true}).then((response) => {
               this.getInfoList();
+              this.hintShow('successHint');
+              this.$store.commit('changeContent', '定时任务恢复成功');
+            }).catch(() => {
+              this.hintShow('errorHint');
+              this.$store.commit('changeContent', '定时任务恢复失败');
             });
           });
         },
@@ -150,9 +158,13 @@
             cancelButtonText: '取消'
           }).then(() => {
             console.log(row)
-            return false
-            this.$http.post('job/deletejob', {'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}, {emulateJSON: true}).then((response) => {
+            this.$http.post('job/deletejob', this.$qs.stringify({'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}), {emulateJSON: true}).then((response) => {
               this.getInfoList();
+              this.hintShow('successHint');
+              this.$store.commit('changeContent', '定时任务删除成功');
+            }).catch(() => {
+              this.hintShow('errorHint');
+              this.$store.commit('changeContent', '定时任务删除失败');
             });
           });
         },
@@ -199,6 +211,14 @@
           if (event.target.className === 'hover_seeMore' && this.strlen(event.target.innerHTML) > 16) {
             Bus.$emit('removeTooltip', event);
           }
+        },
+        // 请求成功提示hint
+        hintShow(val) {
+          this.$store.commit('changeHint', true);
+          this.$store.commit('changeHintClass', val);
+          setTimeout(() => {
+            this.$store.commit('changeHint', false);
+          }, 1000);
         }
       },
       mounted() {
