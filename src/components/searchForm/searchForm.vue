@@ -251,6 +251,8 @@
           }
           if (this.dictCode !== '全部') {
             this.CdictCode = this.dictCode;
+          } else {
+            this.CdictCode = '';
           }
           let router = this.$route.path;
           // 验旧日期要前一天

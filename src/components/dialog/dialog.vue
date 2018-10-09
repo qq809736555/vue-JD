@@ -496,7 +496,6 @@
           if (file === undefined) {
             return;
           }
-          console.log(file);
           let rABS = false; // 是否将文件读取为二进制字符串
           let reader = new FileReader();
           FileReader.prototype.readAsBinaryString = function(f) {
@@ -878,7 +877,6 @@
           });
         },
         modifyJob() {
-          console.log(this.modifyJobData);
           let args = {'jobClassName': this.modifyJobData.job_CLASS_NAME, 'jobGroupName': this.modifyJobData.job_GROUP, 'cronExpression': this.$refs.cronExpression[0].value}
           this.$http.post('job/reschedulejob', this.$qs.stringify(args), {emulateJSON: true}).then((response) => {
             this.dialogClose();
