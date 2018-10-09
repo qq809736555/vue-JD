@@ -3,12 +3,12 @@
       <div class="search_form">
         <div class="search_conditions">
           <div class="search_btn_wrapper">
-            <div class="search_btn red-btn" @click="queryBtn">查询</div>
-            <div class="add_btn red-btn" @click="handleadd">添加</div>
+            <div class="search_btn red-btn" @click="handleQuery">查询</div>
+            <div class="add_btn red-btn" @click="handleAdd">添加</div>
           </div>
         </div>
       </div>
-      <div class="search_table" v-show="tableShow">
+      <div class="search_table">
         <table>
           <thead>
           <tr>
@@ -24,18 +24,18 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in tableData" :key="item.id" v-if="index <= pageSize" @mouseover="hover" @mouseout="out">
-                <td class="hover_seeMore">最后在查看结果中</td>
-              <td class="hover_seeMore">com.guopiao.inpu</td>
-              <td class="hover_seeMore">通过界面样式和交互动效让用户可以清晰的感知自己的操作</td>
-              <td class="hover_seeMore">操作后，通过页面元素的变化清晰地展现当前状态</td>
-              <td class="hover_seeMore">设计简洁直观的操作流程</td>
-              <td class="hover_seeMore">语言表达清晰且表意明确，让用户快速理解进而作出决策</td>
-              <td class="hover_seeMore">界面简单直白，让用户快速识别而非回忆，减少用户记忆负担</td>
+              <td class="hover_seeMore" v-text="item.job_NAME"></td>
+              <td class="hover_seeMore" v-text="item.job_GROUP"></td>
+              <td class="hover_seeMore" v-text="item.job_CLASS_NAME"></td>
+              <td class="hover_seeMore" v-text="item.trigger_NAME"></td>
+              <td class="hover_seeMore" v-text="item.trigger_GROUP"></td>
+              <td class="hover_seeMore" v-text="item.cron_EXPRESSION"></td>
+              <td class="hover_seeMore" v-text="item.time_ZONE_ID"></td>
               <td class="operation">
-                <div class="modify red-btn" @click="suspendedBtn(item)">暂停</div>
-                <div class="reset red-btn" @click="restoreBtn(item)">恢复</div>
-                <div class="delete red-btn" @click="deleteBtn(item)">删除</div>
-                <div class="delete red-btn" @click="modifyBtn(item)">修改</div>
+                <div class="modify red-btn" @click="handlePause(item)">暂停</div>
+                <div class="reset red-btn" @click="handleResume(item)">恢复</div>
+                <div class="delete red-btn" @click="handleDelete(item)">删除</div>
+                <div class="delete red-btn" @click="handleModify(item)">修改</div>
               </td>
             </tr>
           </tbody>
@@ -51,7 +51,6 @@
     import dialog from 'components/dialog/dialog';
     import tooltip from 'components/tooltip/tooltip';
     import Bus from '../../common/js/bus.js';
-
     export default {
       data() {
         return {
@@ -59,27 +58,54 @@
           tableData: [],
           totalCount: 0,
           pageSize: 5,
-          pageNum: 1,
-          tableShow: true
+          pageNum: 1
         };
       },
       methods: {
         // 获取定时任务列表
         getInfoList() {
-          // this.$http.get('/job/queryjob?' + 'pageNum=' + this.pageNum + '&pageSize=' + this.pageSize).then(function(response) {
-          //   console.log(response);
-          //   this.totalCount = response.total;
-          //   this.$store.commit('changeList', response.list);
-          //   this.pageSize = response.pageSize;
-          // });
           this.$http.get('job/queryjob?' + 'pageNum=' + this.pageNum + '&pageSize=' + this.pageSize).then((response) => {
             console.log(response);
+            this.tableData = response.data.JobAndTrigger.list;
+            this.totalCount = response.data.number;
+          }, () => {
+            console.log('failed');
           });
-          // this.$http.get('job/queryjob?' + 'pageNum=' + this.pageNum + '&pageSize=' + this.pageSize).then((res) => {
-          //   console.log(res);
-          //   this.tableData = res.body.JobAndTrigger.list;
-          //   this.totalCount = res.body.number;
-          // });
+        },
+        // 查询定时任务列表
+        handleQuery() {
+          this.getInfoList();
+        },
+        // 添加定时任务
+        handleAdd() {
+          let editItem = [
+            {
+              editLabel: '任务名称',
+              vModel: 'jobName',
+              placeholder: '请输入任务名称',
+              type: 'text',
+              value: ''
+            },
+            {
+              editLabel: '任务分组',
+              vModel: 'jobGroup',
+              placeholder: '请输入任务分组',
+              type: 'text',
+              value: ''
+            },
+            {
+              editLabel: '表达式',
+              vModel: 'cronExpression',
+              placeholder: '请输入表达式',
+              type: 'text',
+              value: ''
+            }
+          ];
+          this.$store.commit('S');
+          this.$store.commit('changeDialogTitle', '添加任务');
+          this.$store.commit('changeIsAddJob', true);
+          this.$store.commit('changeEditItem', editItem);
+          this.$store.commit('changeBtnFunction', 'addJob');
         },
         // 翻页组件修改每页显示条数
         updatePageSize(data) {
@@ -91,20 +117,63 @@
           this.pageNum = data;
           this.getInfoList();
         },
-        // 查询列表
-        queryBtn() {
-          this.getInfoList();
-        },
-        // 增加
-        handleadd() {},
         // 暂停
-        suspendedBtn(item) {},
+        handlePause(row) {
+          this.$confirm('确认暂停定时任务？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(() => {
+            console.log(row)
+            return false
+            this.$http.post('job/pausejob', {'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}, {emulateJSON: true}).then((response) => {
+              this.getInfoList();
+            });
+          });
+        },
         // 恢复
-        restoreBtn(item) {},
+        handleResume(row) {
+          this.$confirm('确认恢复定时任务？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(() => {
+            console.log(row)
+            return false
+            this.$http.post('job/resumejob', {'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}, {emulateJSON: true}).then((response) => {
+              this.getInfoList();
+            });
+          });
+        },
         // 删除
-        deleteBtn(item) {},
+        handleDelete(row) {
+          this.$confirm('确认删除定时任务？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(() => {
+            console.log(row)
+            return false
+            this.$http.post('job/deletejob', {'jobClassName': row.job_NAME, 'jobGroupName': row.job_GROUP}, {emulateJSON: true}).then((response) => {
+              this.getInfoList();
+            });
+          });
+        },
         // 修改
-        modifyBtn(item) {},
+        handleModify(row) {
+          let editItem = [
+            {
+              editLabel: '表达式',
+              vModel: 'cronExpression',
+              placeholder: '请输入表达式',
+              type: 'text',
+              value: ''
+            }
+          ];
+          this.$store.commit('S');
+          this.$store.commit('changeDialogTitle', '编辑任务');
+          this.$store.commit('changeIsAddJob', true);
+          this.$store.commit('changeEditItem', editItem);
+          this.$store.commit('changeBtnFunction', 'modifyJob');
+          Bus.$emit('modifyJobData', row);
+        },
         // 判断字符串长度
         strlen(str) {
             var len = 0;
@@ -132,10 +201,11 @@
           }
         }
       },
-      // created () { // 初始化时currentPage赋值
-      // },
       mounted() {
         this.getInfoList();
+        Bus.$on('changePagination', (e) => {
+          this.getInfoList();
+        });
       },
       components: {
         pagination,
@@ -154,4 +224,7 @@
       white-space nowrap
       text-overflow ellipsis
       cursor: pointer
+  .search_table table tbody tr td.operation .delete {
+    margin-right: 10px;
+  }
 </style>

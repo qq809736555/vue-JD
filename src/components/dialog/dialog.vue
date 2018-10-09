@@ -7,42 +7,42 @@
       </div>
       <div class="edit_content">
         <div class="dialog_error" v-show="dialog_error">{{dialogError}}</div>
-          <div class="edit_item" v-for="item in this.$store.getters.getEditItem" :key="item.id" :style="item.style">
-            <div class="edit_label">{{item.editLabel}}：</div>
-            <input :type="item.type" value="" class="edit_input" :ref="item.vModel" :oninput="item.onInput">
-          </div>
-          <!--状态-->
-          <div class="edit_item" v-if="this.$store.getters.getReStateShow">
-            <div class="edit_label">状态：</div>
-            <div class="edit_radio">
-              <div class="edit_selectRadio">
-                <input type="radio" name="gender" v-model="picked" value="open" id="open"/><label for="open">启用</label>
-              </div>
-              <div class="edit_selectRadio">
-                <input type="radio" name="gender" v-model="picked" value="ban" id="ban"/><label for="ban">禁用</label>
-              </div>
+        <div class="edit_item" v-for="item in this.$store.getters.getEditItem" :key="item.id" :style="item.style">
+          <div class="edit_label">{{item.editLabel}}：</div>
+          <input :type="item.type" value="" class="edit_input" :ref="item.vModel" :oninput="item.onInput">
+        </div>
+        <!--状态-->
+        <div class="edit_item" v-if="this.$store.getters.getReStateShow">
+          <div class="edit_label">状态：</div>
+          <div class="edit_radio">
+            <div class="edit_selectRadio">
+              <input type="radio" name="gender" v-model="picked" value="open" id="open"/><label for="open">启用</label>
+            </div>
+            <div class="edit_selectRadio">
+              <input type="radio" name="gender" v-model="picked" value="ban" id="ban"/><label for="ban">禁用</label>
             </div>
           </div>
-          <!-- 重置密码等情况显示 -->
-          <div class="confirmChange" v-if="this.$store.getters.getStateCChange !== ''">{{this.$store.getters.getStateCChange}}</div>
-          <!-- 批量导入用户 -->
-          <div class="importFile" v-if="this.$store.getters.getImportShow">
-            <form id="upload" enctype="multipart/form-data" method="post">
-            <div class="import_name">请选择Excel文件：</div>
-            <input class="upload" id="selectFile" name="file" @change.stop.prevent="importExcel(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-            </form>
-          </div>
-          <!--下拉框-->
-          <div class="edit_item" v-if="this.$store.getters.getAcceptShow">
-            <div  class="edit_label">接受方式：</div>
-            <span class="icon-dropDown"></span>
-            <select v-model="selectType"  class="search_select edit_select" id="select_receiveType">
-              <option value="">请选择</option>
-              <option value="0">邮件</option>
-              <option value="1">短信</option>
-              <option value="3">邮箱+短信</option>
-            </select>
-          </div>
+        </div>
+        <!-- 重置密码等情况显示 -->
+        <div class="confirmChange" v-if="this.$store.getters.getStateCChange !== ''">{{this.$store.getters.getStateCChange}}</div>
+        <!-- 批量导入用户 -->
+        <div class="importFile" v-if="this.$store.getters.getImportShow">
+          <form id="upload" enctype="multipart/form-data" method="post">
+          <div class="import_name">请选择Excel文件：</div>
+          <input class="upload" id="selectFile" name="file" @change.stop.prevent="importExcel(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+          </form>
+        </div>
+        <!--下拉框-->
+        <div class="edit_item" v-if="this.$store.getters.getAcceptShow">
+          <div  class="edit_label">接受方式：</div>
+          <span class="icon-dropDown"></span>
+          <select v-model="selectType"  class="search_select edit_select" id="select_receiveType">
+            <option value="">请选择</option>
+            <option value="0">手机</option>
+            <option value="1">邮箱</option>
+            <option value="2">手机+邮箱</option>
+          </select>
+        </div>
         <!-- 查看邮件/短信 -->
         <div class="seeMsg" v-if="this.$store.getters.getSeeMsg">
           <div class="message_content">{{this.$store.getters.getSeeMsg}} </div>
@@ -196,7 +196,8 @@
           zsljValue: 0,
           fsljValue: 0,
           selectType: '',
-          receiveType: ''
+          receiveType: '',
+          modifyJobData: ''
         };
       },
       created() {
@@ -234,6 +235,9 @@
           this.lxscValue = value.lxscValue || 0;
           this.zsljValue = value.zsljValue || 0;
           this.fsljValue = value.fsljValue || 0;
+        });
+        Bus.$on('modifyJobData', (value) => {
+          this.modifyJobData = value;
         });
       },
       methods: {
@@ -423,6 +427,13 @@
             // 设置预警值（抄报特殊）
             this.setWaringValNewspaper();
             return false;
+          } else if (this.$store.getters.getBtnFunction === 'addJob') {
+            // 新增任务
+            this.addJob();
+            return false;
+          } else if (this.$store.getters.getBtnFunction === 'changeBtnFunction') {
+            // 编辑任务
+            this.modifyJob();
           }
         },
         // 修改密码
@@ -852,6 +863,30 @@
             this.dialogClose();
             this.hintShow('successHint');
             store.commit('changeContent', '设置成功');
+          });
+        },
+        addJob() {
+          let jobClassName = this.$refs.jobName[0].value;
+          let jobGroupName = this.$refs.jobGroup[0].value;
+          let cronExpression = this.$refs.cronExpression[0].value;
+          let formDate = {'jobClassName': jobClassName, 'jobGroupName': jobGroupName, 'cronExpression': cronExpression};
+          this.$http.post('job/addjob', this.$qs.stringify(formDate), {emulateJSON: true}).then((response) => {
+            if (response === 'success') {
+              this.dialogClose();
+              store.commit('changeContent', '任务新增成功');
+              this.getUserInfoList();
+            }
+          });
+        },
+        modifyJob() {
+          console.log(this.modifyJobData);
+          let args = {'jobClassName': this.modifyJobData.jobClassName, 'jobGroupName': this.modifyJobData.jobGroupName, 'cronExpression': this.$refs.cronExpression[0].value}
+          this.$http.post('job/reschedulejob', args, {emulateJSON: true}).then((response) => {
+            if (response === 'success') {
+              this.dialogClose();
+              store.commit('changeContent', '任务编辑成功');
+              this.getUserInfoList();
+            }
           });
         }
       },
