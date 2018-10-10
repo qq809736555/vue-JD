@@ -77,7 +77,10 @@
         } else {
           this.firstShow = true;
           this.secondShow = true;
-          if (this.$route.path.indexOf('user') > 0) {
+          if (this.$route.path.indexOf('timTask') > 0) {
+            this.showIndex = 5;
+            this.breadCrumbShow();
+          } else if (this.$route.path.indexOf('user') > 0) {
             this.showIndex = 4;
             this.breadCrumbShow();
           } else if (this.$route.path.indexOf('sent') > 0) {

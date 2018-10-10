@@ -141,9 +141,9 @@
         return {
           nowDate: new Date().setMonth((new Date()).getMonth() - 1),
           CnowDate: '',
-          startTime: new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000),
+          startTime: new Date(),
           CstartTime: '',
-          endTime: new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000),
+          endTime: new Date(),
           dateBefore: {
             disabledDate: (time) => {
               let beginDateVal = this.endTime;
@@ -181,6 +181,13 @@
           // 邮件/短信页面
           this.getType('预警项目类型');
         }
+        let router = this.$route.path;
+        // 验旧日期要前一天
+        if (router.indexOf('oldDateQuery') !== -1) {
+          this.startTime = new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000);
+          this.endTime = new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000);
+        }
+        this.lastData();
       },
       methods: {
         lastSH() {
@@ -238,9 +245,11 @@
           }
         },
         lastData() {
+          // 税号
           if (this.nsrsbh !== '全部') {
             this.Cnsrsbh = this.nsrsbh;
           }
+          // 机器编号
           if (this.jqbh === '全部') {
             this.Cjqbh = '';
           } else {
@@ -248,16 +257,19 @@
           }
           if (this.dictCode !== '全部') {
             this.CdictCode = this.dictCode;
+          } else {
+            this.CdictCode = '';
           }
           let dateA = new Date(this.startTime);
+          this.CstartTime = dateA.getFullYear() + '' + this.dateDeal(dateA.getMonth() + 1) + this.dateDeal(dateA.getDate());
           let dateB = new Date(this.endTime);
-          this.CstartTime = dateA.getFullYear() + this.dateDeal(dateA.getMonth() + 1) + this.dateDeal(dateA.getDate());
-          this.CendTime = dateB.getFullYear() + this.dateDeal(dateB.getMonth() + 1) + this.dateDeal(dateB.getDate());
+          this.CendTime = dateB.getFullYear() + '' + this.dateDeal(dateB.getMonth() + 1) + this.dateDeal(dateB.getDate());
           let dateC = new Date(this.nowDate);
-          this.CnowTime = dateC.getFullYear() + this.dateDeal(dateC.getMonth() + 1);
+          this.CnowTime = dateC.getFullYear() + '' + this.dateDeal(dateC.getMonth() + 1);
         },
         // 查询
         queryBtn() {
+          this.lastData();
           let data = {
             tableShow: true,
             pageNum: 1,
@@ -292,7 +304,6 @@
               window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=' + this.CdictCode);
             } else if (router.indexOf('controlBillSource') !== -1) {
               // 发票票源监控
-              console.info('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=1,11,12');
               window.open('/api/exportInvoiceStates?nsrsbh=' + this.Cnsrsbh + '&jqbh=' + this.Cjqbh + '&taskType=1,11,12');
             } else if (router.indexOf('controlOffLine') !== -1) {
               // 离线参数监控

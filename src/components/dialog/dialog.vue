@@ -431,7 +431,7 @@
             // 新增任务
             this.addJob();
             return false;
-          } else if (this.$store.getters.getBtnFunction === 'changeBtnFunction') {
+          } else if (this.$store.getters.getBtnFunction === 'modifyJob') {
             // 编辑任务
             this.modifyJob();
           }
@@ -496,7 +496,6 @@
           if (file === undefined) {
             return;
           }
-          console.log(file);
           let rABS = false; // 是否将文件读取为二进制字符串
           let reader = new FileReader();
           FileReader.prototype.readAsBinaryString = function(f) {
@@ -870,23 +869,20 @@
           let jobGroupName = this.$refs.jobGroup[0].value;
           let cronExpression = this.$refs.cronExpression[0].value;
           let formDate = {'jobClassName': jobClassName, 'jobGroupName': jobGroupName, 'cronExpression': cronExpression};
-          this.$http.post('job/addjob', this.$qs.stringify(formDate), {emulateJSON: true}).then((response) => {
-            if (response === 'success') {
-              this.dialogClose();
-              store.commit('changeContent', '任务新增成功');
-              this.getUserInfoList();
-            }
+          this.$http.post('/job/addjob', this.$qs.stringify(formDate), {emulateJSON: true}).then((response) => {
+            this.dialogClose();
+            this.hintShow('successHint');
+            store.commit('changeContent', '任务新增成功');
+            this.getUserInfoList();
           });
         },
         modifyJob() {
-          console.log(this.modifyJobData);
-          let args = {'jobClassName': this.modifyJobData.jobClassName, 'jobGroupName': this.modifyJobData.jobGroupName, 'cronExpression': this.$refs.cronExpression[0].value}
-          this.$http.post('job/reschedulejob', args, {emulateJSON: true}).then((response) => {
-            if (response === 'success') {
-              this.dialogClose();
-              store.commit('changeContent', '任务编辑成功');
-              this.getUserInfoList();
-            }
+          let args = {'jobClassName': this.modifyJobData.job_CLASS_NAME, 'jobGroupName': this.modifyJobData.job_GROUP, 'cronExpression': this.$refs.cronExpression[0].value}
+          this.$http.post('/job/reschedulejob', this.$qs.stringify(args), {emulateJSON: true}).then((response) => {
+            this.dialogClose();
+            this.hintShow('successHint');
+            store.commit('changeContent', '任务编辑成功');
+            this.getUserInfoList();
           });
         }
       },
