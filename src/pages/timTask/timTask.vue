@@ -43,7 +43,7 @@
         <pagination :total-count = "totalCount" :page-size="pageSize" :page-num="pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></pagination>
         <tooltip></tooltip>
         <p class="tip">表达式参数中各个参数的含义：按顺序依次为[秒](0-59) [分](0-59) [时](0-23) [日](1-31) [月](1-12) [星期](1-7) [年(可选)]秒（留空, 1970-2099）。</p>
-        <p class="tip">其中每个元素可以是一个值(如6),一个连续区间(9-12),一个间隔时间(8-18/4)(/表示每隔4个当前单位),一个列表(1,3,5),通配符。由于"月份中的日期"和"星期中的日期"这两个元素互斥的,必须要对其中一个设置?。</p>
+        <p class="tip">其中每个元素可以是一个值(如6),一个连续区间(9-12),一个间隔时间(8-18/4)(/表示每隔4个当前单位),一个列表(1,3,5),通配符。由于"月份中的日期"和"星期中的日期"这两个元素互斥的,必须要对其中一个设置'?'。</p>
       </div>
     </div>
 </template>
