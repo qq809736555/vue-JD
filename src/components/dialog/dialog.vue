@@ -38,9 +38,9 @@
           <span class="icon-dropDown"></span>
           <select v-model="selectType"  class="search_select edit_select" id="select_receiveType">
             <option value="">请选择</option>
-            <option value="0">手机</option>
-            <option value="1">邮箱</option>
-            <option value="2">手机+邮箱</option>
+            <option value="0">邮件</option>
+            <option value="1">短信</option>
+            <option value="3">邮箱+短信</option>
           </select>
         </div>
         <!-- 查看邮件/短信 -->
