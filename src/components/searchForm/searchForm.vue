@@ -181,6 +181,12 @@
           // 邮件/短信页面
           this.getType('预警项目类型');
         }
+        let router = this.$route.path;
+        // 验旧日期要前一天
+        if (router.indexOf('oldDateQuery') !== -1) {
+          this.startTime = new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000);
+          this.endTime = new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000);
+        }
         this.lastData();
       },
       methods: {
@@ -253,12 +259,6 @@
             this.CdictCode = this.dictCode;
           } else {
             this.CdictCode = '';
-          }
-          let router = this.$route.path;
-          // 验旧日期要前一天
-          if (router.indexOf('oldDateQuery') !== -1) {
-            this.startTime = new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000);
-            this.endTime = new Date().setTime((new Date()).getTime() - 24 * 60 * 60 * 1000);
           }
           let dateA = new Date(this.startTime);
           this.CstartTime = dateA.getFullYear() + '' + this.dateDeal(dateA.getMonth() + 1) + this.dateDeal(dateA.getDate());
