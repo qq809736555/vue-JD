@@ -868,7 +868,7 @@
           let jobClassName = this.$refs.jobName[0].value;
           let jobGroupName = this.$refs.jobGroup[0].value;
           let cronExpression = this.$refs.cronExpression[0].value;
-          let formDate = {'jobClassName': jobClassName, 'jobGroupName': jobGroupName, 'cronExpression': cronExpression};
+          let formDate = {'jobClassName': jobClassName.trim(), 'jobGroupName': jobGroupName, 'cronExpression': cronExpression};
           this.$http.post('/job/addjob', this.$qs.stringify(formDate), {emulateJSON: true}).then((response) => {
             this.dialogClose();
             this.hintShow('successHint');
