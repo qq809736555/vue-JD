@@ -7,7 +7,7 @@
       <div class="left_bar">
         <div class="menu_item">
           <div class="first_menu" v-for="(item, index) in resourceList" :key="item.id" @click="showSeconedMenu(index, $event)">
-            <p class="first_menu_p" :class="index === showIndex? 'select_firstMenu' : ''"><span class="icon-add"></span>{{item.name}}</p>
+            <p class="first_menu_p" :class="index === showIndex? 'select_firstMenu' : ''" :id="item.url === '/' ? item.url : ''"><span class="icon-add"></span>{{item.name}}</p>
             <div class="second_menu" :class="index === showIndex? 'select_secondMenu' : ''">
               <div class="second_menu_item" v-for="child in item.children" :key="child.id">
                 <router-link :to="child.url">
@@ -114,9 +114,15 @@
         } else {
           targetClassName = event.target.className;
         }
+        if (event.target.id !== '') {
+          this.$router.push('/');
+        }
         if (targetClassName.indexOf('select_firstMenu') === -1) {
           this.showIndex = index;
         } else {
+          if (event.target.id !== '') {
+            return;
+          }
           this.showIndex = -1;
         }
       }
