@@ -20,6 +20,11 @@
           <td>{{item.flbm}}</td>
           <td>{{item.sysl}}</td>
         </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td>统计</td>
+          <td>0</td>
+        </tr>
         </tbody>
       </table>
       <pagination :total-count = "totalCount" :page-num="pageNum" :page-size="pageSize" @showNewPageSize="updatePageSize" @currentPage="currentPage"></pagination>
@@ -46,6 +51,7 @@
       getList() {
         let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
         this.$http.post('/api/queryOilProductStore', formDate).then((response) => {
+          console.log(response);
           this.totalCount = response.total;
           this.$store.commit('changeList', response.list);
           this.pageSize = response.pageSize;

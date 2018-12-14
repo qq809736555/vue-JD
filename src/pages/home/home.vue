@@ -30,7 +30,7 @@
     <v-dialog></v-dialog>
     <v-hint></v-hint>
     <!-- loading -->
-    <v-loading></v-loading>
+    <!--<v-loading></v-loading>-->
   </div>
 </template>
 

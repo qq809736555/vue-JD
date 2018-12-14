@@ -20,6 +20,11 @@
               <td>{{item.zdbs}}</td>
               <td>{{item.fpfs}}</td>
             </tr>
+            <tr>
+              <td colspan="3"></td>
+              <td>统计</td>
+              <td>0</td>
+            </tr>
           </tbody>
         </table>
         <pagination :total-count="totalCount" :page-size="pageSize" :page-num="pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></pagination>
