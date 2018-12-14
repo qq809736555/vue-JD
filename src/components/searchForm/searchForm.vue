@@ -268,7 +268,7 @@
           this.CnowTime = dateC.getFullYear() + '' + this.dateDeal(dateC.getMonth() + 1);
         },
         // 查询
-        tableShow() {
+        queryBtn() {
           this.lastData();
           let data = {
             tableShow: true,
