@@ -45,12 +45,22 @@
     },
     methods: {
       getList() {
-        let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
-        this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
-          this.totalCount = response.total;
-          this.$store.commit('changeList', response.list);
-          this.pageSize = response.pageSize;
-        });
+        console.log(this.dictCode);
+        if (this.dictCode === '') {
+          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh, 'dictType': '预警'};
+          this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
+            this.totalCount = response.total;
+            this.$store.commit('changeList', response.list);
+            this.pageSize = response.pageSize;
+          });
+        } else {
+          let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
+          this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
+            this.totalCount = response.total;
+            this.$store.commit('changeList', response.list);
+            this.pageSize = response.pageSize;
+          });
+        }
       },
       // 翻页组件修改每页显示条数
       updatePageSize(data) {

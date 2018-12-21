@@ -256,6 +256,10 @@
               };
               myChartDay.setOption(optionDay);
             });
+          }).catch((error) => {
+            console.log(error);
+            this.$store.commit('changeLoading', false);
+            console.log(this.$store.getters.getLoading);
           });
           this.$http.post('/api/chartQueryMonth', formDate).then((response) => {
             console.log(response);
@@ -315,6 +319,10 @@
               };
               myChartMonth.setOption(optionMonth);
             });
+          }).catch((error) => {
+            console.log(error);
+            this.$store.commit('changeLoading', false);
+            console.log(this.$store.getters.getLoading);
           });
         },
         getList2() {
@@ -326,14 +334,12 @@
         getList3() {
           let formDate = '';
           this.$http.post('/api/statisticalCountQuery', formDate).then((response) => {
-            console.log(response);
             this.list3 = response;
           });
         },
         getList4() {
           let formDate = '';
           this.$http.post('/api/statisticalQuery', formDate).then((response) => {
-            console.log(response);
             this.list4 = response;
           });
         }
@@ -362,24 +368,23 @@
       .myCharts
         flex 1
         height 300px
+      .aaa
+        position absolute
+        top 0
+        left 0
+        z-index 1000
+        width 100%
+        height 100%
+        .bbb
+          position absolute
+          top 0
+          bottom 0
+          left 0
+          right 0
+          margin auto
+          width 100px!important
+          height 100px!important
+          fill #e2231a!important
 </style>
-<style lang="stylus" rel="stylesheet" scoped>
-  .aaa
-    position absolute
-    top 0
-    left 0
-    z-index 1000
-    width 100%
-    height 100%
-    .bbb
-      position absolute
-      top 0
-      bottom 0
-      left 0
-      right 0
-      margin auto
-      width 100px!important
-      height 100px!important
-      fill #e2231a!important
-</style>
+
 
