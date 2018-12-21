@@ -8,7 +8,7 @@
         <div class="myCharts" id="myChartMonth"></div>
       </div>
       <div class="search_table">
-        <div class="table_name">1、基本信息</div>
+        <div class="table_name">1、基本信息</div>`
         <table>
           <thead>
           <tr>
@@ -70,6 +70,9 @@
           </tr>
           </tbody>
         </table>
+        <div class="search" v-show="this.$store.getters.getLoading">
+          <v-loading type="spiningDubbles" class="bbb" color="#d9544e"></v-loading>
+        </div>
         <table>
           <thead>
           <tr>
@@ -201,16 +204,10 @@
           let chart_dayKpNums_X = [];
           let chart_dayKpNums_Y = [];
           this.$http.post('/api/chartQueryDay', formDate).then((response) => {
-            console.log(response);
-            this.list.dayKpNums = response.dayKpNums;
-            if (response.length === 0) {
-              chart_dayKpNums_X.push();
-              chart_dayKpNums_Y.push();
-            } else {
+            this.list.dayKpNums = response;
             for (let i = 0; i < this.list.dayKpNums.length; i++) {
               chart_dayKpNums_X.push(this.list.dayKpNums[i].kprq);
               chart_dayKpNums_Y.push(this.list.dayKpNums[i].dayKpNums);
-            }
             }
             this.$nextTick(() => {
               let myChartDay = echarts.init(document.getElementById('myChartDay'));
@@ -255,6 +252,8 @@
                 }]
               };
               myChartDay.setOption(optionDay);
+              this.$store.commit('changeLoading', false);
+              console.log(this.$store.getters.getLoading);
             });
           }).catch((error) => {
             console.log(error);
@@ -262,19 +261,13 @@
             console.log(this.$store.getters.getLoading);
           });
           this.$http.post('/api/chartQueryMonth', formDate).then((response) => {
-            console.log(response);
-            this.list.monthKpNums = response.monthKpNums;
+            this.list.monthKpNums = response;
             let chart_monthKpNums_X = [];
             let chart_monthKpNums_Y = [];
-            if (response.length === 0) {
-              chart_dayKpNums_X.push();
-              chart_dayKpNums_Y.push();
-            } else {
               for (let i = 0; i < this.list.monthKpNums.length; i++) {
                 chart_monthKpNums_X.push(this.list.monthKpNums[i].kprq);
                 chart_monthKpNums_Y.push(this.list.monthKpNums[i].monthKpNums);
               }
-            }
             this.$nextTick(() => {
               let myChartMonth = echarts.init(document.getElementById('myChartMonth'));
               let optionMonth = {
@@ -318,6 +311,7 @@
                 }]
               };
               myChartMonth.setOption(optionMonth);
+              this.$store.commit('changeLoading', false);
             });
           }).catch((error) => {
             console.log(error);
@@ -331,16 +325,16 @@
             this.list2 = response;
           });
         },
-        getList3() {
-          let formDate = '';
-          this.$http.post('/api/statisticalCountQuery', formDate).then((response) => {
-            this.list3 = response;
-          });
-        },
         getList4() {
           let formDate = '';
           this.$http.post('/api/statisticalQuery', formDate).then((response) => {
             this.list4 = response;
+          });
+        },
+        getList3() {
+          let formDate = '';
+          this.$http.post('/api/statisticalCountQuery', formDate).then((response) => {
+            this.list3 = response;
           });
         }
       },
@@ -385,6 +379,53 @@
           width 100px!important
           height 100px!important
           fill #e2231a!important
+  .charts
+    width 100%
+    height auto
+    padding 10px 30px 30px 30px
+    background #fff
+    border-radius 5px
+    box-shadow 0 3px 5px 0 rgba(210,210,210,0.5)
+    display flex
+    position relative
+    .myCharts
+      flex 1
+      height 300px
+    .aaa
+      position absolute
+      top 0
+      left 0
+      z-index 1000
+      width 100%
+      height 100%
+      .bbb
+        position absolute
+        top 0
+        bottom 0
+        left 0
+        right 0
+        margin auto
+        width 100px!important
+        height 100px!important
+        fill #e2231a!important
+  .search_table
+    .search
+      position absolute
+      bottom 0
+      left 0
+      z-index 1000
+      width 100%
+      height 30%
+      .bbb
+        position absolute
+        top 0
+        bottom 0
+        left 0
+        right 0
+        margin auto
+        width 90px!important
+        height 90px!important
+        fill #e2231a!important
 </style>
 
 

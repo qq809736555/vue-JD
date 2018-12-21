@@ -23,7 +23,7 @@
             <tr>
               <td colspan="3"></td>
               <td>统计</td>
-              <td>0</td>
+              <td>{{total || 0 }}</td>
             </tr>
           </tbody>
         </table>
@@ -44,16 +44,18 @@
           pageNum: 1,
           tabIsShow: false,
           nsrsbh: '',
-          jqbh: ''
+          jqbh: '',
+          total: ''
         };
       },
       methods: {
         getList() {
           let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh};
           this.$http.post('/api/queryInvoiceStore', formDate).then((response) => {
-            this.totalCount = response.total;
-            this.$store.commit('changeList', response.list);
-            this.pageSize = response.pageSize;
+            this.totalCount = response.pageInfo.total;
+            this.$store.commit('changeList', response.pageInfo.list);
+            this.pageSize = response.pageInfo.pageSize;
+            this.total = response.total;
           });
         },
         // 翻页组件修改每页显示条数
