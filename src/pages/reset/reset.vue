@@ -51,7 +51,7 @@
         </table>
       </div>
       <div class="search_table">
-        <div class="table_name">2、查询信息</div>
+        <div class="table_name">2、查询信息{{this.$store.getters.getLoading2}}</div>
         <table>
           <thead>
           <tr>
@@ -70,7 +70,7 @@
           </tr>
           </tbody>
         </table>
-        <div class="search" v-show="this.$store.getters.getLoading">
+        <div class="search" v-show="this.$store.getters.getLoading2">
           <v-loading type="spiningDubbles" class="bbb" color="#d9544e"></v-loading>
         </div>
         <table>
@@ -253,12 +253,10 @@
               };
               myChartDay.setOption(optionDay);
               this.$store.commit('changeLoading', false);
-              console.log(this.$store.getters.getLoading);
             });
           }).catch((error) => {
             console.log(error);
             this.$store.commit('changeLoading', false);
-            console.log(this.$store.getters.getLoading);
           });
           this.$http.post('/api/chartQueryMonth', formDate).then((response) => {
             this.list.monthKpNums = response;
@@ -329,6 +327,7 @@
           let formDate = '';
           this.$http.post('/api/statisticalQuery', formDate).then((response) => {
             this.list4 = response;
+            this.$store.commit('changeLoading2', false);
           });
         },
         getList3() {
@@ -379,53 +378,24 @@
           width 100px!important
           height 100px!important
           fill #e2231a!important
-  .charts
-    width 100%
-    height auto
-    padding 10px 30px 30px 30px
-    background #fff
-    border-radius 5px
-    box-shadow 0 3px 5px 0 rgba(210,210,210,0.5)
-    display flex
-    position relative
-    .myCharts
-      flex 1
-      height 300px
-    .aaa
-      position absolute
-      top 0
-      left 0
-      z-index 1000
-      width 100%
-      height 100%
-      .bbb
+    .search_table
+      .search
         position absolute
-        top 0
         bottom 0
         left 0
-        right 0
-        margin auto
-        width 100px!important
-        height 100px!important
-        fill #e2231a!important
-  .search_table
-    .search
-      position absolute
-      bottom 0
-      left 0
-      z-index 1000
-      width 100%
-      height 30%
-      .bbb
-        position absolute
-        top 0
-        bottom 0
-        left 0
-        right 0
-        margin auto
-        width 90px!important
-        height 90px!important
-        fill #e2231a!important
+        z-index 1000
+        width 100%
+        height 30%
+        .bbb
+          position absolute
+          top 0
+          bottom 0
+          left 0
+          right 0
+          margin auto
+          width 90px!important
+          height 90px!important
+          fill #e2231a!important
 </style>
 
 

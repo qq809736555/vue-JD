@@ -33,6 +33,7 @@ let reaponseNum = 0;
 axios.interceptors.request.use(function (config) {
   reaponseNum++;
   store.commit('changeLoading', true);
+  store.commit('changeLoading2', true);
   // Do something before request is sent
   return config;
 }, function (error) {
@@ -47,6 +48,7 @@ axios.interceptors.response.use(function (response) {
     store.commit('changeLoading', false);
   } else {
     store.commit('changeLoading', true);
+    store.commit('changeLoading2', true);
   }
   if (!response.data.code) {
     if (response.data instanceof Object) {

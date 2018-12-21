@@ -138,7 +138,8 @@ const GlobalData = new Vuex.Store({
     hintContent: '',
     list: [],
     // loading
-    loadingShow: false
+    loadingShow: false,
+    loadingShow2: false
   },
   getters: {
     // 组件数据读取/输出，不能在这里直接修改状态
@@ -159,6 +160,9 @@ const GlobalData = new Vuex.Store({
     },
     getLoading(state) {
       return state.loadingShow;
+    },
+    getLoading2(state) {
+      return state.loadingShow2;
     }
   },
   mutations: {
@@ -176,6 +180,9 @@ const GlobalData = new Vuex.Store({
     },
     changeLoading(state, loadingShow) {
       state.loadingShow = loadingShow;
+    },
+    changeLoading2(state, loadingShow2) {
+      state.loadingShow2 = loadingShow2;
     }
   },
   modules: {
