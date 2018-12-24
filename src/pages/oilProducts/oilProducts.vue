@@ -20,13 +20,9 @@
           <td>{{item.flbm}}</td>
           <td>{{item.sysl}}</td>
         </tr>
-        <tr>
-          <td colspan="3"></td>
-          <td>统计</td>
-          <td>{{totalOil || 0 }}</td>
-        </tr>
         </tbody>
       </table>
+      <div class="table_desc">剩余总数量（升）： {{totalOil || 0 }}</div>
       <pagination :total-count = "totalCount" :page-num="pageNum" :page-size="pageSize" @showNewPageSize="updatePageSize" @currentPage="currentPage"></pagination>
     </div>
   </div>
@@ -85,4 +81,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet" scoped>
+  .table_desc
+    float right
+    margin 30px 20px
 </style>

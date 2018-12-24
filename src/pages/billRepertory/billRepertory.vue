@@ -20,13 +20,9 @@
               <td>{{item.zdbs}}</td>
               <td>{{item.fpfs}}</td>
             </tr>
-            <tr>
-              <td colspan="3"></td>
-              <td>统计</td>
-              <td>{{total || 0 }}</td>
-            </tr>
           </tbody>
         </table>
+        <div class="table_desc">分发未开具发票总分数  ： {{total || 0 }}</div>
         <pagination :total-count="totalCount" :page-size="pageSize" :page-num="pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></pagination>
       </div>
     </div>
@@ -85,4 +81,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet" scoped>
+  .table_desc
+    float right
+    margin 30px 20px
 </style>
