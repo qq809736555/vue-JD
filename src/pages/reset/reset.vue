@@ -51,7 +51,7 @@
         </table>
       </div>
       <div class="search_table">
-        <div class="table_name">2、查询信息{{this.$store.getters.getLoading2}}</div>
+        <div class="table_name">2、查询信息</div>
         <table>
           <thead>
           <tr>
@@ -71,7 +71,7 @@
           </tbody>
         </table>
         <div class="search" v-show="this.$store.getters.getLoading2">
-          <v-loading type="spiningDubbles" class="bbb" color="#d9544e"></v-loading>
+          <v-loading type="spiningDubbles" class="searchbbb" color="#d9544e"></v-loading>
         </div>
         <table>
           <thead>
@@ -314,7 +314,6 @@
           }).catch((error) => {
             console.log(error);
             this.$store.commit('changeLoading', false);
-            console.log(this.$store.getters.getLoading);
           });
         },
         getList2() {
@@ -386,7 +385,7 @@
         z-index 1000
         width 100%
         height 30%
-        .bbb
+        .searchbbb
           position absolute
           top 0
           bottom 0
