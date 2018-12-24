@@ -91,7 +91,7 @@
           </tr>
           </tbody>
         </table>
-        <div class="table_desc">（日均开票、成品油使用量是通过近10天使用量计算得出的）</div>
+        <div class="table_desc">（日均开票使用量是通过近10天使用量计算得出的）</div>
       </div>
     </div>
 </template>
