@@ -22,7 +22,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="table_desc">分发未开具发票总分数  ： {{total || 0 }}</div>
+        <div class="table_desc">已领购未分发份数：{{totalLg || 0 }}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已分发未开具份数： {{ totalFf || 0 }}</div>
         <pagination :total-count="totalCount" :page-size="pageSize" :page-num="pageNum" @showNewPageSize="updatePageSize" @currentPage="currentPage"></pagination>
       </div>
     </div>
@@ -41,7 +41,8 @@
           tabIsShow: false,
           nsrsbh: '',
           jqbh: '',
-          total: ''
+          totalFf: '',
+          totalLg: ''
         };
       },
       methods: {
@@ -51,7 +52,8 @@
             this.totalCount = response.pageInfo.total;
             this.$store.commit('changeList', response.pageInfo.list);
             this.pageSize = response.pageInfo.pageSize;
-            this.total = response.total;
+            this.totalFf = response.totalFf;
+            this.totalLg = response.totalLg;
           });
         },
         // 翻页组件修改每页显示条数
