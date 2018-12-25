@@ -78,7 +78,7 @@
             </div>
             <div class="set_item">
               <span class="red_desc">（当前税控值{{zsljValue}}元）</span>
-              <span class="setItem_desc">离线开票正数累计金额≤<input v-model="offLine_value2" class="input_edit" type="number" />元</span>
+              <span class="setItem_desc">离线开票正数累计金额≥<input v-model="offLine_value2" class="input_edit" type="number" />元</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType21" class="input_checkBox" type="checkbox" value="">邮件通知</span>
               <span class="setItem_desc"><input v-model="offLine_notifyType22" class="input_checkBox" type="checkbox" value="">短信通知</span>
             </div>
