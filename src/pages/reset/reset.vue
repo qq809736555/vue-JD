@@ -325,8 +325,8 @@
         getList4() {
           let formDate = '';
           this.$http.post('/api/statisticalQuery', formDate).then((response) => {
-            this.list4 = response;
             this.$store.commit('changeLoading2', false);
+            this.list4 = response;
           });
         },
         getList3() {
