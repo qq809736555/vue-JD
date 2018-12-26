@@ -35,8 +35,8 @@
             <th width="7%">序号</th>
             <th width="26%">核心板编号</th>
             <th width="26%">已离线开票正数累计金额预警（元）</th>
-            <th width="12%">预警值（h）</th>
-            <th width="15%">税控值（h）</th>
+            <th width="12%">预警值（元）</th>
+            <th width="15%">税控值（元）</th>
             <th width="11%">状态</th>
           </tr>
           </thead>
@@ -61,8 +61,8 @@
             <th width="7%">序号</th>
             <th width="26%">核心板编号</th>
             <th width="29%">已离线开票负数累计金额预警（元）</th>
-            <th width="12%">预警值（h）</th>
-            <th width="15%">税控值（h）</th>
+            <th width="12%">预警值（元）</th>
+            <th width="15%">税控值（元）</th>
             <th width="11%">状态</th>
           </tr>
           </thead>
