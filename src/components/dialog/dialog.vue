@@ -101,7 +101,7 @@
             </div>
             <div class="set_title">预警设置：</div>
             <div class="set_item">
-              <span class="setItem_desc">核心板剩余发票数量≤<input v-model="value" class="input_edit" type="number" />张</span>
+              <span class="setItem_desc">{{warningDesc2}}≥<input v-model="value" class="input_edit" type="number" />张</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="0" v-model="notifyType1">邮件通知</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="1" v-model="notifyType2">短信通知</span>
             </div>
@@ -175,6 +175,7 @@
           warningType: '',
           setNsrsbh: '',
           warningDesc: '核心板剩余发票数量',
+          warningDesc2: '未签名发票',
           unitDesc: '张',
           setItemShow: true,
           monitorStartTime: '0',
@@ -356,7 +357,8 @@
           this.notifyType2 = false;
           this.dialog_error = false;
           this.dialogError = '';
-          this.warningDesc = '核心板剩余发票数量';
+          this.warningDesc = '发票库存数量';
+          this.warningDesc2 = '未签名发票';
           this.unitDesc = '张';
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
           for (let i = 0; i < dialogInput.length; i++) {
@@ -894,22 +896,30 @@
           } else {
             this.setItemShow = true;
           }
+          if (val === '1') {
+            this.warningDesc = '发票库存数量';
+          }
           if (val === '11') {
-            this.warningDesc = '核心板剩余成品油数量';
+            this.warningDesc = '成品油库存数量';
             this.unitDesc = 'L';
           } else {
-            this.warningDesc = '核心板剩余发票数量';
+            this.warningDesc = '发票库存数量';
             this.unitDesc = '张';
           }
           if (val === '2') {
             this.warningDesc = '核心板未上传发票数量';
+            this.warningDesc2 = '未上传发票';
           }
           if (val === '7') {
             this.warningDesc = '核心板未签名发票数量';
+            this.warningDesc2 = '未签名发票';
           }
           if (val === '8') {
             this.warningDesc = '核心板验签失败发票数量';
+            this.warningDesc2 = '验签失败发票';
           }
+          console.log(val);
+          console.log(this.taskType);
           this.$http.get('/api/queryWarn?' + 'nsrsbh=' + this.setNsrsbh + '&taskType=' + this.taskType).then((response) => {
             if (JSON.stringify(response) !== '[]') {
               this.monitorStartTime = response[0].monitorStartTime || '0';
