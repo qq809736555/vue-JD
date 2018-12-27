@@ -358,7 +358,7 @@
           this.dialog_error = false;
           this.dialogError = '';
           this.warningDesc = '发票库存数量';
-          this.warningDesc2 = '未签名发票';
+          this.warningDesc2 = '未签名发票数量';
           this.unitDesc = '张';
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
           for (let i = 0; i < dialogInput.length; i++) {
@@ -908,18 +908,16 @@
           }
           if (val === '2') {
             this.warningDesc = '核心板未上传发票数量';
-            this.warningDesc2 = '未上传发票';
+            this.warningDesc2 = '未上传发票数量';
           }
           if (val === '7') {
             this.warningDesc = '核心板未签名发票数量';
-            this.warningDesc2 = '未签名发票';
+            this.warningDesc2 = '未签名发票数量';
           }
           if (val === '8') {
             this.warningDesc = '核心板验签失败发票数量';
-            this.warningDesc2 = '验签失败发票';
+            this.warningDesc2 = '验签失败发票数量';
           }
-          console.log(val);
-          console.log(this.taskType);
           this.$http.get('/api/queryWarn?' + 'nsrsbh=' + this.setNsrsbh + '&taskType=' + this.taskType).then((response) => {
             if (JSON.stringify(response) !== '[]') {
               this.monitorStartTime = response[0].monitorStartTime || '0';
