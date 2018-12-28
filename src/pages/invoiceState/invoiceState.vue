@@ -45,7 +45,6 @@
     },
     methods: {
       getList() {
-        console.log(this.dictCode);
         if (this.dictCode === '') {
           let formDate = {'pageNum': this.pageNum, 'pageSize': '' + this.pageSize, 'taskType': this.dictCode, 'nsrsbh': this.nsrsbh, 'jqbh': this.jqbh, 'dictType': '预警'};
           this.$http.post('/api/queryInvoiceStates', formDate).then((response) => {
