@@ -112,6 +112,9 @@
         newVal = year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
         return newVal;
       }
+    },
+    destroyed () {
+      this.$store.commit('changeBtnShow', true);
     }
   };
 </script>
