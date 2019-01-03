@@ -104,6 +104,7 @@
               <span class="setItem_desc">{{warningDesc2}}≥<input v-model="value" class="input_edit" type="number" />张</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="0" v-model="notifyType1">邮件通知</span>
               <span class="setItem_desc"><input class="input_checkBox" type="checkbox" value="1" v-model="notifyType2">短信通知</span>
+              <div class="red" v-if="!failShow">（验签失败发票超过3张核心板开具会受到影响,此处值不能超过3）</div>
             </div>
           </div>
           <!-- 4.抄报提醒监控 -->
@@ -175,9 +176,10 @@
           warningType: '',
           setNsrsbh: '',
           warningDesc: '发票库存数量',
-          warningDesc2: '未签名发票数量',
+          warningDesc2: '核心板未签名发票数量',
           unitDesc: '张',
           setItemShow: true,
+          failShow: true,
           monitorStartTime: '0',
           monitorEndTime: '0',
           value: '',
@@ -358,7 +360,7 @@
           this.dialog_error = false;
           this.dialogError = '';
           this.warningDesc = '发票库存数量';
-          this.warningDesc2 = '未签名发票数量';
+          this.warningDesc2 = '核心板未签名发票数量';
           this.unitDesc = '张';
           let dialogInput = window.document.getElementById('dialog').getElementsByTagName('INPUT');
           for (let i = 0; i < dialogInput.length; i++) {
@@ -806,6 +808,13 @@
             store.commit('changeContent', '请选择业务类型');
             return;
           }
+          if (this.taskType === '8') {
+            if (this.value > 3) {
+              this.hintShow('errorHint');
+              store.commit('changeContent', '验签失败发票数量不能超过3');
+              return;
+            }
+          }
           if (this.taskType !== '12' && this.notifyType1 === false && this.notifyType2 === false) {
             this.hintShow('errorHint');
             store.commit('changeContent', '请选择预警发送方式');
@@ -908,15 +917,18 @@
           }
           if (val === '2') {
             this.warningDesc = '核心板未上传发票数量';
-            this.warningDesc2 = '未上传发票数量';
+            this.warningDesc2 = '核心板未上传发票数量';
           }
           if (val === '7') {
             this.warningDesc = '核心板未签名发票数量';
-            this.warningDesc2 = '未签名发票数量';
+            this.warningDesc2 = '核心板未签名发票数量';
           }
           if (val === '8') {
             this.warningDesc = '核心板验签失败发票数量';
-            this.warningDesc2 = '验签失败发票数量';
+            this.warningDesc2 = '核心板验签失败发票数量';
+            this.failShow = false;
+          } else {
+            this.failShow = true;
           }
           this.$http.get('/api/queryWarn?' + 'nsrsbh=' + this.setNsrsbh + '&taskType=' + this.taskType).then((response) => {
             if (JSON.stringify(response) !== '[]') {
@@ -1163,4 +1175,8 @@
               .search_select
                 padding 0 22px 0 5px
                 height 22px
+        .setWaring_BillState
+          .red
+            margin -8px 0 0 -6px
+            color #e2231a
 </style>
