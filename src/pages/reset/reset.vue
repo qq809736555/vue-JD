@@ -142,7 +142,7 @@
             },
             yAxis: {
               type: 'value',
-              name: '/W张'
+              name: '/张'
             },
             series: [{
               data: '',
@@ -184,7 +184,7 @@
             },
             yAxis: {
               type: 'value',
-              name: '/W张'
+              name: '/张'
             },
             series: [{
               data: '',
@@ -236,7 +236,7 @@
                 },
                 yAxis: {
                   type: 'value',
-                  name: '/W张'
+                  name: '/张'
                 },
                 series: [{
                   data: chart_dayKpNums_Y,
@@ -293,7 +293,13 @@
                 },
                 yAxis: {
                   type: 'value',
-                  name: '/W张'
+                  name: '/张',
+                  axisLabel: {
+                    interval: 0, // 信息全部显示
+                    show: true,
+                    margin: 0,
+                    showMaxLabel: true
+                  }
                 },
                 series: [{
                   data: chart_monthKpNums_Y,
@@ -351,7 +357,7 @@
     .charts
       width 100%
       height auto
-      padding 10px 30px 30px 30px
+      padding 10px 0px 30px 0px
       background #fff
       border-radius 5px
       box-shadow 0 3px 5px 0 rgba(210,210,210,0.5)

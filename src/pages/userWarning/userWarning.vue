@@ -10,7 +10,7 @@
           <div class="search_btn red-btn" @click="queryBtn">查询</div>
           <div class="add_btn red-btn" @click="newReceivers">新增</div>
           <div class="import_btn red-btn" @click="importExcel">导入</div>
-          <div class="export_btn red-btn" @click="exportBtn">导出</div>
+          <div class="export_btn red-btn" @click="exportBtn">模板下载</div>
         </div>
       </div>
     </div>
