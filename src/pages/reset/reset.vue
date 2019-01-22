@@ -236,7 +236,13 @@
                 },
                 yAxis: {
                   type: 'value',
-                  name: '/张'
+                  name: '/张',
+                  axisLabel: {
+                    interval: 0, // 信息全部显示
+                    show: true,
+                    margin: 4,
+                    showMaxLabel: true
+                  }
                 },
                 series: [{
                   data: chart_dayKpNums_Y,
