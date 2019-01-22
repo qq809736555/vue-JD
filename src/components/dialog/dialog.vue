@@ -29,7 +29,7 @@
         <div class="importFile" v-if="this.$store.getters.getImportShow">
           <form id="upload" enctype="multipart/form-data" method="post">
           <div class="import_name">请选择Excel文件：</div>
-          <input class="upload" id="selectFile" name="file" @change.stop.prevent="importExcel(this)" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+          <input class="upload" id="selectFile" name="file" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
           </form>
         </div>
         <!--下拉框-->
@@ -537,14 +537,14 @@
         },
         // 接收人批量导入
         importExcel() {
-          let file = event.currentTarget.files[0];
+          let form = document.getElementById('upload');
+          let formData = new FormData(form);
+          let file = document.querySelector('input[type=file]').files[0];
           if (file === undefined) {
             return;
           }
-          let form = document.getElementById('upload');
-          let formData = new FormData(form);
           formData.append('taskType', this.receiveType);
-          formData.append('file', file);
+          formData.append('file', document.querySelector('input[type=file]').files[0]);
           this.$http.post('/api/importJSRExcel', formData).then((response) => {
             if (response === '0000') {
               this.dialogClose();
