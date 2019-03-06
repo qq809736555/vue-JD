@@ -1,5 +1,22 @@
 <template>
     <div class="reset_wrapper">
+      <div class="topSearch">
+        <!-- 税号 -->
+        <div class="search_form">
+          <div class="search_conditions">
+            <div class="search_item" v-show="nsrsbhShow">
+              <div class="search_label">税号：</div>
+              <span class="icon-dropDown"></span>
+              <select v-model="nsrsbh" class="search_select">
+                <option v-for="option1 in shuiHao" :value="option1.nsrsbh" :key="option1.id">{{option1.nsrsbh}}<span>,{{option1.dwmc}}</span></option>
+              </select>
+            </div>
+            <div class="search_btn_wrapper">
+              <div class="search_btn red-btn" @click="queryBtn">查询</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="charts">
         <div class="myCharts" id="myChartDay"></div>
         <div class="aaa" v-show="this.$store.getters.getLoading">
@@ -102,19 +119,37 @@
     export default {
       data() {
         return {
+          nsrsbh: '',
+          nsrsbhShow: true,
+          shuiHao: [],
           list: {},
           list2: {},
           list3: {},
-          list4: {}
+          list4: {},
+          Cnsrsbh: '',
+          dwmc: '',
+          selection: []
         };
       },
+      created () { // 初始化时currentPage赋值
+        this.getSH();
+      },
       mounted() {
-        this.getList2();
-        this.getList3();
-        this.getList4();
-        this.getList1();
       },
       methods: {
+        // 获取税号
+        getSH() {
+          this.$http.get('/rbac/mvc/sallerInfo/getByNsrsbh?xfdm=' + JSON.parse(window.localStorage.getItem('userInfo')).xfdm).then((response) => {
+            this.shuiHao = response.nsrsbhList || [];
+            this.nsrsbh = this.shuiHao[0].nsrsbh;
+            this.dwmc = this.shuiHao[0].dwmc;
+            this.Cnsrsbh = this.nsrsbh + ',' + this.dwmc;
+            this.getList2();
+            this.getList3();
+            this.getList4();
+            this.getList1();
+          });
+        },
         getList1() {
           let myChartDay = echarts.init(document.getElementById('myChartDay'));
           let optionDay = {
@@ -200,10 +235,9 @@
             }]
           };
           myChartMonth.setOption(optionMonth);
-          let formDate = '';
           let chart_dayKpNums_X = [];
           let chart_dayKpNums_Y = [];
-          this.$http.post('/api/chartQueryDay', formDate).then((response) => {
+          this.$http.post('/api/chartQueryDay?nsrsbh=' + this.Cnsrsbh).then((response) => {
             this.list.dayKpNums = response;
             for (let i = 0; i < this.list.dayKpNums.length; i++) {
               chart_dayKpNums_X.push(this.list.dayKpNums[i].kprq);
@@ -264,7 +298,7 @@
             console.log(error);
             this.$store.commit('changeLoading', false);
           });
-          this.$http.post('/api/chartQueryMonth', formDate).then((response) => {
+          this.$http.post('/api/chartQueryMonth?nsrsbh=' + this.Cnsrsbh).then((response) => {
             this.list.monthKpNums = response;
             let chart_monthKpNums_X = [];
             let chart_monthKpNums_Y = [];
@@ -329,23 +363,26 @@
           });
         },
         getList2() {
-          let formDate = '';
-          this.$http.post('/api/basicQuery', formDate).then((response) => {
+          this.$http.post('/api/basicQuery?nsrsbh=' + this.Cnsrsbh).then((response) => {
             this.list2 = response;
           });
         },
         getList4() {
-          let formDate = '';
-          this.$http.post('/api/statisticalQuery', formDate).then((response) => {
+          this.$http.post('/api/statisticalQuery?nsrsbh=' + this.Cnsrsbh).then((response) => {
             this.$store.commit('changeLoading2', false);
             this.list4 = response;
           });
         },
         getList3() {
-          let formDate = '';
-          this.$http.post('/api/statisticalCountQuery', formDate).then((response) => {
+          this.$http.post('/api/statisticalCountQuery?nsrsbh=' + this.Cnsrsbh).then((response) => {
             this.list3 = response;
           });
+        },
+        queryBtn() {
+          this.getList2();
+          this.getList3();
+          this.getList4();
+          this.getList1();
         }
       },
       components: {
@@ -360,10 +397,20 @@
     height 100%
     position relative
     text-align center
+    .topSearch
+      width 100%
+      height 60px
+      background #fff
+      border-radius 5px
+      box-shadow 0 3px 5px 0 rgba(210,210,210,0.5)
+      display flex
+      position relative
+      .search_form
+        text-align right
     .charts
       width 100%
       height auto
-      padding 10px 0px 30px 0px
+      padding 0px 0px 30px 0px
       background #fff
       border-radius 5px
       box-shadow 0 3px 5px 0 rgba(210,210,210,0.5)
